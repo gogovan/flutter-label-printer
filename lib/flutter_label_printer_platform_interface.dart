@@ -5,6 +5,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   /// Constructs a FlutterLabelPrinterPlatform.
   FlutterLabelPrinterPlatform() : super(token: _token);
 
+  // ignore: no-object-declaration, needed, directly from Flutter template code.
   static final Object _token = Object();
 
   static FlutterLabelPrinterPlatform _instance =
