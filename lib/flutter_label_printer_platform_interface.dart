@@ -24,7 +24,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<List<String>> searchHMA300L() {
+    throw UnimplementedError('searchHMA300L() has not been implemented.');
   }
 }

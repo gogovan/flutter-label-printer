@@ -17,11 +17,11 @@ abstract class PrinterInterface {
   ///
   /// Implementors should connect to the specified device, and the device should be ready to use when this method returns normally.
   /// This method should be idempotent - multiple invocation of this method should not result in errors or multiple connections.
-  void connect(PrinterSearchResult device);
+  Future<void> connect(PrinterSearchResult device);
 
   /// Disconnect to the currently connected device.
   ///
   /// Implementors should disconnect the current device, and do any cleanup needed.
   /// This method should be idempotent - multiple invocation of this method should not result in errors or multiple disconnections.
-  void disconnect();
+  Future<void> disconnect();
 }

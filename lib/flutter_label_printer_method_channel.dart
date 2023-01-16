@@ -10,9 +10,10 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   final methodChannel = const MethodChannel('flutter_label_printer');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<List<String>> searchHMA300L() async {
+    final result = await methodChannel.invokeMethod<List<String>>('searchHMA300L');
+
+    return result ?? [];
   }
+
 }

@@ -6,5 +6,6 @@ abstract class PrinterSearcherInterface {
   /// Returns a list of `PrinterSearchResult`, allowing client to select one to be passed to the `connect` method on a compatible PrinterInterface class.
   ///
   /// Implementors should search for devices (using USB, WiFi, BLE etc) and return a list of found compatible devices.
-  List<PrinterSearchResult> search();
+  /// These devices should be indicated by an ID stored in a `PrinterSearchResult` instance.
+  Future<List<PrinterSearchResult>> search();
 }
