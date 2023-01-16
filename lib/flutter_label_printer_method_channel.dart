@@ -11,9 +11,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<List<String>> searchHMA300L() async {
-    final result = await methodChannel.invokeMethod<List<String>>('searchHMA300L');
+    final result = await methodChannel.invokeMethod<List<dynamic>>('searchHMA300L');
 
-    return result ?? [];
+    return result?.cast() ?? [];
   }
 
 }
