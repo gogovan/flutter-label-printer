@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_label_printer/flutter_label_printer.dart';
+import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
+import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  final _flutterLabelPrinterPlugin = FlutterLabelPrinter();
+  HMA300LSearcher _searcher = HMA300LSearcher();
+
+  String _searchResult = '';
 
   @override
   void initState() {
@@ -27,16 +30,26 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+    try {
+      _searcher.search().listen((event) {
+        setState(() {
+          _searchResult = event.toString();
+        });
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('flutter_label_printer example app'),
         ),
         body: Center(
-          child: Text('Running on: testing\n'),
+          child: Text('Search Result = $_searchResult\n'),
         ),
       ),
     );

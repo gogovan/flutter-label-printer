@@ -7,13 +7,16 @@ import 'package:flutter_label_printer/flutter_label_printer_platform_interface.d
 class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('flutter_label_printer');
+  final methodChannel =
+      const MethodChannel('com.gogovan/flutter_label_printer');
+
+  final _scanBluetoothEventChannel =
+      const EventChannel('com.gogovan/bluetoothScan');
 
   @override
-  Future<List<String>> searchHMA300L() async {
-    final result = await methodChannel.invokeMethod<List<dynamic>>('searchHMA300L');
-
-    return result?.cast() ?? [];
-  }
-
+  Stream<List<String>> searchHMA300L() =>
+      _scanBluetoothEventChannel.receiveBroadcastStream().map(
+            (event) =>
+                (event as List<dynamic>).map((e) => e.toString()).toList(),
+          );
 }

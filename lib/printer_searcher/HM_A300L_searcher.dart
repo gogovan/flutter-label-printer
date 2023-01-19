@@ -7,13 +7,14 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 
 /// Searcher for Hanyin (HPRT) HM-A300L printers.
 class HMA300LSearcher implements PrinterSearcherInterface {
+  /// Scan for Bluetooth printers.
+  /// Will request for Bluetooth permission if none was granted yet.
   @override
-  Future<List<PrinterSearchResult>> search() async {
+  Stream<List<PrinterSearchResult>> search() {
     try {
-      final addresses =
-          await FlutterLabelPrinterPlatform.instance.searchHMA300L();
-
-      return addresses.map(BluetoothResult.new).toList();
+      return FlutterLabelPrinterPlatform.instance
+          .searchHMA300L()
+          .map((event) => event.map(BluetoothResult.new).toList());
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex),

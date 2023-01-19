@@ -4,4 +4,7 @@ class BluetoothResult implements PrinterSearchResult {
   BluetoothResult(this.address);
 
   final String address;
+
+  @override
+  String toString() => 'BluetoothResult{address: $address}';
 }

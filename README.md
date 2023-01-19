@@ -2,11 +2,34 @@
 
 Integrate printers with Flutter apps.
 
+# Supported Platforms
+
+- Android: Android 7.0+
+- iOS:
+
 # Supported Printers
 
 - Hanyin (HPRT) HM-A300L
 
 # Setup
+
+## General
+
+1. Set `minSdkVersion` in your Android app `build.gradle` to at least `24`.
+
+```groovy
+android {
+    // ...
+    defaultConfig {
+        applicationId "com.example.flutter_label_printer_example"
+        minSdkVersion 24
+        // ...
+    }
+    // ...
+}
+```
+
+2. Depending on the connection technology your printer device requires, do the following steps:
 
 ## Bluetooth
 
@@ -16,6 +39,8 @@ OS.
 ### Android
 
 1. Add the following to your main `AndroidManifest.xml`.
+   See [Android Developers](https://developer.android.com/guide/topics/connectivity/bluetooth/permissions)) and [this StackOverflow answer](https://stackoverflow.com/a/70793272)
+   for more information about permission settings.
 
 ```xml
 
@@ -27,8 +52,14 @@ OS.
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation" />
+        android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+   <uses-permission
+           android:name="android.permission.ACCESS_COARSE_LOCATION"
+           android:maxSdkVersion="30" />
+   <uses-permission
+           android:name="android.permission.ACCESS_FINE_LOCATION"
+           android:maxSdkVersion="30" />
     <!-- ... -->
 </manifest>
 ```

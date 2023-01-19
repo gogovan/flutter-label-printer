@@ -7,5 +7,5 @@ abstract class PrinterSearcherInterface {
   ///
   /// Implementors should search for devices (using USB, WiFi, BLE etc) and return a list of found compatible devices.
   /// These devices should be indicated by an ID stored in a `PrinterSearchResult` instance.
-  Future<List<PrinterSearchResult>> search();
+  Stream<List<PrinterSearchResult>> search();
 }
