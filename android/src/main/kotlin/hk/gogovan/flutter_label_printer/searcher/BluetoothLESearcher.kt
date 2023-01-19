@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import hk.gogovan.flutter_label_printer.PluginException
 import hk.gogovan.flutter_label_printer.util.ResultOr
@@ -39,6 +40,8 @@ class BluetoothLESearcher(private val context: Context) : Closeable {
     }
 
     private val bluetoothEnabled = MutableSharedFlow<Boolean>()
+    private val bluetoothPermissionGranted = MutableSharedFlow<Boolean>()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val ioScope = CoroutineScope(Dispatchers.IO)
 
@@ -137,6 +140,10 @@ class BluetoothLESearcher(private val context: Context) : Closeable {
             if (permissions.isNotEmpty()) {
                 if (grantResult[0] != PackageManager.PERMISSION_GRANTED) {
                     throw PluginException(1002, "Bluetooth permission denied.")
+                } else {
+                    coroutineScope.launch {
+                        bluetoothPermissionGranted.emit(true)
+                    }
                 }
             }
             return
@@ -162,7 +169,18 @@ class BluetoothLESearcher(private val context: Context) : Closeable {
 
         Handler(Looper.getMainLooper()).post {
             if (context.checkSelfPermissions(permissions) != PackageManager.PERMISSION_GRANTED) {
+                Log.i("flutter", "requesting perm")
                 ActivityCompat.requestPermissions(activity, permissions, REQUEST_PERMISSION_CODE)
+                coroutineScope.launch {
+                    Log.i("flutter", "collecting granted")
+                    bluetoothPermissionGranted.collect {
+                        Log.i("flutter", "collected")
+                        activity.startActivityForResult(
+                            Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                            REQUEST_ENABLE_CODE
+                        )
+                    }
+                }
             } else {
                 activity.startActivityForResult(
                     Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
