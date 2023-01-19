@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.NonNull
 import hk.gogovan.flutter_label_printer.searcher.BluetoothLESearcher
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -14,6 +15,7 @@ import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,8 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
     private lateinit var coroutineScope: CoroutineScope
 
     private var bluetoothLESearcher: BluetoothLESearcher? = null
+
+    private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         val context = flutterPluginBinding.applicationContext
@@ -67,6 +71,15 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
                         }
                     }
                 }
+
+                coroutineScope.launch {
+                    pluginExceptionFlow.collect { ex ->
+                        print("exception received $ex")
+                        Handler(Looper.getMainLooper()).post {
+                            events?.error(ex.code.toString(), ex.message, null)
+                        }
+                    }
+                }
             }
 
             override fun onCancel(arguments: Any?) {
@@ -87,22 +100,33 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         currentActivity = binding.activity
         binding.addActivityResultListener { requestCode, resultCode, _ ->
-            bluetoothLESearcher!!.handleActivityResult(
-                requestCode,
-                resultCode
-            )
+            try {
+                bluetoothLESearcher!!.handleActivityResult(
+                    requestCode,
+                    resultCode
+                )
+            } catch (ex: PluginException) {
+                coroutineScope.launch {
+                    pluginExceptionFlow.emit(ex)
+                }
+            }
             true
         }
         binding.addRequestPermissionsResultListener { requestCode, permissions, grantResults ->
-            bluetoothLESearcher!!.handlePermissionResult(
-                requestCode,
-                permissions,
-                grantResults
-            )
-            // TODO: Perform scan again after permission handled.
-            // bluetoothLESearcher!!.scan(currentActivity)
+            try {
+                bluetoothLESearcher!!.handlePermissionResult(
+                    requestCode,
+                    permissions,
+                    grantResults
+                )
+            } catch (ex: PluginException) {
+                coroutineScope.launch {
+                    pluginExceptionFlow.emit(ex)
+                }
+            }
             true
         }
+
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

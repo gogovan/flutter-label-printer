@@ -138,7 +138,7 @@ class BluetoothLESearcher(private val context: Context) : Closeable {
     ) {
         if (requestCode == REQUEST_PERMISSION_CODE) {
             if (permissions.isNotEmpty()) {
-                if (grantResult[0] != PackageManager.PERMISSION_GRANTED) {
+                if (grantResult.any { it != PackageManager.PERMISSION_GRANTED }) {
                     throw PluginException(1002, "Bluetooth permission denied.")
                 } else {
                     coroutineScope.launch {
@@ -169,16 +169,15 @@ class BluetoothLESearcher(private val context: Context) : Closeable {
 
         Handler(Looper.getMainLooper()).post {
             if (context.checkSelfPermissions(permissions) != PackageManager.PERMISSION_GRANTED) {
-                Log.i("flutter", "requesting perm")
                 ActivityCompat.requestPermissions(activity, permissions, REQUEST_PERMISSION_CODE)
-                coroutineScope.launch {
-                    Log.i("flutter", "collecting granted")
-                    bluetoothPermissionGranted.collect {
-                        Log.i("flutter", "collected")
-                        activity.startActivityForResult(
-                            Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                            REQUEST_ENABLE_CODE
-                        )
+                if (context.checkSelfPermissions(permissions) == PackageManager.PERMISSION_GRANTED) {
+                    coroutineScope.launch {
+                        bluetoothPermissionGranted.collect {
+                            activity.startActivityForResult(
+                                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                                REQUEST_ENABLE_CODE
+                            )
+                        }
                     }
                 }
             } else {
