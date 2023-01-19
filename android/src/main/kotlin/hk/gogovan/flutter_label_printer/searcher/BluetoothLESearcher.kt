@@ -12,7 +12,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import hk.gogovan.flutter_label_printer.PluginException
 import hk.gogovan.flutter_label_printer.util.ResultOr
@@ -49,7 +48,7 @@ class BluetoothLESearcher(private val context: Context) : Closeable {
         return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_CONNECT
             )
         } else {
             arrayOf(
