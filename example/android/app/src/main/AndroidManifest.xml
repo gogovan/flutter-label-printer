@@ -3,7 +3,7 @@
     package="hk.gogovan.flutter_label_printer_example">
 
     <uses-feature
-        android:name="android.hardware.bluetooth_le"
+        android:name="android.hardware.bluetooth"
         android:required="true" />
 
     <uses-permission

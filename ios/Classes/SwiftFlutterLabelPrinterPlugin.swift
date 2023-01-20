@@ -22,6 +22,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin, FlutterStr
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         PTDispatcher.share().scanBluetooth()
         PTDispatcher.share()?.whenFindAllBluetooth({ (array) in
+            // TODO filter for our model of device, not arbitrary BT devices.
             var hasError = false
             let result = array?.map({ item in
                 switch item {

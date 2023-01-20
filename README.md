@@ -48,7 +48,7 @@ OS.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_label_printer_example">
 
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />

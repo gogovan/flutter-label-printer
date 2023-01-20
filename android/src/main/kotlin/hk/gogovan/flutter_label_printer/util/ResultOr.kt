@@ -3,10 +3,10 @@ package hk.gogovan.flutter_label_printer.util
 /**
  * Stores either an item or an error.
  */
-class ResultOr<T> private constructor(val value: T?, val error: Exception?) {
+class ResultOr<T> private constructor(val value: T?, val error: Throwable?) {
     constructor(value: T) : this(value, null)
 
-    constructor(error: Exception) : this(null, error)
+    constructor(error: Throwable) : this(null, error)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

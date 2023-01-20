@@ -4,10 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.NonNull
-import hk.gogovan.flutter_label_printer.searcher.BluetoothLESearcher
-import hk.gogovan.flutter_label_printer.util.exception.BluetoothScanException
+import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -33,7 +31,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
     private var currentActivity: Activity? = null
     private lateinit var coroutineScope: CoroutineScope
 
-    private var bluetoothLESearcher: BluetoothLESearcher? = null
+    private var bluetoothSearcher: BluetoothSearcher? = null
 
     private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
 
@@ -43,7 +41,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
         coroutineScope = CoroutineScope(Dispatchers.IO)
 
-        bluetoothLESearcher = BluetoothLESearcher(context)
+        bluetoothSearcher = BluetoothSearcher(context)
 
         channel =
             MethodChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/flutter_label_printer")
@@ -57,27 +55,34 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 coroutineScope.launch {
                     try {
-                        bluetoothLESearcher!!.scan(currentActivity).collect { valueOrError ->
+                        bluetoothSearcher?.scan(currentActivity)?.collect { valueOrError ->
                             Handler(Looper.getMainLooper()).post {
                                 if (valueOrError.value != null) {
                                     events?.success(valueOrError.value)
                                 } else {
-                                    events?.error("1004", valueOrError.error?.message, null)
+                                    if (valueOrError.error is PluginException) {
+                                        events?.error(
+                                            valueOrError.error.code.toString(),
+                                            valueOrError.error.fullMessage,
+                                            null
+                                        )
+                                    } else {
+                                        events?.error("1004", valueOrError.error?.message, null)
+                                    }
                                 }
                             }
                         }
                     } catch (ex: PluginException) {
                         Handler(Looper.getMainLooper()).post {
-                            events?.error(ex.code.toString(), ex.message, null)
+                            events?.error(ex.code.toString(), ex.fullMessage, null)
                         }
                     }
                 }
 
                 coroutineScope.launch {
                     pluginExceptionFlow.collect { ex ->
-                        print("exception received $ex")
                         Handler(Looper.getMainLooper()).post {
-                            events?.error(ex.code.toString(), ex.message, null)
+                            events?.error(ex.code.toString(), ex.fullMessage, null)
                         }
                     }
                 }
@@ -94,37 +99,25 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
         channel.setMethodCallHandler(null)
         context = null
         coroutineScope.cancel()
-        bluetoothLESearcher = null
+        bluetoothSearcher = null
         currentActivity = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         currentActivity = binding.activity
         binding.addActivityResultListener { requestCode, resultCode, _ ->
-            try {
-                bluetoothLESearcher!!.handleActivityResult(
-                    requestCode,
-                    resultCode
-                )
-            } catch (ex: PluginException) {
-                coroutineScope.launch {
-                    pluginExceptionFlow.emit(ex)
-                }
-            }
+            bluetoothSearcher?.handleActivityResult(
+                requestCode,
+                resultCode
+            )
             true
         }
         binding.addRequestPermissionsResultListener { requestCode, permissions, grantResults ->
-            try {
-                bluetoothLESearcher!!.handlePermissionResult(
-                    requestCode,
-                    permissions,
-                    grantResults
-                )
-            } catch (ex: PluginException) {
-                coroutineScope.launch {
-                    pluginExceptionFlow.emit(ex)
-                }
-            }
+            bluetoothSearcher?.handlePermissionResult(
+                requestCode,
+                permissions,
+                grantResults
+            )
             true
         }
 
