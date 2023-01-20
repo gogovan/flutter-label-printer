@@ -39,7 +39,8 @@ OS.
 ### Android
 
 1. Add the following to your main `AndroidManifest.xml`.
-   See [Android Developers](https://developer.android.com/guide/topics/connectivity/bluetooth/permissions)) and [this StackOverflow answer](https://stackoverflow.com/a/70793272)
+   See [Android Developers](https://developer.android.com/guide/topics/connectivity/bluetooth/permissions))
+   and [this StackOverflow answer](https://stackoverflow.com/a/70793272)
    for more information about permission settings.
 
 ```xml
@@ -54,12 +55,10 @@ OS.
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-   <uses-permission
-           android:name="android.permission.ACCESS_COARSE_LOCATION"
-           android:maxSdkVersion="30" />
-   <uses-permission
-           android:name="android.permission.ACCESS_FINE_LOCATION"
-           android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
     <!-- ... -->
 </manifest>
 ```
@@ -72,7 +71,18 @@ OS.
 # Usage
 
 1. Use an instance of a class implementing `PrinterSearcherInterface` to search for compatible
-   printers. It will return a list of `PrinterSearchResult`s.
+   printers.
+    1. All classes implementing `PrinterSearcherInterface` provides a `search` method returning
+       a `Stream<List<PrinterSearchResult>>`. `listen` to the stream to list all the available devices.
+
+```dart
+
+HMA300LSearcher _searcher = HMA300LSearcher();
+_searcher.search().listen((event) {
+// event contains a list of `PrinterSearchResult`s
+});
+```
+
 2. Pass one of the returned `PrinterSearchResult` and use it to connect to a printer through an
    instance of a class implementing `PrinterInterface`. Each instance of `PrinterInterface`
    represent a single printer. If you wish to connect multiple printers, use multiple instances

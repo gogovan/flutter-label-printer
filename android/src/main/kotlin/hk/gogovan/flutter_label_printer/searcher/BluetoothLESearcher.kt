@@ -81,6 +81,7 @@ class BluetoothLESearcher(private val context: Context) : Closeable {
 
                         override fun onScanResult(callbackType: Int, result: ScanResult?) {
                             if (result != null) {
+                                // TODO filter for our model of device, not arbitrary BT devices.
                                 val address = result.device?.address
                                 if (address != null) {
                                     coroutineScope.launch {

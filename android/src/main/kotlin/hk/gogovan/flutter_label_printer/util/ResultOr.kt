@@ -1,5 +1,8 @@
 package hk.gogovan.flutter_label_printer.util
 
+/**
+ * Stores either an item or an error.
+ */
 class ResultOr<T> private constructor(val value: T?, val error: Exception?) {
     constructor(value: T) : this(value, null)
 

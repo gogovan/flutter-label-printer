@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
 import hk.gogovan.flutter_label_printer.searcher.BluetoothLESearcher
+import hk.gogovan.flutter_label_printer.util.exception.BluetoothScanException
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
