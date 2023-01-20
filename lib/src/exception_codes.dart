@@ -1,6 +1,5 @@
 // ignore_for_file: no-magic-number, this file documents all error codes.
 
-import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/exception/label_printer_exception.dart';
 import 'package:flutter_label_printer/exception/missing_permission_exception.dart';
 import 'package:flutter_label_printer/exception/missing_phone_capability_exception.dart';
@@ -11,21 +10,21 @@ import 'package:flutter_label_printer/exception/unknown_label_printer_exception.
 LabelPrinterException getExceptionFromCode(
   int code,
   String message,
-  PlatformException cause,
+  String stacktrace,
 ) {
   switch (code) {
     case 1000:
-      return UnknownLabelPrinterException(message, cause);
+      return UnknownLabelPrinterException(message, stacktrace);
     case 1001:
-      return MissingPhoneCapabilityException(message, cause);
+      return MissingPhoneCapabilityException(message, stacktrace);
     case 1002:
-      return MissingSearchPermissionException(message, cause);
+      return MissingSearchPermissionException(message, stacktrace);
     case 1003:
-      return NoCurrentActivityException(message, cause);
+      return NoCurrentActivityException(message, stacktrace);
     case 1004:
-      return SearchFailedException(message, cause);
+      return SearchFailedException(message, stacktrace);
   }
 
   // All codes should be covered. This should not happen. Fallback.
-  return UnknownLabelPrinterException(message, cause);
+  return UnknownLabelPrinterException(message, stacktrace);
 }

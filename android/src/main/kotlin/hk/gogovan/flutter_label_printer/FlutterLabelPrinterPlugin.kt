@@ -63,18 +63,18 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
                                     if (valueOrError.error is PluginException) {
                                         events?.error(
                                             valueOrError.error.code.toString(),
-                                            valueOrError.error.fullMessage,
-                                            null
+                                            valueOrError.error.message,
+                                            valueOrError.error.stackTraceToString()
                                         )
                                     } else {
-                                        events?.error("1004", valueOrError.error?.message, null)
+                                        events?.error("1004", valueOrError.error?.message, valueOrError.error?.stackTraceToString())
                                     }
                                 }
                             }
                         }
                     } catch (ex: PluginException) {
                         Handler(Looper.getMainLooper()).post {
-                            events?.error(ex.code.toString(), ex.fullMessage, null)
+                            events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
                         }
                     }
                 }
@@ -82,7 +82,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
                 coroutineScope.launch {
                     pluginExceptionFlow.collect { ex ->
                         Handler(Looper.getMainLooper()).post {
-                            events?.error(ex.code.toString(), ex.fullMessage, null)
+                            events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
                         }
                     }
                 }
