@@ -27,21 +27,16 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
     private lateinit var channel: MethodChannel
     private lateinit var bluetoothScanChannel: EventChannel
 
-    private var context: Context? = null
     private var currentActivity: Activity? = null
-    private lateinit var coroutineScope: CoroutineScope
 
     private var bluetoothSearcher: BluetoothSearcher? = null
-
-    private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
+    private var bluetoothScanStreamHandler: BluetoothScanStreamHandler? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         val context = flutterPluginBinding.applicationContext
-        this.context = context
-
-        coroutineScope = CoroutineScope(Dispatchers.IO)
 
         bluetoothSearcher = BluetoothSearcher(context)
+        bluetoothScanStreamHandler = BluetoothScanStreamHandler(bluetoothSearcher, currentActivity)
 
         channel =
             MethodChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/flutter_label_printer")
@@ -51,55 +46,18 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
         bluetoothScanChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/bluetoothScan")
-        bluetoothScanChannel.setStreamHandler(object : EventChannel.StreamHandler {
-            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                coroutineScope.launch {
-                    try {
-                        bluetoothSearcher?.scan(currentActivity)?.collect { valueOrError ->
-                            Handler(Looper.getMainLooper()).post {
-                                if (valueOrError.value != null) {
-                                    events?.success(valueOrError.value)
-                                } else {
-                                    if (valueOrError.error is PluginException) {
-                                        events?.error(
-                                            valueOrError.error.code.toString(),
-                                            valueOrError.error.message,
-                                            valueOrError.error.stackTraceToString()
-                                        )
-                                    } else {
-                                        events?.error("1004", valueOrError.error?.message, valueOrError.error?.stackTraceToString())
-                                    }
-                                }
-                            }
-                        }
-                    } catch (ex: PluginException) {
-                        Handler(Looper.getMainLooper()).post {
-                            events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
-                        }
-                    }
-                }
-
-                coroutineScope.launch {
-                    pluginExceptionFlow.collect { ex ->
-                        Handler(Looper.getMainLooper()).post {
-                            events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
-                        }
-                    }
-                }
-            }
-
-            override fun onCancel(arguments: Any?) {
-
-            }
-
-        })
+        bluetoothScanChannel.setStreamHandler(bluetoothScanStreamHandler)
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
-        context = null
-        coroutineScope.cancel()
+
+        bluetoothSearcher?.close()
         bluetoothSearcher = null
+
+        bluetoothScanStreamHandler?.close()
+        bluetoothScanStreamHandler = null
+
         currentActivity = null
     }
 
