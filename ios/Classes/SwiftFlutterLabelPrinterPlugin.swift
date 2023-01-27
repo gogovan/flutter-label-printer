@@ -17,7 +17,12 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        result("iOS " + UIDevice.current.systemVersion)
+        if (call.method == "com.gogovan/stopSearchHMA300L") {
+            PTDispatcher.share().stopScanBluetooth()
+            result(true)
+        } else {
+            result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
+        }
     }    
    
 }
