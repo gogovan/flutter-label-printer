@@ -7,5 +7,12 @@ abstract class PrinterSearcherInterface {
   ///
   /// Implementors should search for devices (using USB, WiFi, BLE etc) and return a list of found compatible devices.
   /// These devices should be indicated by an ID stored in a `PrinterSearchResult` instance.
+  /// Such IDs should be able to be used to connect a specified device.
   Stream<List<PrinterSearchResult>> search();
+
+  /// Stop searching for nearby printers.
+  ///
+  /// If the searching method needs to be disconnected or otherwise closed, implement this method.
+  /// Return true if closing is successful, false otherwise.
+  Future<bool> stopSearch() => Future.value(true);
 }

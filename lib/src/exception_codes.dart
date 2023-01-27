@@ -1,5 +1,6 @@
 // ignore_for_file: no-magic-number, this file documents all error codes.
 
+import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/exception/label_printer_exception.dart';
 import 'package:flutter_label_printer/exception/missing_permission_exception.dart';
 import 'package:flutter_label_printer/exception/missing_phone_capability_exception.dart';
@@ -23,6 +24,8 @@ LabelPrinterException getExceptionFromCode(
       return NoCurrentActivityException(message, stacktrace);
     case 1004:
       return SearchFailedException(message, stacktrace);
+    case 1005:
+      return InvalidConnectionStateException(message, stacktrace);
   }
 
   // All codes should be covered. This should not happen. Fallback.

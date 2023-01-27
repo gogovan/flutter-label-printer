@@ -123,6 +123,8 @@ class BluetoothSearcher(private val context: Context) : Closeable {
                             )
                         )
                     } else {
+                        btManager.adapter?.cancelDiscovery()
+
                         val intentFilter = IntentFilter()
                         intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
                         activity.registerReceiver(onBluetoothFound, intentFilter)
@@ -196,6 +198,18 @@ class BluetoothSearcher(private val context: Context) : Closeable {
                         bluetoothEnabled.emit(true)
                     }
                 }
+            }
+        }
+    }
+
+    fun stopScan(): Boolean {
+        return if (context.checkSelfPermissions(getScanningPermissions()) != PackageManager.PERMISSION_GRANTED) {
+            throw PluginException(1002, "Bluetooth permission denied")
+        } else {
+            if (btManager.adapter?.state == BluetoothAdapter.STATE_ON) {
+                btManager.adapter?.cancelDiscovery() ?: false
+            } else {
+                throw PluginException(1005, "Bluetooth is not turned on.")
             }
         }
     }

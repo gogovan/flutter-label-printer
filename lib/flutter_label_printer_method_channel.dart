@@ -19,4 +19,11 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
             (event) =>
                 (event as List<dynamic>).map((e) => e.toString()).toList(),
           );
+
+  @override
+  Future<bool> stopSearchHMA300L() async {
+    final result = await methodChannel.invokeMethod<bool>('com.gogovan/stopSearchHMA300L');
+
+    return result ?? false;
+  }
 }

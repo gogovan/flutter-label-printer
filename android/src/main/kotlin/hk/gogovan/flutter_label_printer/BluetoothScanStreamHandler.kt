@@ -14,10 +14,11 @@ import kotlinx.coroutines.launch
 
 class BluetoothScanStreamHandler(
     private val bluetoothSearcher: BluetoothSearcher?,
-    private val currentActivity: Activity?
 ) : EventChannel.StreamHandler {
     private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+
+    private var currentActivity: Activity? = null
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         coroutineScope.launch {
@@ -63,7 +64,12 @@ class BluetoothScanStreamHandler(
 
     }
 
+    fun setCurrentActivity(activity: Activity?) {
+        currentActivity = activity
+    }
+
     fun close() {
         coroutineScope.cancel()
+        currentActivity = null
     }
 }

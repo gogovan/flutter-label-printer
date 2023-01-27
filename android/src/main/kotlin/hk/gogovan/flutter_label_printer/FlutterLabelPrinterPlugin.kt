@@ -1,9 +1,6 @@
 package hk.gogovan.flutter_label_printer
 
 import android.app.Activity
-import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.NonNull
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -11,12 +8,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 /** FlutterLabelPrinterPlugin */
 class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
@@ -27,8 +18,6 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
     private lateinit var channel: MethodChannel
     private lateinit var bluetoothScanChannel: EventChannel
 
-    private var currentActivity: Activity? = null
-
     private var bluetoothSearcher: BluetoothSearcher? = null
     private var bluetoothScanStreamHandler: BluetoothScanStreamHandler? = null
 
@@ -36,12 +25,21 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
         val context = flutterPluginBinding.applicationContext
 
         bluetoothSearcher = BluetoothSearcher(context)
-        bluetoothScanStreamHandler = BluetoothScanStreamHandler(bluetoothSearcher, currentActivity)
+        bluetoothScanStreamHandler = BluetoothScanStreamHandler(bluetoothSearcher)
 
         channel =
             MethodChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/flutter_label_printer")
         channel.setMethodCallHandler { call, result ->
-            result.notImplemented()
+            try {
+                if (call.method == "com.gogovan/stopSearchHMA300L") {
+                    val response = bluetoothSearcher?.stopScan()
+                    result.success(response)
+                } else {
+                    result.notImplemented()
+                }
+            } catch (e: PluginException) {
+                result.error(e.code.toString(), e.message, e.stackTraceToString())
+            }
         }
 
         bluetoothScanChannel =
@@ -57,12 +55,11 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
         bluetoothScanStreamHandler?.close()
         bluetoothScanStreamHandler = null
-
-        currentActivity = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        currentActivity = binding.activity
+        bluetoothScanStreamHandler?.setCurrentActivity(binding.activity)
+
         binding.addActivityResultListener { requestCode, resultCode, _ ->
             bluetoothSearcher?.handleActivityResult(
                 requestCode,
@@ -82,15 +79,15 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        currentActivity = null
+        bluetoothScanStreamHandler?.setCurrentActivity(null)
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        currentActivity = binding.activity
+        bluetoothScanStreamHandler?.setCurrentActivity(binding.activity)
     }
 
     override fun onDetachedFromActivity() {
-        currentActivity = null
+        bluetoothScanStreamHandler?.setCurrentActivity(null)
     }
 
 }
