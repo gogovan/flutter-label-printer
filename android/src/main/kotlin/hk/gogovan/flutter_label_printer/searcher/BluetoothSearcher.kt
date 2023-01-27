@@ -1,6 +1,7 @@
 package hk.gogovan.flutter_label_printer.searcher
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothClass
@@ -13,10 +14,10 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import hk.gogovan.flutter_label_printer.PluginException
 import hk.gogovan.flutter_label_printer.util.ResultOr
+import hk.gogovan.flutter_label_printer.util.checkSelfPermissions
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,6 +27,11 @@ import java.io.Closeable
 /**
  * Search for devices using Classic Bluetooth.
  */
+// Implementation note: Due to complexity of Bluetooth permissions across different Android versions
+// we use a specialized method to store required permissions. Lint cannot pick that up and keep
+// reporting MissingPermission. We are ignoring it and we should ensure that all permissions are
+// requested correctly.
+@SuppressLint("MissingPermission")
 class BluetoothSearcher(private val context: Context) : Closeable {
     companion object {
         const val REQUEST_PERMISSION_CODE = 9031
@@ -46,7 +52,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
 
     private val discoveredBluetoothDevices = mutableSetOf<String>()
 
-    inner class OnBluetoothFound: BroadcastReceiver() {
+    inner class OnBluetoothFound : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (context == null) {
                 coroutineScope.launch {
@@ -56,11 +62,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
             }
 
             val device = intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-            if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (context.checkSelfPermissions(getScanningPermissions()) != PackageManager.PERMISSION_GRANTED) {
                 coroutineScope.launch {
                     pluginExceptionFlow.emit(PluginException(1002, "Bluetooth permission denied"))
                 }
@@ -111,21 +113,29 @@ class BluetoothSearcher(private val context: Context) : Closeable {
 
             coroutineScope.launch {
                 bluetoothEnabled.collect {
-                    if (ActivityCompat.checkSelfPermission(
-                            activity, Manifest.permission.BLUETOOTH_SCAN
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        resultFlow.emit(ResultOr(PluginException(1002, "Bluetooth permission denied")))
+                    if (context.checkSelfPermissions(getScanningPermissions()) != PackageManager.PERMISSION_GRANTED) {
+                        resultFlow.emit(
+                            ResultOr(
+                                PluginException(
+                                    1002,
+                                    "Bluetooth permission denied"
+                                )
+                            )
+                        )
                     } else {
                         val intentFilter = IntentFilter()
                         intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
                         activity.registerReceiver(onBluetoothFound, intentFilter)
 
                         if (btManager.adapter?.startDiscovery() != true) {
-                            resultFlow.emit(ResultOr(PluginException(
-                                1004,
-                                "Unable to initiate Bluetooth discover process"
-                            )))
+                            resultFlow.emit(
+                                ResultOr(
+                                    PluginException(
+                                        1004,
+                                        "Unable to initiate Bluetooth discover process"
+                                    )
+                                )
+                            )
                         }
                     }
                 }
@@ -156,7 +166,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
         val permissions = getScanningPermissions()
 
         Handler(Looper.getMainLooper()).post {
-            if (context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            if (context.checkSelfPermissions(permissions) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
                     activity, permissions,
                     REQUEST_PERMISSION_CODE
@@ -204,7 +214,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
             return
         }
         coroutineScope.launch {
-            pluginExceptionFlow.emit(PluginException(1000, "Unexpected program flow occurred"))
+            pluginExceptionFlow.emit(PluginException(1000, "Unexpected error occurred"))
         }
     }
 
@@ -217,7 +227,12 @@ class BluetoothSearcher(private val context: Context) : Closeable {
             if (permissions.isNotEmpty()) {
                 if (grantResult.any { it != PackageManager.PERMISSION_GRANTED }) {
                     coroutineScope.launch {
-                        pluginExceptionFlow.emit(PluginException(1002, "Bluetooth permission denied"))
+                        pluginExceptionFlow.emit(
+                            PluginException(
+                                1002,
+                                "Bluetooth permission denied"
+                            )
+                        )
                     }
                 } else {
                     coroutineScope.launch {
@@ -228,7 +243,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
             return
         }
         coroutineScope.launch {
-            pluginExceptionFlow.emit(PluginException(1000, "Unexpected program flow occurred"))
+            pluginExceptionFlow.emit(PluginException(1000, "Unexpected error occurred"))
         }
     }
 
