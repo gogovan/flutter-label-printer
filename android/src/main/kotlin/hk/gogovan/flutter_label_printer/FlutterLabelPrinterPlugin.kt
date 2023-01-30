@@ -20,27 +20,18 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
     private var bluetoothSearcher: BluetoothSearcher? = null
     private var bluetoothScanStreamHandler: BluetoothScanStreamHandler? = null
+    private var methodHandler: FlutterLabelPrinterMethodHandler? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         val context = flutterPluginBinding.applicationContext
 
         bluetoothSearcher = BluetoothSearcher(context)
         bluetoothScanStreamHandler = BluetoothScanStreamHandler(bluetoothSearcher)
+        methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
 
         channel =
             MethodChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/flutter_label_printer")
-        channel.setMethodCallHandler { call, result ->
-            try {
-                if (call.method == "com.gogovan/stopSearchHMA300L") {
-                    val response = bluetoothSearcher?.stopScan()
-                    result.success(response)
-                } else {
-                    result.notImplemented()
-                }
-            } catch (e: PluginException) {
-                result.error(e.code.toString(), e.message, e.stackTraceToString())
-            }
-        }
+        channel.setMethodCallHandler(methodHandler)
 
         bluetoothScanChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/bluetoothScan")

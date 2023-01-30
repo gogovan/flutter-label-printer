@@ -34,4 +34,16 @@ class HMA300LSearcher implements PrinterSearcherInterface {
       );
     }
   }
+
+  @override
+  Future<bool> connect(PrinterSearchResult id) {
+    try {
+      return FlutterLabelPrinterPlatform.instance.connectHMA300L((id as BluetoothResult).address);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }

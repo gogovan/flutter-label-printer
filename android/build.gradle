@@ -38,9 +38,14 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        main.jniLibs.srcDirs = ['libs']
     }
 
     defaultConfig {
         minSdkVersion 24
     }
+}
+
+dependencies {
+    implementation files('libs/CPCL_SDK_V1.13.jar')
 }

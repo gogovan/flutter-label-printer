@@ -22,7 +22,18 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<bool> stopSearchHMA300L() async {
-    final result = await methodChannel.invokeMethod<bool>('com.gogovan/stopSearchHMA300L');
+    final result =
+        await methodChannel.invokeMethod<bool>('com.gogovan/stopSearchHMA300L');
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> connectHMA300L(String address) async {
+    final result = await methodChannel
+        .invokeMethod<bool>('com.gogovan/connectHMA300L', <String, dynamic>{
+      'address': address,
+    });
 
     return result ?? false;
   }

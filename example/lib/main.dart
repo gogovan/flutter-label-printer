@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
+import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,8 +21,10 @@ class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   HMA300LSearcher _searcher = HMA300LSearcher();
 
-  String _searchResult = '';
+  String _searchResultString = '';
+  PrinterSearchResult? _searchResult;
   bool _searching = false;
+  bool _connected = false;
 
   @override
   void initState() {
@@ -36,7 +39,10 @@ class _MyAppState extends State<MyApp> {
 
       _searcher.search().listen((event) {
         setState(() {
-          _searchResult = event.toString();
+          _searchResultString = event.toString();
+          if (event.isNotEmpty) {
+            _searchResult = event.first;
+          }
         });
       });
     } catch (ex, st) {
@@ -55,6 +61,20 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _connect() async {
+    try {
+      PrinterSearchResult? result = _searchResult;
+      if (result != null) {
+        _searcher.connect(result);
+        setState(() {
+          _connected = true;
+        });
+      }
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -67,8 +87,10 @@ class _MyAppState extends State<MyApp> {
             children: [
               Text('Searching = $_searching'),
               ElevatedButton(onPressed: _startSearch, child: const Text('Start search')),
-              Text('Search Result = $_searchResult\n'),
+              Text('Search Result = $_searchResultString\n'),
               ElevatedButton(onPressed: _stopSearch, child: const Text('Stop search')),
+              ElevatedButton(onPressed: _connect, child: const Text('Connect')),
+              Text('Connected = $_connected\n'),
             ],
           )
         ),
