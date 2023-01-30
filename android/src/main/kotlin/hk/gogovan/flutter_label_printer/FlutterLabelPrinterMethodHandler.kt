@@ -54,6 +54,9 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
+                "com.gogovan/disconnectHMA300L" -> {
+                    result.success(PrinterHelper.portClose())
+                }
                 else -> {
                     result.notImplemented()
                 }

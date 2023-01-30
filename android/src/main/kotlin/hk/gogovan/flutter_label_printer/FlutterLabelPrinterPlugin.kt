@@ -66,7 +66,6 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
             )
             true
         }
-
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

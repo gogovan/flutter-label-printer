@@ -37,4 +37,12 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> disconnectHMA300L() async {
+    final result =
+        await methodChannel.invokeMethod<bool>('com.gogovan/disconnectHMA300L');
+
+    return result ?? false;
+  }
 }

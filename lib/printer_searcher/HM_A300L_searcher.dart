@@ -46,4 +46,16 @@ class HMA300LSearcher implements PrinterSearcherInterface {
       );
     }
   }
+
+  @override
+  Future<bool> disconnect() {
+    try {
+      return FlutterLabelPrinterPlatform.instance.disconnectHMA300L();
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }

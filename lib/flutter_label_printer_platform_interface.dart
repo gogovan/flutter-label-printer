@@ -35,4 +35,8 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   Future<bool> connectHMA300L(String address) {
     throw UnimplementedError('connectHMA300L() has not been implemented.');
   }
+
+  Future<bool> disconnectHMA300L() {
+    throw UnimplementedError('disconnectHMA300L() has not been implemented.');
+  }
 }

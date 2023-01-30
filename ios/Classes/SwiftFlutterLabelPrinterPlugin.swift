@@ -33,19 +33,19 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 PTDispatcher.share().whenConnectFailureWithErrorBlock { (error) in
                     var fError: FlutterError
                     switch error {
-                        case .bleTimeout:
+                    case .bleTimeout:
                         fError = FlutterError(code: "1008", message: "Connection timed out.", details: Thread.callStackSymbols.joined(separator: "\n"))
-                        case .bleValidateTimeout:
+                    case .bleValidateTimeout:
                         fError = FlutterError(code: "1008", message: "Bluetooth validation timed out.", details: Thread.callStackSymbols.joined(separator: "\n"))
-                        case .bleUnknownDevice:
+                    case .bleUnknownDevice:
                         fError = FlutterError(code: "1006", message: "Unknown device.", details: Thread.callStackSymbols.joined(separator: "\n"))
-                        case .bleSystem:
+                    case .bleSystem:
                         fError = FlutterError(code: "1006", message: "System error.", details: Thread.callStackSymbols.joined(separator: "\n"))
-                        case .bleValidateFail:
+                    case .bleValidateFail:
                         fError = FlutterError(code: "1006", message: "Verification failed.", details: Thread.callStackSymbols.joined(separator: "\n"))
-                        case .bleDisvocerServiceTimeout:
+                    case .bleDisvocerServiceTimeout:
                         fError = FlutterError(code: "1006", message: "Connection failed.", details: Thread.callStackSymbols.joined(separator: "\n"))
-                        default:
+                    default:
                         fError = FlutterError(code: "1006", message: "Unexpected connection error.", details: Thread.callStackSymbols.joined(separator: "\n"))
                     }
                     result(fError)
@@ -53,6 +53,9 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1000", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
+        } else if (call.method == "com.gogovan/disconnectHMA300L") {
+            PTDispatcher.share().disconnect()
+            result(true)
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }

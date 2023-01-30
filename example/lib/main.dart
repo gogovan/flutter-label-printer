@@ -75,6 +75,17 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _disconnect() async {
+    try {
+      _searcher.disconnect();
+      setState(() {
+        _connected = false;
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -91,6 +102,7 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(onPressed: _stopSearch, child: const Text('Stop search')),
               ElevatedButton(onPressed: _connect, child: const Text('Connect')),
               Text('Connected = $_connected\n'),
+              ElevatedButton(onPressed: _disconnect, child: const Text('Disconnect')),
             ],
           )
         ),
