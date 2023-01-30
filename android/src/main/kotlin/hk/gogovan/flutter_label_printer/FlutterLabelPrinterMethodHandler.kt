@@ -19,18 +19,38 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "com.gogovan/connectHMA300L" -> {
                     val address = call.argument<String>("address")
-                    when (PrinterHelper.portOpenBT(context, address)) {
-                        0 -> {
-                            result.success(true)
-                        }
-                        -1 -> {
-                            result.error("1008", "Connection timed out.", Throwable().stackTraceToString())
-                        }
-                        -2 -> {
-                            result.error("1007", "Bluetooth address incorrect", Throwable().stackTraceToString())
-                        }
-                        else -> {
-                            result.error("1006", "Connection error", Throwable().stackTraceToString())
+                    if (address == null) {
+                        result.error(
+                            "1000",
+                            "Unable to extract arguments.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        when (PrinterHelper.portOpenBT(context, address)) {
+                            0 -> {
+                                result.success(true)
+                            }
+                            -1 -> {
+                                result.error(
+                                    "1008",
+                                    "Connection timed out.",
+                                    Throwable().stackTraceToString()
+                                )
+                            }
+                            -2 -> {
+                                result.error(
+                                    "1007",
+                                    "Bluetooth address incorrect.",
+                                    Throwable().stackTraceToString()
+                                )
+                            }
+                            else -> {
+                                result.error(
+                                    "1006",
+                                    "Connection error.",
+                                    Throwable().stackTraceToString()
+                                )
+                            }
                         }
                     }
                 }
