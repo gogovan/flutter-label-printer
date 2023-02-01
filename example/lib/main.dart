@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _stopSearch() async {
     try {
-      _searcher.stopSearch();
+      await _searcher.stopSearch();
       setState(() {
         _searching = false;
       });
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result = _searchResults[int.parse(connectIndexController.text)];
       if (result != null) {
-        _searcher.connect(result);
+        await _searcher.connect(result);
         setState(() {
           _connected = true;
         });
@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _disconnect() async {
     try {
-      _searcher.disconnect();
+      await _searcher.disconnect();
       setState(() {
         _connected = false;
       });

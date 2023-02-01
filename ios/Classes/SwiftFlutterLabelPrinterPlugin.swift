@@ -4,15 +4,16 @@ import PrinterSDK
 
 public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     
+    let handler = BluetoothScanStreamHandler()
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "com.gogovan/flutter_label_printer", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterLabelPrinterPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
       
         let bluetoothScanChannel = FlutterEventChannel(name: "com.gogovan/bluetoothScan", binaryMessenger: registrar.messenger())
-        let handler = BluetoothScanStreamHandler()
-        bluetoothScanChannel.setStreamHandler(handler)
         
+        bluetoothScanChannel.setStreamHandler(instance.handler)
         PTDispatcher.share().initBleCentral()
     }
     
@@ -23,9 +24,10 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
         } else if (call.method == "com.gogovan/connectHMA300L") {
             if let args = call.arguments as? [String:Any],
                let address = args["address"] as? String {
-                let printer = PTPrinter()
-                printer.mac = address
-                printer.module = .BLE
+                let printer = handler.foundPrinters.filter { p in
+                    p.uuid == address
+                }.first
+                
                 PTDispatcher.share().connect(printer)
                 PTDispatcher.share().whenConnectSuccess {
                     result(true)
