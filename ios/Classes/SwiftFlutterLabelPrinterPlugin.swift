@@ -25,7 +25,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             if let args = call.arguments as? [String:Any],
                let address = args["address"] as? String {
                 let printer = handler.foundPrinters.filter { p in
-                    p.uuid == address
+                    p.mac == address
                 }.first
                 
                 PTDispatcher.share().connect(printer)

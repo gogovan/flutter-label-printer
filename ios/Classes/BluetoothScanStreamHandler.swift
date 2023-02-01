@@ -12,40 +12,24 @@ class BluetoothScanStreamHandler: NSObject, FlutterStreamHandler {
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         PTDispatcher.share().scanBluetooth()
         PTDispatcher.share()?.whenFindAllBluetooth({ (array) in
-            var hasError = false
-            
-            guard let array2 = array else {
+            guard let tArray = array as? Array<AnyObject> else {
                 events(FlutterError(code: "1000", message: "Unexpected item received.", details: nil))
-                hasError = true
                 return
             }
             
-            self.foundPrinters = array2.compactMap({ item in
-                switch item {
-                case let item as PTPrinter:
-                    return item
-                default:
-                    events(FlutterError(code: "1000", message: "Unexpected item received.", details: nil))
-                    hasError = true
-                    return nil
-                }
+            let filtered = tArray.filter({ element in
+                element is PTPrinter && element.mac != "Unknown"
+            }).map({ element in
+                element as! PTPrinter
             })
             
-            let result = array2.map({ item in
-                switch item {
-                case let item as PTPrinter:
-                    return item.uuid
-                default:
-                    events(FlutterError(code: "1000", message: "Unexpected item received.", details: nil))
-                    hasError = true
-                    return nil
-                }
-            })
+            self.foundPrinters = filtered
             
-            if (!hasError) {
-                events(result)
-            }
+            let result = filtered.map({ item in
+                return item.mac
+            })
 
+            events(result)
         })
         return nil
     }
