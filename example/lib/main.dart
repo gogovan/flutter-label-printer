@@ -22,13 +22,21 @@ class _MyAppState extends State<MyApp> {
   HMA300LSearcher _searcher = HMA300LSearcher();
 
   String _searchResultString = '';
-  PrinterSearchResult? _searchResult;
+  List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
   bool _connected = false;
+
+  final connectIndexController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    connectIndexController.dispose();
+    super.dispose();
   }
 
   Future<void> _startSearch() async {
@@ -39,10 +47,7 @@ class _MyAppState extends State<MyApp> {
 
       _searcher.search().listen((event) {
         setState(() {
-          _searchResultString = event.toString();
-          if (event.isNotEmpty) {
-            _searchResult = event.first;
-          }
+          _searchResults = event;
         });
       });
     } catch (ex, st) {
@@ -63,7 +68,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _connect() async {
     try {
-      PrinterSearchResult? result = _searchResult;
+      PrinterSearchResult? result = _searchResults[int.parse(connectIndexController.text)];
       if (result != null) {
         _searcher.connect(result);
         setState(() {
@@ -98,8 +103,15 @@ class _MyAppState extends State<MyApp> {
             children: [
               Text('Searching = $_searching'),
               ElevatedButton(onPressed: _startSearch, child: const Text('Start search')),
-              Text('Search Result = $_searchResultString\n'),
+              Text('Search Result = ${_searchResults.toString()}\n'),
               ElevatedButton(onPressed: _stopSearch, child: const Text('Stop search')),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Index of Search result to Connect Bluetooth to',
+                ),
+                keyboardType: TextInputType.number,
+                controller: connectIndexController,
+              ),
               ElevatedButton(onPressed: _connect, child: const Text('Connect')),
               Text('Connected = $_connected\n'),
               ElevatedButton(onPressed: _disconnect, child: const Text('Disconnect')),
