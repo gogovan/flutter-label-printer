@@ -15,14 +15,4 @@ abstract class PrinterSearcherInterface {
   /// If the searching method needs to be disconnected or otherwise closed, implement this method.
   /// Return true if closing is successful.
   Future<bool> stopSearch() => Future.value(true);
-
-  /// Connect to a specified printer identified by a PrinterSearchResult returned from the `search` function.
-  ///
-  /// Return true if operation successful.
-  Future<bool> connect(PrinterSearchResult id);
-
-  /// Disconnect to currently connected printer.
-  ///
-  /// Return true if operation successful.
-  Future<bool> disconnect();
 }

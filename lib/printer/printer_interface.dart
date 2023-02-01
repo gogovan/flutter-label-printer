@@ -14,14 +14,16 @@ abstract class PrinterInterface {
 
   /// Connect to the specified printer.
   /// The printer should be one of the printers returned by the `search` method from a compatible PrinterSearcherInterface class.
+  /// Return true if connection successful, false otherwise.
   ///
   /// Implementors should connect to the specified device, and the device should be ready to use when this method returns normally.
   /// This method should be idempotent - multiple invocation of this method should not result in errors or multiple connections.
-  Future<void> connect(PrinterSearchResult device);
+  Future<bool> connect(PrinterSearchResult device);
 
   /// Disconnect to the currently connected device.
+  /// Return true if disconnection successful, false otherwise.
   ///
   /// Implementors should disconnect the current device, and do any cleanup needed.
   /// This method should be idempotent - multiple invocation of this method should not result in errors or multiple disconnections.
-  Future<void> disconnect();
+  Future<bool> disconnect();
 }
