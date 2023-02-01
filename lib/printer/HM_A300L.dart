@@ -8,14 +8,9 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 /// Interface a Hanyin (HPRT) HM-A300L printer.
 class HMA300L extends PrinterInterface {
   @override
-  Future<bool> connect(PrinterSearchResult device) async {
+  Future<bool> connectImpl(PrinterSearchResult device) {
     try {
-      final result = await FlutterLabelPrinterPlatform.instance.connectHMA300L((device as BluetoothResult).address);
-      if (result) {
-        connected = true;
-      }
-
-      return result;
+      return FlutterLabelPrinterPlatform.instance.connectHMA300L((device as BluetoothResult).address);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -25,14 +20,9 @@ class HMA300L extends PrinterInterface {
   }
 
   @override
-  Future<bool> disconnect() async {
+  Future<bool> disconnectImpl() {
     try {
-      final result = await FlutterLabelPrinterPlatform.instance.disconnectHMA300L();
-      if (result) {
-        connected = false;
-      }
-
-      return result;
+      return FlutterLabelPrinterPlatform.instance.disconnectHMA300L();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
