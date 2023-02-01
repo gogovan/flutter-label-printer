@@ -3,7 +3,12 @@ import 'package:flutter_label_printer/printer_search_result/printer_search_resul
 
 /// Interface all printers should implement.
 abstract class PrinterInterface {
-  /// Whether the device has been connected.
+  PrinterInterface(this.device);
+
+  /// PrinterSearchResult indicating the device this instance is representing.
+  @protected
+  PrinterSearchResult device;
+
   bool _connected = false;
 
   /// Whether the device has been connected.
@@ -14,7 +19,7 @@ abstract class PrinterInterface {
   /// The printer should be one of the printers returned by the `search` method from a compatible PrinterSearcherInterface class.
   /// Return true if connection successful, false otherwise.
   @nonVirtual
-  Future<bool> connect(PrinterSearchResult device) async {
+  Future<bool> connect() async {
     if (!_connected) {
       final result = await connectImpl(device);
       _connected = true;

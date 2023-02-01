@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_label_printer/printer/HM_A300L.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
@@ -18,8 +19,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   HMA300LSearcher _searcher = HMA300LSearcher();
+  HMA300L? _printer;
 
   String _searchResultString = '';
   List<PrinterSearchResult> _searchResults = [];
@@ -27,11 +28,6 @@ class _MyAppState extends State<MyApp> {
   bool _connected = false;
 
   final connectIndexController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -70,7 +66,8 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result = _searchResults[int.parse(connectIndexController.text)];
       if (result != null) {
-        await _searcher.connect(result);
+        _printer = HMA300L(result);
+        await _printer?.connect();
         setState(() {
           _connected = true;
         });
@@ -82,7 +79,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _disconnect() async {
     try {
-      await _searcher.disconnect();
+      await _printer?.disconnect();
       setState(() {
         _connected = false;
       });
