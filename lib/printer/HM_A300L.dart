@@ -33,4 +33,15 @@ class HMA300L extends PrinterInterface {
     }
   }
 
+  @override
+  Future<bool> printTestPage() async {
+    try {
+      return FlutterLabelPrinterPlatform.instance.printTestPageHMA300L();
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }

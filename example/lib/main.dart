@@ -88,6 +88,14 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _printTestPage() async {
+    try {
+      _printer?.printTestPage();
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -111,6 +119,7 @@ class _MyAppState extends State<MyApp> {
               ),
               ElevatedButton(onPressed: _connect, child: const Text('Connect')),
               Text('Connected = $_connected\n'),
+              ElevatedButton(onPressed: _printTestPage, child: const Text('Print Test Page')),
               ElevatedButton(onPressed: _disconnect, child: const Text('Disconnect')),
             ],
           )

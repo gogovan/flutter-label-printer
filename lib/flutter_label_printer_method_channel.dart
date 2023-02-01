@@ -45,4 +45,11 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> printTestPageHMA300L() async {
+    await methodChannel.invokeMethod<void>('com.gogovan/printTestPageHMA300L');
+
+    return true;
+  }
 }

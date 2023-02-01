@@ -1,10 +1,10 @@
 package hk.gogovan.flutter_label_printer
 
 import android.content.Context
+import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import cpcl.PrinterHelper
 
 class FlutterLabelPrinterMethodHandler(
     private val context: Context,
@@ -56,6 +56,13 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "com.gogovan/disconnectHMA300L" -> {
                     result.success(PrinterHelper.portClose())
+                }
+                "com.gogovan/printTestPageHMA300L" -> {
+                    PrinterHelper.printAreaSize("0", "200", "200", "100", "1")
+                    PrinterHelper.Text(PrinterHelper.TEXT, "4", "0", "0", "0", "This is a test.")
+                    PrinterHelper.Form()
+                    PrinterHelper.Print()
+                    result.success(null)
                 }
                 else -> {
                     result.notImplemented()

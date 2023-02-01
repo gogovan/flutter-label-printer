@@ -57,4 +57,10 @@ abstract class PrinterInterface {
   /// Implementors should disconnect the current device, and do any cleanup needed.
   /// This method should be idempotent - multiple invocation of this method should not result in errors or multiple disconnections.
   Future<bool> disconnectImpl();
+
+  /// Signal the printer and print a test page.
+  ///
+  /// If the printer provides a function to print a test page, that is preferred.
+  /// Otherwise, implementors are free to implement any printing routine to achieve testing purposes.
+  Future<bool> printTestPage();
 }
