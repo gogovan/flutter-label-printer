@@ -18,6 +18,11 @@ abstract class PrinterSearcherInterface {
 
   /// Connect to a specified printer identified by a PrinterSearchResult returned from the `search` function.
   ///
-  /// Return true if connection successful.
+  /// Return true if operation successful.
   Future<bool> connect(PrinterSearchResult id);
+
+  /// Disconnect to currently connected printer.
+  ///
+  /// Return true if operation successful.
+  Future<bool> disconnect();
 }
