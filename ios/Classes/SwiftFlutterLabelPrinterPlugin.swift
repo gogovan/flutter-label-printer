@@ -58,6 +58,11 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
         } else if (call.method == "com.gogovan/disconnectHMA300L") {
             PTDispatcher.share().disconnect()
             result(true)
+        } else if (call.method == "com.gogovan/printTestPageHMA300L") {
+            let cmd = PTCommandCPCL()
+            cmd.printSelfInspectionPage()
+            PTDispatcher.share().send(cmd.cmdData as Data)
+            result(true)
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }
