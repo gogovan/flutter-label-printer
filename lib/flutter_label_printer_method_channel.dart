@@ -49,16 +49,16 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<bool> printTestPageHMA300L() async {
-    await methodChannel.invokeMethod<void>('com.gogovan/printTestPageHMA300L');
+    final result = await methodChannel.invokeMethod<bool>('com.gogovan/printTestPageHMA300L');
 
-    return true;
+    return result ?? false;
   }
 
   @override
   Future<bool> setPrintAreaSizeHMA300L(
     PrintAreaSizeParamsHMA300L params,
   ) async {
-    await methodChannel.invokeMethod<void>(
+    final result = await methodChannel.invokeMethod<bool>(
       'com.gogovan/setPrintAreaSizeHMA300L',
       <String, dynamic>{
         'offset': params.offset,
@@ -69,6 +69,6 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
       },
     );
 
-    return true;
+    return result ?? false;
   }
 }
