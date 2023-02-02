@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _printTestPage() async {
     try {
-      _printer?.printTestPage();
+      await _printer?.printTestPage();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }

@@ -73,7 +73,8 @@ OS.
 1. Use an instance of a class implementing `PrinterSearcherInterface` to search for compatible
    printers.
     1. All classes implementing `PrinterSearcherInterface` provides a `search` method returning
-       a `Stream<List<PrinterSearchResult>>`. `listen` to the stream to list all the available devices.
+       a `Stream<List<PrinterSearchResult>>`. `listen` to the stream to list all the available
+       devices.
 
 ```dart
 
@@ -87,8 +88,25 @@ _searcher.search().listen((event) {
    instance of a class implementing `PrinterInterface`. Each instance of `PrinterInterface`
    represent a single printer. If you wish to connect multiple printers, use multiple instances
    of `PrinterInterface`.
-3. Use the instance of `PrinterInterface` that has connected to a printer to send printing commands.
+
+```dart
+HMA300L? _printer;
+_printer = HMA300L(result);
+await _printer?.connect();
+```
+
+3. Use the instance of `PrinterInterface` that has connected to a printer to send printing commands. 
+   `printTestPage` may be used to print a testing page.
+
+```dart
+await _printer?.printTestPage();
+```
+
 4. When you are done, call `disconnect` to disconnect the device from your app.
+
+```dart
+await _printer?.disconnect();
+```
 
 # Issues
 
