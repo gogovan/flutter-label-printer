@@ -12,7 +12,8 @@ class HMA300L extends PrinterInterface {
   @override
   Future<bool> connectImpl(PrinterSearchResult device) {
     try {
-      return FlutterLabelPrinterPlatform.instance.connectHMA300L((device as BluetoothResult).address);
+      return FlutterLabelPrinterPlatform.instance
+          .connectHMA300L((device as BluetoothResult).address);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

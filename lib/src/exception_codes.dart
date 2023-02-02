@@ -1,7 +1,7 @@
 // ignore_for_file: no-magic-number, this file documents all error codes.
 
-import 'package:flutter_label_printer/exception/connection_id_exception.dart';
 import 'package:flutter_label_printer/exception/connection_exception.dart';
+import 'package:flutter_label_printer/exception/connection_id_exception.dart';
 import 'package:flutter_label_printer/exception/connection_timeout_exception.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/exception/label_printer_exception.dart';
