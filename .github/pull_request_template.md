@@ -8,5 +8,4 @@ Describe your changes.
 Post any screenshots for your feature, if any.
 
 #### Checklist
-- [ ] Create suitable unit/widget tests for your change.
 - [ ] Run the `pre_pr.sh` script to ensure code quality.
