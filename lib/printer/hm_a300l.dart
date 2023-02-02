@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_label_printer/exception/device_not_connected_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
@@ -37,6 +38,10 @@ class HMA300L extends PrinterInterface {
 
   @override
   Future<bool> printTestPage() async {
+    if (!isConnected()) {
+      throw DeviceNotConnectedException("Device not connected.", StackTrace.current.toString());
+    }
+
     try {
       return FlutterLabelPrinterPlatform.instance.printTestPageHMA300L();
     } on PlatformException catch (ex, st) {
@@ -48,6 +53,10 @@ class HMA300L extends PrinterInterface {
   }
 
   Future<bool> setPrintAreaSize(PrintAreaSizeParamsHMA300L params) async {
+    if (!isConnected()) {
+      throw DeviceNotConnectedException("Device not connected.", StackTrace.current.toString());
+    }
+
     try {
       return FlutterLabelPrinterPlatform.instance.setPrintAreaSizeHMA300L(params);
     } on PlatformException catch (ex, st) {
