@@ -1,4 +1,5 @@
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
@@ -43,6 +44,12 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   Future<bool> printTestPageHMA300L() {
     throw UnimplementedError(
       'printTestPageHMA300L() has not been implemented.',
+    );
+  }
+
+  Future<bool> setPrintAreaSizeHMA300L(PrintAreaSizeParamsHMA300L params) {
+    throw UnimplementedError(
+      'setPrintAreaSizeHMA300L() has not been implemented.',
     );
   }
 }

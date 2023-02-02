@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
@@ -38,6 +39,17 @@ class HMA300L extends PrinterInterface {
   Future<bool> printTestPage() async {
     try {
       return FlutterLabelPrinterPlatform.instance.printTestPageHMA300L();
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> setPrintAreaSize(PrintAreaSizeParamsHMA300L params) async {
+    try {
+      return FlutterLabelPrinterPlatform.instance.setPrintAreaSizeHMA300L(params);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

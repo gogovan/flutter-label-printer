@@ -64,6 +64,20 @@ class FlutterLabelPrinterMethodHandler(
                     PrinterHelper.Print()
                     result.success(null)
                 }
+                "com.gogovan/setPrintAreaSizeHMA300L" -> {
+                    val offset = call.argument<Int>("offset")
+                    val horizontalRes = call.argument<Int>("horizontalRes")
+                    val verticalRes = call.argument<Int>("verticalRes")
+                    val height = call.argument<Int>("height")
+                    val quantity = call.argument<Int>("quantity")
+                    PrinterHelper.printAreaSize(
+                        offset?.toString() ?: "0",
+                        horizontalRes?.toString() ?: "200",
+                        verticalRes?.toString() ?: "200",
+                        height?.toString() ?: "0",
+                        quantity?.toString() ?: "1",
+                    )
+                }
                 else -> {
                     result.notImplemented()
                 }

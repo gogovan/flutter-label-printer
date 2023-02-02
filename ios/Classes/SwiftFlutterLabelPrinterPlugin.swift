@@ -5,12 +5,13 @@ import PrinterSDK
 public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     
     let handler = BluetoothScanStreamHandler()
+    var currentCommand: PTCommandCPCL? = nil
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "com.gogovan/flutter_label_printer", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterLabelPrinterPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-      
+        
         let bluetoothScanChannel = FlutterEventChannel(name: "com.gogovan/bluetoothScan", binaryMessenger: registrar.messenger())
         
         bluetoothScanChannel.setStreamHandler(instance.handler)
@@ -63,9 +64,39 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             cmd.printSelfInspectionPage()
             PTDispatcher.share().send(cmd.cmdData as Data)
             result(true)
+        } else if (call.method == "com.gogovan/setPrintAreaSizeHMA300L") {
+            if (currentCommand == nil) {
+                currentCommand = PTCommandCPCL()
+            }
+            if let args = call.arguments as? [String:Any],
+               let offset = args["offset"] as? Int,
+               let horizontalRes = args["horizontalRes"] as? Int,
+               let verticalRes = args["verticalRes"] as? Int,
+               let height = args["height"] as? Int,
+               let quantity = args["quantity"] as? Int {
+                
+                let hRes: PTCPCLLabelResolution
+                if (horizontalRes == 100) {
+                    hRes = PTCPCLLabelResolution.resolution100
+                } else {
+                    hRes = PTCPCLLabelResolution.resolution200
+                }
+                
+                let vRes: PTCPCLLabelResolution
+                if (verticalRes == 100) {
+                    vRes = PTCPCLLabelResolution.resolution100
+                } else {
+                    vRes = PTCPCLLabelResolution.resolution200
+                }
+                
+                currentCommand?.cpclLabel(withOffset: offset, hRes: hRes, vRes: vRes, height: height, quantity: quantity)
+                result(true)
+            } else {
+                result(false)
+            }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }
-    }    
-   
+    }
+    
 }

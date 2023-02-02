@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 
 /// An implementation of [FlutterLabelPrinterPlatform] that uses method channels.
 class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
@@ -49,6 +50,24 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   @override
   Future<bool> printTestPageHMA300L() async {
     await methodChannel.invokeMethod<void>('com.gogovan/printTestPageHMA300L');
+
+    return true;
+  }
+
+  @override
+  Future<bool> setPrintAreaSizeHMA300L(
+    PrintAreaSizeParamsHMA300L params,
+  ) async {
+    await methodChannel.invokeMethod<void>(
+      'com.gogovan/setPrintAreaSizeHMA300L',
+      <String, dynamic>{
+        'offset': params.offset,
+        'horizontalRes': params.horizontalRes.res,
+        'verticalRes': params.verticalRes.res,
+        'height': params.height,
+        'quantity': params.quantity,
+      },
+    );
 
     return true;
   }

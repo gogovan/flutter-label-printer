@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/printer/HM_A300L.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
-import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
+import 'package:flutter_label_printer_example/set_print_area_size.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,15 +13,15 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static HMA300L? printer;
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  HMA300LSearcher _searcher = HMA300LSearcher();
-  HMA300L? _printer;
+  final HMA300LSearcher _searcher = HMA300LSearcher();
 
-  String _searchResultString = '';
   List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
   bool _connected = false;
@@ -64,14 +63,13 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _connect() async {
     try {
-      PrinterSearchResult? result = _searchResults[int.parse(connectIndexController.text)];
-      if (result != null) {
-        _printer = HMA300L(result);
-        await _printer?.connect();
-        setState(() {
-          _connected = true;
-        });
-      }
+      PrinterSearchResult? result =
+          _searchResults[int.parse(connectIndexController.text)];
+      MyApp.printer = HMA300L(result);
+      await MyApp.printer?.connect();
+      setState(() {
+        _connected = true;
+      });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -79,7 +77,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _disconnect() async {
     try {
-      await _printer?.disconnect();
+      await MyApp.printer?.disconnect();
       setState(() {
         _connected = false;
       });
@@ -88,9 +86,11 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> _printTestPage() async {
+  Future<void> _printTestPage(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await _printer?.printTestPage();
+      await MyApp.printer?.printTestPage();
+      scaffoldMessenger.showSnackBar(const SnackBar(content: Text("Test page printed.")));
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -100,31 +100,54 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('flutter_label_printer example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Text('Searching = $_searching'),
-              ElevatedButton(onPressed: _startSearch, child: const Text('Start search')),
-              Text('Search Result = ${_searchResults.toString()}\n'),
-              ElevatedButton(onPressed: _stopSearch, child: const Text('Stop search')),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Index of Search result to Connect Bluetooth to',
+          appBar: AppBar(
+            title: const Text('flutter_label_printer example app'),
+          ),
+          body: LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                          onPressed: _startSearch,
+                          child: const Text('Start search')),
+                      Text('Searching = $_searching'),
+                      Text('Search Result = ${_searchResults.toString()}\n'),
+                      ElevatedButton(
+                          onPressed: _stopSearch,
+                          child: const Text('Stop search')),
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText:
+                              'Index of Search result to Connect Bluetooth to',
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: connectIndexController,
+                      ),
+                      ElevatedButton(
+                          onPressed: _connect, child: const Text('Connect')),
+                      Text('Connected = $_connected\n'),
+                      ElevatedButton(
+                          onPressed: () => _printTestPage(context),
+                          child: const Text('Print Test Page')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SetPrintAreaSize()));
+                          }, child: const Text('Set Print Area Size')),
+                      ElevatedButton(
+                          onPressed: _disconnect,
+                          child: const Text('Disconnect')),
+                    ],
+                  ),
                 ),
-                keyboardType: TextInputType.number,
-                controller: connectIndexController,
-              ),
-              ElevatedButton(onPressed: _connect, child: const Text('Connect')),
-              Text('Connected = $_connected\n'),
-              ElevatedButton(onPressed: _printTestPage, child: const Text('Print Test Page')),
-              ElevatedButton(onPressed: _disconnect, child: const Text('Disconnect')),
-            ],
-          )
-        ),
-      ),
+              );
+            },
+          )),
     );
   }
 }
