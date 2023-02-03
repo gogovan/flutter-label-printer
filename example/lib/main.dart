@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter_label_printer/printer/HM_A300L.dart';
+import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
@@ -14,7 +14,7 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static HMA300L? printer;
+  static HMA300LPrinter? printer;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result =
           _searchResults[int.parse(connectIndexController.text)];
-      MyApp.printer = HMA300L(result);
+      MyApp.printer = HMA300LPrinter(result);
       await MyApp.printer?.connect();
       setState(() {
         _connected = true;

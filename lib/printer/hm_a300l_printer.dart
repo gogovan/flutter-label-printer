@@ -8,8 +8,8 @@ import 'package:flutter_label_printer/printer_search_result/printer_search_resul
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
 /// Interface a Hanyin (HPRT) HM-A300L printer.
-class HMA300L extends PrinterInterface {
-  HMA300L(super.device);
+class HMA300LPrinter extends PrinterInterface {
+  HMA300LPrinter(super.device);
 
   @override
   Future<bool> connectImpl(PrinterSearchResult device) {
