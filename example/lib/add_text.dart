@@ -22,8 +22,8 @@ class _AddTextState extends State<AddText> {
       await MyApp.printer?.addText(TextParams(
         rotate: rotation,
         font: font,
-        x: int.parse(xController.text),
-        y: int.parse(yController.text),
+        xPosition: int.parse(xController.text),
+        yPosition: int.parse(yController.text),
         text: textController.text,
       ));
       navigator.pop();

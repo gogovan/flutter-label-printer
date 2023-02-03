@@ -39,7 +39,7 @@ class HMA300L extends PrinterInterface {
   @override
   Future<bool> printTestPage() async {
     if (!isConnected()) {
-      throw InvalidConnectionStateException("Device not connected.", StackTrace.current.toString());
+      throw InvalidConnectionStateException('Device not connected.', StackTrace.current.toString());
     }
 
     try {
@@ -54,7 +54,7 @@ class HMA300L extends PrinterInterface {
 
   Future<bool> setPrintAreaSize(PrintAreaSizeParams params) async {
     if (!isConnected()) {
-      throw InvalidConnectionStateException("Device not connected.", StackTrace.current.toString());
+      throw InvalidConnectionStateException('Device not connected.', StackTrace.current.toString());
     }
 
     try {
@@ -69,7 +69,7 @@ class HMA300L extends PrinterInterface {
 
   Future<bool> addText(TextParams params) async {
     if (!isConnected()) {
-      throw InvalidConnectionStateException("Device not connected.", StackTrace.current.toString());
+      throw InvalidConnectionStateException('Device not connected.', StackTrace.current.toString());
     }
 
     try {

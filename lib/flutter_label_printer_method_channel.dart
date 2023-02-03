@@ -79,8 +79,8 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
       <String, dynamic>{
         'rotate': params.rotate.rot,
         'font': params.font.code,
-        'x': params.x,
-        'y': params.y,
+        'x': params.xPosition,
+        'y': params.yPosition,
         'text': params.text,
       },
     );
