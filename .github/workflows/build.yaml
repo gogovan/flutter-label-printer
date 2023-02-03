@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
@@ -17,7 +18,12 @@ jobs:
       - name: Install dependencies
         run: |
           flutter pub get
-          flutter pub run build_runner build
+
+      - name: Build example
+        run: | 
+          cd example
+          flutter build apk
+#          flutter build ipa
 
 #      - name: Run tests
 #        run: flutter test
