@@ -225,6 +225,11 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
+                "com.gogovan/print" -> {
+                    PrinterHelper.Form()
+                    PrinterHelper.Print()
+                    result.success(true)
+                }
                 else -> {
                     result.notImplemented()
                 }

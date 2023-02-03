@@ -97,6 +97,17 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _print() async {
+    try {
+      await MyApp.printer?.print();
+      setState(() {
+        _connected = false;
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -144,6 +155,9 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const AddText()));
                           }, child: const Text('Add Text')),
+                      ElevatedButton(
+                          onPressed: _print,
+                          child: const Text('Print')),
                       ElevatedButton(
                           onPressed: _disconnect,
                           child: const Text('Disconnect')),

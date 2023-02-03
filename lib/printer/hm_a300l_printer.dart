@@ -8,6 +8,14 @@ import 'package:flutter_label_printer/printer_search_result/printer_search_resul
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
 /// Interface a Hanyin (HPRT) HM-A300L printer.
+///
+/// All printing commands (such as addText) are sent directly to the official Hanyin SDK. They are stored and managed by Hanyin SDK.
+/// Only the function "print" would actually start printing.
+///
+/// For all functions, unless otherwise specified, returns true on success.
+///
+/// You should call `connect` first to connect the printer.
+/// All commands throw InvalidConnectionStateException if the printer is not connected.
 class HMA300LPrinter extends PrinterInterface {
   HMA300LPrinter(super.device);
 
@@ -74,6 +82,21 @@ class HMA300LPrinter extends PrinterInterface {
 
     try {
       return FlutterLabelPrinterPlatform.instance.addText(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> print() async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException('Device not connected.', StackTrace.current.toString());
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.print();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

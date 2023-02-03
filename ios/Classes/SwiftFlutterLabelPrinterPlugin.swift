@@ -75,8 +75,9 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                let height = args["height"] as? Int,
                let quantity = args["quantity"] as? Int,
                let hRes = PTCPCLLabelResolution(rawValue: UInt(horizontalRes)),
-               let vRes = PTCPCLLabelResolution(rawValue: UInt(verticalRes)) {
-                currentCommand?.cpclLabel(withOffset: offset, hRes: hRes, vRes: vRes, height: height, quantity: quantity)
+               let vRes = PTCPCLLabelResolution(rawValue: UInt(verticalRes)),
+               let cmd = currentCommand {
+                cmd.cpclLabel(withOffset: offset, hRes: hRes, vRes: vRes, height: height, quantity: quantity)
                 result(true)
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
@@ -92,11 +93,22 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                let y = args["y"] as? Int,
                let text = args["text"] as? String,
                let rotate = PTCPCLStyleRotation(rawValue: UInt(rotateValue)),
-               let font = PTCPCLTextFontName(rawValue: UInt(fontValue)) {
-                currentCommand?.cpclText(withRotate: rotate, font: font, fontSize: PTCPCLTextFontSize.size0, x: x, y: y, text: text)
+               let font = PTCPCLTextFontName(rawValue: UInt(fontValue)),
+               let cmd = currentCommand {
+                cmd.cpclText(withRotate: rotate, font: font, fontSize: PTCPCLTextFontSize.size0, x: x, y: y, text: text)
                 result(true)
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+            }
+        } else if (call.method == "com.gogovan/print") {
+            if (currentCommand == nil) {
+                currentCommand = PTCommandCPCL()
+            }
+            if let cmd = currentCommand {
+                cmd.cpclPrint();
+                PTDispatcher.share().send(cmd.cmdData as Data)
+                currentCommand = PTCommandCPCL() // After printing, throw away the old data.
+                result(true)
             }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
