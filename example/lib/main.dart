@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_label_printer/printer/HM_A300L.dart';
+import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
-import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +19,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   HMA300LSearcher _searcher = HMA300LSearcher();
-  HMA300L? _printer;
+  HMA300LPrinter? _printer;
 
   String _searchResultString = '';
   List<PrinterSearchResult> _searchResults = [];
@@ -66,7 +65,7 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result = _searchResults[int.parse(connectIndexController.text)];
       if (result != null) {
-        _printer = HMA300L(result);
+        _printer = HMA300LPrinter(result);
         await _printer?.connect();
         setState(() {
           _connected = true;
