@@ -17,7 +17,7 @@ abstract class PrinterInterface {
 
   /// Connect to the specified printer.
   /// The printer should be one of the printers returned by the `search` method from a compatible PrinterSearcherInterface class.
-  /// Return true if connection successful, false otherwise.
+  /// Return true if connection successful or already connected, false otherwise.
   @nonVirtual
   Future<bool> connect() async {
     if (!_connected) {
@@ -26,7 +26,7 @@ abstract class PrinterInterface {
 
       return result;
     } else {
-      return false;
+      return true;
     }
   }
 
@@ -38,7 +38,7 @@ abstract class PrinterInterface {
   Future<bool> connectImpl(PrinterSearchResult device);
 
   /// Disconnect to the currently connected device.
-  /// Return true if disconnection successful, false otherwise.
+  /// Return true if disconnection successful or already disconnected, false otherwise.
   @nonVirtual
   Future<bool> disconnect() async {
     if (_connected) {
@@ -47,7 +47,7 @@ abstract class PrinterInterface {
 
       return result;
     } else {
-      return false;
+      return true;
     }
   }
 
