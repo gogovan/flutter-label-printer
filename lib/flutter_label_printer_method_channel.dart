@@ -56,7 +56,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<bool> setPrintAreaSizeHMA300L(
-    PrintAreaSizeParamsHMA300L params,
+    PrintAreaSizeParams params,
   ) async {
     final result = await methodChannel.invokeMethod<bool>(
       'com.gogovan/setPrintAreaSizeHMA300L',
@@ -66,6 +66,22 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
         'verticalRes': params.verticalRes.res,
         'height': params.height,
         'quantity': params.quantity,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addText(TextParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'com.gogovan/addText',
+      <String, dynamic>{
+        'rotate': params.rotate.rot,
+        'font': params.font.code,
+        'x': params.x,
+        'y': params.y,
+        'text': params.text,
       },
     );
 

@@ -73,26 +73,30 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                let horizontalRes = args["horizontalRes"] as? Int,
                let verticalRes = args["verticalRes"] as? Int,
                let height = args["height"] as? Int,
-               let quantity = args["quantity"] as? Int {
-                
-                let hRes: PTCPCLLabelResolution
-                if (horizontalRes == 100) {
-                    hRes = PTCPCLLabelResolution.resolution100
-                } else {
-                    hRes = PTCPCLLabelResolution.resolution200
-                }
-                
-                let vRes: PTCPCLLabelResolution
-                if (verticalRes == 100) {
-                    vRes = PTCPCLLabelResolution.resolution100
-                } else {
-                    vRes = PTCPCLLabelResolution.resolution200
-                }
-                
+               let quantity = args["quantity"] as? Int,
+               let hRes = PTCPCLLabelResolution(rawValue: UInt(horizontalRes)),
+               let vRes = PTCPCLLabelResolution(rawValue: UInt(verticalRes)) {
                 currentCommand?.cpclLabel(withOffset: offset, hRes: hRes, vRes: vRes, height: height, quantity: quantity)
                 result(true)
             } else {
-                result(false)
+                result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+            }
+        } else if (call.method == "com.gogovan/addText") {
+            if (currentCommand == nil) {
+                currentCommand = PTCommandCPCL()
+            }
+            if let args = call.arguments as? [String:Any],
+               let rotateValue = args["rotate"] as? Int,
+               let fontValue = args["font"] as? Int,
+               let x = args["x"] as? Int,
+               let y = args["y"] as? Int,
+               let text = args["text"] as? String,
+               let rotate = PTCPCLStyleRotation(rawValue: UInt(rotateValue)),
+               let font = PTCPCLTextFontName(rawValue: UInt(fontValue)) {
+                currentCommand?.cpclText(withRotate: rotate, font: font, fontSize: PTCPCLTextFontSize.size0, x: x, y: y, text: text)
+                result(true)
+            } else {
+                result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))

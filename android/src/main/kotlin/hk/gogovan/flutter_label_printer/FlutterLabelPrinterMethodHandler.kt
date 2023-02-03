@@ -65,19 +65,36 @@ class FlutterLabelPrinterMethodHandler(
                     result.success(true)
                 }
                 "com.gogovan/setPrintAreaSizeHMA300L" -> {
-                    val offset = call.argument<Int>("offset")
-                    val horizontalRes = call.argument<Int>("horizontalRes")
-                    val verticalRes = call.argument<Int>("verticalRes")
-                    val height = call.argument<Int>("height")
-                    val quantity = call.argument<Int>("quantity")
-                    PrinterHelper.printAreaSize(
-                        offset?.toString() ?: "0",
-                        horizontalRes?.toString() ?: "200",
-                        verticalRes?.toString() ?: "200",
-                        height?.toString() ?: "0",
-                        quantity?.toString() ?: "1",
-                    )
-                    result.success(true)
+                    try {
+                        val offset = call.argument<Int>("offset")
+                        val horizontalRes = call.argument<Int>("horizontalRes")
+                        val verticalRes = call.argument<Int>("verticalRes")
+                        val height = call.argument<Int>("height")
+                        val quantity = call.argument<Int>("quantity")
+                        PrinterHelper.printAreaSize(
+                            offset?.toString() ?: "0",
+                            horizontalRes?.toString() ?: "200",
+                            verticalRes?.toString() ?: "200",
+                            height?.toString() ?: "0",
+                            quantity?.toString() ?: "1",
+                        )
+                        result.success(true)
+                    } catch (e: ClassCastException) {
+                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                    }
+                }
+                "com.gogovan/addText" -> {
+                    try {
+                        val rotate = call.argument<Int>("rotate")
+                        val font = call.argument<Int>("font")
+                        val x = call.argument<Int>("x")
+                        val y = call.argument<Int>("y")
+                        val text = call.argument<String>("text")
+                        PrinterHelper.Text(rotate.toString(), font.toString(), "0", x.toString(), y.toString(), text)
+                        result.success(true)
+                    } catch (e: ClassCastException) {
+                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                    }
                 }
                 else -> {
                     result.notImplemented()

@@ -19,7 +19,7 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
   Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.setPrintAreaSize(PrintAreaSizeParamsHMA300L(
+      await MyApp.printer?.setPrintAreaSize(PrintAreaSizeParams(
         offset: int.parse(offsetController.text),
         horizontalRes: hRes,
         verticalRes: vRes,
