@@ -58,8 +58,137 @@ class FlutterLabelPrinterMethodHandler(
                     result.success(PrinterHelper.portClose())
                 }
                 "com.gogovan/printTestPageHMA300L" -> {
-                    PrinterHelper.printAreaSize("0", "200", "200", "100", "1")
-                    PrinterHelper.Text(PrinterHelper.TEXT, "4", "0", "0", "0", "This is a test.")
+                    PrinterHelper.printAreaSize("0", "200", "200", "1400", "1")
+                    PrinterHelper.Align(PrinterHelper.CENTER)
+                    PrinterHelper.Text(
+                        PrinterHelper.TEXT,
+                        "8",
+                        "0",
+                        "50",
+                        "5",
+                        "Test Page"
+                    )
+                    PrinterHelper.Align(PrinterHelper.LEFT)
+                    PrinterHelper.Text(PrinterHelper.TEXT, "8", "0", "0", "66", "CODE128")
+                    PrinterHelper.Barcode(
+                        PrinterHelper.BARCODE,
+                        "128",
+                        "2",
+                        "1",
+                        "50",
+                        "0",
+                        "100",
+                        true,
+                        "7",
+                        "0",
+                        "5",
+                        "123456789"
+                    )
+                    PrinterHelper.Text(PrinterHelper.TEXT, "8", "0", "0", "180", "UPCA")
+                    PrinterHelper.Barcode(
+                        PrinterHelper.BARCODE,
+                        PrinterHelper.UPCA,
+                        "2",
+                        "1",
+                        "50",
+                        "0",
+                        "210",
+                        true,
+                        "7",
+                        "0",
+                        "5",
+                        "123456789012"
+                    )
+                    PrinterHelper.Text(PrinterHelper.TEXT, "8", "0", "0", "310", "UPCE")
+                    PrinterHelper.Barcode(
+                        PrinterHelper.BARCODE,
+                        PrinterHelper.code128,
+                        "2",
+                        "1",
+                        "50",
+                        "0",
+                        "340",
+                        true,
+                        "7",
+                        "0",
+                        "5",
+                        "0234565687"
+                    )
+                    PrinterHelper.Text(PrinterHelper.TEXT, "8", "0", "0", "440", "EAN8")
+                    PrinterHelper.Barcode(
+                        PrinterHelper.BARCODE,
+                        PrinterHelper.EAN8,
+                        "2",
+                        "1",
+                        "50",
+                        "0",
+                        "470",
+                        true,
+                        "7",
+                        "0",
+                        "5",
+                        "12345678"
+                    )
+                    PrinterHelper.Text(PrinterHelper.TEXT, "8", "0", "0", "570", "CODE93")
+                    PrinterHelper.Barcode(
+                        PrinterHelper.BARCODE,
+                        PrinterHelper.code93,
+                        "2",
+                        "1",
+                        "50",
+                        "0",
+                        "600",
+                        true,
+                        "7",
+                        "0",
+                        "5",
+                        "123456789"
+                    )
+                    PrinterHelper.Text(PrinterHelper.TEXT, "8", "0", "0", "700", "CODE39")
+                    PrinterHelper.Barcode(
+                        PrinterHelper.BARCODE,
+                        PrinterHelper.code39,
+                        "2",
+                        "1",
+                        "50",
+                        "0",
+                        "730",
+                        true,
+                        "7",
+                        "0",
+                        "5",
+                        "123456789"
+                    )
+                    PrinterHelper.Text(
+                        PrinterHelper.TEXT,
+                        "8",
+                        "0",
+                        "0",
+                        "830",
+                        "ESC function BTN QR Code"
+                    )
+                    PrinterHelper.PrintQR(PrinterHelper.BARCODE, "0", "870", "4", "6", "ABC123")
+                    PrinterHelper.PrintQR(PrinterHelper.BARCODE, "150", "870", "4", "6", "ABC123")
+                    PrinterHelper.Text(
+                        PrinterHelper.TEXT,
+                        "8",
+                        "0",
+                        "0",
+                        "1000",
+                        "Activity Test Line"
+                    )
+                    PrinterHelper.Line("0", "1030", "400", "1030", "1")
+                    PrinterHelper.Text(
+                        PrinterHelper.TEXT,
+                        "8",
+                        "0",
+                        "0",
+                        "1050",
+                        "Activity Test Box"
+                    )
+                    PrinterHelper.Box("10", "1080", "400", "1300", "1")
+                    // TODO check paper type instead of changing it.
+                    PrinterHelper.papertype_CPCL(1)
                     PrinterHelper.Form()
                     PrinterHelper.Print()
                     result.success(true)
