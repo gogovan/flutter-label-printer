@@ -220,6 +220,7 @@ class FlutterLabelPrinterMethodHandler(
                         val y = call.argument<Int>("y")
                         val text = call.argument<String>("text")
                         PrinterHelper.Text(rotate.toString(), font.toString(), "0", x.toString(), y.toString(), text)
+                        // PrinterHelper.PrintTextCPCL(rotate.toString(), 1, x.toString(), y.toString(), text, 0, false, 0)
                         result.success(true)
                     } catch (e: ClassCastException) {
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
@@ -229,6 +230,15 @@ class FlutterLabelPrinterMethodHandler(
                     PrinterHelper.Form()
                     PrinterHelper.Print()
                     result.success(true)
+                }
+                "com.gogovan/setPaperType" -> {
+                    try {
+                        val paperType = call.argument<Int>("paperType")
+                        PrinterHelper.setPaperFourInch(paperType ?: 0)
+                        result.success(true)
+                    } catch (e: ClassCastException) {
+                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                    }
                 }
                 else -> {
                     result.notImplemented()

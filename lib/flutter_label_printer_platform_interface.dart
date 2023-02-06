@@ -64,4 +64,10 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
       'print() has not been implemented.',
     );
   }
+
+  Future<bool> setPaperType(PaperType type) {
+    throw UnimplementedError(
+      'print() has not been implemented.',
+    );
+  }
 }

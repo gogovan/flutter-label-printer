@@ -104,4 +104,19 @@ class HMA300LPrinter extends PrinterInterface {
       );
     }
   }
+
+  Future<bool> setPaperType(PaperType type) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException('Device not connected.', StackTrace.current.toString());
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.setPaperType(type);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
+import 'package:flutter_label_printer_example/set_paper_type.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
 
 void main() {
@@ -151,6 +152,10 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const SetPrintAreaSize()));
                           }, child: const Text('Set Print Area Size')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SetPaperType()));
+                          }, child: const Text('Set Paper Type')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const AddText()));

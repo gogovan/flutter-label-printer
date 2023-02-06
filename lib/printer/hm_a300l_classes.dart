@@ -55,6 +55,18 @@ enum Font {
   final int code;
 }
 
+enum PaperType {
+  continuous(0),
+  label(2),
+  blackMark2Inch(4),
+  blackMark3Inch(5),
+  blackMark4Inch(6);
+
+  const PaperType(this.code);
+
+  final int code;
+}
+
 class PrintAreaSizeParams {
   PrintAreaSizeParams({
     this.offset = 0,

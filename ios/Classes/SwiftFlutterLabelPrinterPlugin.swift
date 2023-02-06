@@ -110,6 +110,19 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 currentCommand = PTCommandCPCL() // After printing, throw away the old data.
                 result(true)
             }
+        } else if (call.method == "com.gogovan/setPaperType") {
+            if (currentCommand == nil) {
+                currentCommand = PTCommandCPCL()
+            }
+            if let args = call.arguments as? [String:Any],
+               let typeId = args["paperType"] as? Int,
+               let type = PTCPCLNewPaperType(rawValue: UInt(typeId)),
+               let cmd = currentCommand {
+                cmd.setPrinterPaperTypeFor4Inch(type)
+                result(true)
+            } else {
+                result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+            }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }

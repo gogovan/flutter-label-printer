@@ -90,7 +90,19 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<bool> print() async {
-    final result = await methodChannel.invokeMethod('com.gogovan/print');
+    final result = await methodChannel.invokeMethod<bool>('com.gogovan/print');
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> setPaperType(PaperType type) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'com.gogovan/setPaperType',
+      <String, dynamic> {
+        'paperType': type.code,
+      },
+    );
 
     return result ?? false;
   }
