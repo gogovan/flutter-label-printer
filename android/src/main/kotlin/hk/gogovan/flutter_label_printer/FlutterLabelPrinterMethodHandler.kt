@@ -80,14 +80,14 @@ class FlutterLabelPrinterMethodHandler(
                         val verticalRes = call.argument<Int>("verticalRes")
                         val height = call.argument<Int>("height")
                         val quantity = call.argument<Int>("quantity")
-                        PrinterHelper.printAreaSize(
+                        val returnCode = PrinterHelper.printAreaSize(
                             offset?.toString() ?: "0",
                             horizontalRes?.toString() ?: "200",
                             verticalRes?.toString() ?: "200",
                             height?.toString() ?: "0",
                             quantity?.toString() ?: "1",
                         )
-                        result.success(true)
+                        result.success(returnCode >= 0)
                     } catch (e: ClassCastException) {
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
@@ -99,8 +99,8 @@ class FlutterLabelPrinterMethodHandler(
                         val x = call.argument<Int>("x")
                         val y = call.argument<Int>("y")
                         val text = call.argument<String>("text")
-                        PrinterHelper.Text(rotate.toString(), font.toString(), "0", x.toString(), y.toString(), text)
-                        result.success(true)
+                        val returnCode = PrinterHelper.Text(rotate.toString(), font.toString(), "0", x.toString(), y.toString(), text)
+                        result.success(returnCode >= 0)
                     } catch (e: ClassCastException) {
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
@@ -115,13 +115,13 @@ class FlutterLabelPrinterMethodHandler(
                 "hk.gogovan.setPaperType" -> {
                     try {
                         val paperType = call.argument<Int>("paperType") ?: 0
-                        PrinterHelper.setPaperFourInch(paperType)
+                        val returnCode = PrinterHelper.setPaperFourInch(paperType)
 
                         currentPaperType = paperType
                         val pref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
                         pref.edit().putInt(SHARED_PREF_PAPER_TYPE, paperType).apply()
 
-                        result.success(true)
+                        result.success(returnCode >= 0)
                     } catch (e: ClassCastException) {
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
