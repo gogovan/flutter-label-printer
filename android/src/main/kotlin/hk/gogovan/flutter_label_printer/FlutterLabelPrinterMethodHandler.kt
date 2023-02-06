@@ -138,6 +138,17 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
+                "hk.gogovan.setTextSize" -> {
+                    try {
+                        val width = max(1, min(16, call.argument<Int>("width") ?: 1))
+                        val height = max(1, min(16, call.argument<Int>("height") ?: 1))
+                        val returnCode = PrinterHelper.SetMag(width.toString(), height.toString())
+
+                        result.success(returnCode >= 0)
+                    } catch (e: ClassCastException) {
+                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                    }
+                }
                 else -> {
                     result.notImplemented()
                 }

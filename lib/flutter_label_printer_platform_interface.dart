@@ -71,9 +71,17 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
+  /// Command to set boldness of text. Size should be within 0 to 5.
   Future<bool> setBold(int size) {
     throw UnimplementedError(
       'print() has not been implemented.',
+    );
+  }
+
+  /// Command to set size of text. Size should be within 1 to 16.
+  Future<bool> setTextSize(int width, int height) {
+    throw UnimplementedError(
+      'setSize() has not been implemented.',
     );
   }
 }

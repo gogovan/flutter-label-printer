@@ -118,4 +118,17 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> setTextSize(int width, int height) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.setTextSize',
+      <String, dynamic> {
+        'width': width,
+        'height': height,
+      },
+    );
+
+    return result ?? false;
+  }
 }

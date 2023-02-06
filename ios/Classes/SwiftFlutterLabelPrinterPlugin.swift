@@ -160,6 +160,29 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
+        } else if (call.method == "hk.gogovan.setTextSize") {
+            if (currentCommand == nil) {
+                currentCommand = PTCommandCPCL()
+            }
+            if let args = call.arguments as? [String:Any],
+               let widthId = args["width"] as? Int,
+               let heightId = args["height"] as? Int,
+               let cmd = currentCommand {
+                let widthCapped = max(1, min(16, widthId))
+                let heightCapped = max(1, min(16, heightId))
+                let width = PTCPCLFontScale(rawValue: UInt(widthCapped))
+                let height = PTCPCLFontScale(rawValue: UInt(heightCapped))
+                
+                if let fWidth = width,
+                   let fHeight = height {
+                    cmd.cpclSetMag(withWidth: fWidth, height: fHeight)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            } else {
+                result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+            }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }

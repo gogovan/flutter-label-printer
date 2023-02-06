@@ -7,6 +7,7 @@ import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
+import 'package:flutter_label_printer_example/set_text_size.dart';
 
 void main() {
   runApp(const MyApp());
@@ -218,6 +219,10 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                           onPressed: () => _setBold(context),
                           child: const Text('Set Bold')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SetTextSize()));
+                          }, child: const Text('Set Text Size')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const AddText()));
