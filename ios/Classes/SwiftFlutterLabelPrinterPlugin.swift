@@ -4,8 +4,12 @@ import PrinterSDK
 
 public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     
+    static let SHARED_PREF_PAPER_TYPE = "paper_type"
+    
     let handler = BluetoothScanStreamHandler()
     var currentCommand: PTCommandCPCL? = nil
+    
+    var currentPaperType: PTCPCLNewPaperType? = nil
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "com.gogovan/flutter_label_printer", binaryMessenger: registrar.messenger())
@@ -19,6 +23,12 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if (currentPaperType == nil) {
+            let def = UserDefaults()
+            let value = def.integer(forKey: SwiftFlutterLabelPrinterPlugin.SHARED_PREF_PAPER_TYPE)
+            currentPaperType = PTCPCLNewPaperType(rawValue: UInt(value))
+        }
+        
         if (call.method == "com.gogovan/stopSearchHMA300L") {
             PTDispatcher.share().stopScanBluetooth()
             result(true)
@@ -105,6 +115,9 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 currentCommand = PTCommandCPCL()
             }
             if let cmd = currentCommand {
+                if (currentPaperType == PTCPCLNewPaperType.paperLabel) {
+                    cmd.cpclForm()
+                }
                 cmd.cpclPrint();
                 PTDispatcher.share().send(cmd.cmdData as Data)
                 currentCommand = PTCommandCPCL() // After printing, throw away the old data.
@@ -119,6 +132,11 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                let type = PTCPCLNewPaperType(rawValue: UInt(typeId)),
                let cmd = currentCommand {
                 cmd.setPrinterPaperTypeFor4Inch(type)
+                
+                currentPaperType = type
+                let def = UserDefaults()
+                def.set(currentPaperType?.rawValue, forKey: SwiftFlutterLabelPrinterPlugin.SHARED_PREF_PAPER_TYPE)
+                
                 result(true)
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
