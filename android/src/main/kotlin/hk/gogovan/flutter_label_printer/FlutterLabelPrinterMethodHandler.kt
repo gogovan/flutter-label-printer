@@ -5,6 +5,8 @@ import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.lang.Integer.max
+import java.lang.Integer.min
 
 class FlutterLabelPrinterMethodHandler(
     private val context: Context,
@@ -120,6 +122,16 @@ class FlutterLabelPrinterMethodHandler(
                         currentPaperType = paperType
                         val pref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
                         pref.edit().putInt(SHARED_PREF_PAPER_TYPE, paperType).apply()
+
+                        result.success(returnCode >= 0)
+                    } catch (e: ClassCastException) {
+                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                    }
+                }
+                "hk.gogovan.setBold" -> {
+                    try {
+                        val size = max(0, min(5, call.argument<Int>("size") ?: 0))
+                        val returnCode = PrinterHelper.SetBold(size.toString())
 
                         result.success(returnCode >= 0)
                     } catch (e: ClassCastException) {

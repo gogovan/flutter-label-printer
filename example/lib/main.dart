@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
-import 'package:flutter_label_printer_example/set_paper_type.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
 
 void main() {
@@ -109,6 +109,66 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _setPaperType(BuildContext context) async {
+    try {
+      final answer = await showDialog<PaperType>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Set Paper Type'),
+            children: [
+              SimpleDialogOption(
+                child: const Text('Continuous'),
+                onPressed: () { Navigator.pop(context, PaperType.continuous); },
+              ),
+              SimpleDialogOption(
+                child: const Text('Label'),
+                onPressed: () { Navigator.pop(context, PaperType.label); },
+              ),
+              SimpleDialogOption(
+                child: const Text('2 Inch Black Mark'),
+                onPressed: () { Navigator.pop(context, PaperType.blackMark2Inch); },
+              ),
+              SimpleDialogOption(
+                child: const Text('3 Inch Black Mark'),
+                onPressed: () { Navigator.pop(context, PaperType.blackMark3Inch); },
+              ),
+              SimpleDialogOption(
+                child: const Text('4 Inch Black Mark'),
+                onPressed: () { Navigator.pop(context, PaperType.blackMark4Inch); },
+              ),
+            ]
+          );
+        }
+      ) ?? PaperType.continuous;
+      await MyApp.printer?.setPaperType(answer);
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _setBold(BuildContext context) async {
+    try {
+      final answer = await showDialog<int>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+                title: const Text('Set Bold'),
+                children: List.generate(6, (index) =>
+                    SimpleDialogOption(
+                      child: Text(index.toString()),
+                      onPressed: () { Navigator.pop(context, index); },
+                    )
+                )
+            );
+          }
+      ) ?? 0;
+      await MyApp.printer?.setBold(answer);
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -153,9 +213,11 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const SetPrintAreaSize()));
                           }, child: const Text('Set Print Area Size')),
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SetPaperType()));
-                          }, child: const Text('Set Paper Type')),
+                          onPressed: () => _setPaperType(context),
+                          child: const Text('Set Paper Type')),
+                      ElevatedButton(
+                          onPressed: () => _setBold(context),
+                          child: const Text('Set Bold')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const AddText()));

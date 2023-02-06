@@ -106,4 +106,16 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> setBold(int size) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.setBold',
+      <String, dynamic> {
+        'size': size,
+      },
+    );
+
+    return result ?? false;
+  }
 }
