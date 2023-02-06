@@ -12,11 +12,11 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     var currentPaperType: PTCPCLNewPaperType? = nil
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "com.gogovan/flutter_label_printer", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "hk.gogovan.flutter_label_printer", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterLabelPrinterPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         
-        let bluetoothScanChannel = FlutterEventChannel(name: "com.gogovan/bluetoothScan", binaryMessenger: registrar.messenger())
+        let bluetoothScanChannel = FlutterEventChannel(name: "hk.gogovan.bluetoothScan", binaryMessenger: registrar.messenger())
         
         bluetoothScanChannel.setStreamHandler(instance.handler)
         PTDispatcher.share().initBleCentral()
@@ -29,10 +29,10 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             currentPaperType = PTCPCLNewPaperType(rawValue: UInt(value))
         }
         
-        if (call.method == "com.gogovan/stopSearchHMA300L") {
+        if (call.method == "hk.gogovan.stopSearchHMA300L") {
             PTDispatcher.share().stopScanBluetooth()
             result(true)
-        } else if (call.method == "com.gogovan/connectHMA300L") {
+        } else if (call.method == "hk.gogovan.connectHMA300L") {
             if let args = call.arguments as? [String:Any],
                let address = args["address"] as? String {
                 let printer = handler.foundPrinters.filter { p in
@@ -66,15 +66,15 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1000", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "com.gogovan/disconnectHMA300L") {
+        } else if (call.method == "hk.gogovan.disconnectHMA300L") {
             PTDispatcher.share().disconnect()
             result(true)
-        } else if (call.method == "com.gogovan/printTestPageHMA300L") {
+        } else if (call.method == "hk.gogovan.printTestPageHMA300L") {
             let cmd = PTCommandCPCL()
             cmd.printSelfInspectionPage()
             PTDispatcher.share().send(cmd.cmdData as Data)
             result(true)
-        } else if (call.method == "com.gogovan/setPrintAreaSizeHMA300L") {
+        } else if (call.method == "hk.gogovan.setPrintAreaSizeHMA300L") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
@@ -92,7 +92,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "com.gogovan/addText") {
+        } else if (call.method == "hk.gogovan.addText") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
@@ -110,7 +110,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "com.gogovan/print") {
+        } else if (call.method == "hk.gogovan.print") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
@@ -123,7 +123,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 currentCommand = PTCommandCPCL() // After printing, throw away the old data.
                 result(true)
             }
-        } else if (call.method == "com.gogovan/setPaperType") {
+        } else if (call.method == "hk.gogovan.setPaperType") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }

@@ -30,11 +30,11 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
         methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
 
         channel =
-            MethodChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/flutter_label_printer")
+            MethodChannel(flutterPluginBinding.binaryMessenger, "hk.gogovan.flutter_label_printer")
         channel.setMethodCallHandler(methodHandler)
 
         bluetoothScanChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "com.gogovan/bluetoothScan")
+            EventChannel(flutterPluginBinding.binaryMessenger, "hk.gogovan.bluetoothScan")
         bluetoothScanChannel.setStreamHandler(bluetoothScanStreamHandler)
     }
 

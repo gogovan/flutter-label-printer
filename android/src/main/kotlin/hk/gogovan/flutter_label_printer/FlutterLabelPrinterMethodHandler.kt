@@ -11,7 +11,7 @@ class FlutterLabelPrinterMethodHandler(
     private val bluetoothSearcher: BluetoothSearcher?,
 ): MethodChannel.MethodCallHandler {
     companion object {
-        const val SHARED_PREF_NAME = "hk.gogovan/flutter_label_printer"
+        const val SHARED_PREF_NAME = "hk.gogovan.flutter_label_printer"
         const val SHARED_PREF_PAPER_TYPE = "paper_type"
     }
 
@@ -25,11 +25,11 @@ class FlutterLabelPrinterMethodHandler(
 
         try {
             when (call.method) {
-                "com.gogovan/stopSearchHMA300L" -> {
+                "hk.gogovan.stopSearchHMA300L" -> {
                     val response = bluetoothSearcher?.stopScan()
                     result.success(response)
                 }
-                "com.gogovan/connectHMA300L" -> {
+                "hk.gogovan.connectHMA300L" -> {
                     val address = call.argument<String>("address")
                     if (address == null) {
                         result.error(
@@ -66,14 +66,14 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
-                "com.gogovan/disconnectHMA300L" -> {
+                "hk.gogovan.disconnectHMA300L" -> {
                     result.success(PrinterHelper.portClose())
                 }
-                "com.gogovan/printTestPageHMA300L" -> {
+                "hk.gogovan.printTestPageHMA300L" -> {
                     printTestPage()
                     result.success(true)
                 }
-                "com.gogovan/setPrintAreaSizeHMA300L" -> {
+                "hk.gogovan.setPrintAreaSizeHMA300L" -> {
                     try {
                         val offset = call.argument<Int>("offset")
                         val horizontalRes = call.argument<Int>("horizontalRes")
@@ -92,7 +92,7 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
-                "com.gogovan/addText" -> {
+                "hk.gogovan.addText" -> {
                     try {
                         val rotate = call.argument<Int>("rotate")
                         val font = call.argument<Int>("font")
@@ -105,14 +105,14 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
-                "com.gogovan/print" -> {
+                "hk.gogovan.print" -> {
                     if (currentPaperType == 1) {
                         PrinterHelper.Form()
                     }
                     PrinterHelper.Print()
                     result.success(true)
                 }
-                "com.gogovan/setPaperType" -> {
+                "hk.gogovan.setPaperType" -> {
                     try {
                         val paperType = call.argument<Int>("paperType") ?: 0
                         PrinterHelper.setPaperFourInch(paperType)
