@@ -12,11 +12,11 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     var currentPaperType: PTCPCLNewPaperType? = nil
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "hk.gogovan.flutter_label_printer", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "hk.gogovan.label_printer.flutter_label_printer", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterLabelPrinterPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         
-        let bluetoothScanChannel = FlutterEventChannel(name: "hk.gogovan.bluetoothScan", binaryMessenger: registrar.messenger())
+        let bluetoothScanChannel = FlutterEventChannel(name: "hk.gogovan.label_printer.bluetoothScan", binaryMessenger: registrar.messenger())
         
         bluetoothScanChannel.setStreamHandler(instance.handler)
         PTDispatcher.share().initBleCentral()
@@ -29,10 +29,10 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             currentPaperType = PTCPCLNewPaperType(rawValue: UInt(value))
         }
         
-        if (call.method == "hk.gogovan.stopSearchHMA300L") {
+        if (call.method == "hk.gogovan.label_printer.stopSearchHMA300L") {
             PTDispatcher.share().stopScanBluetooth()
             result(true)
-        } else if (call.method == "hk.gogovan.connectHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.connectHMA300L") {
             if let args = call.arguments as? [String:Any],
                let address = args["address"] as? String {
                 let printer = handler.foundPrinters.filter { p in
@@ -66,15 +66,15 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1000", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "hk.gogovan.disconnectHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.disconnectHMA300L") {
             PTDispatcher.share().disconnect()
             result(true)
-        } else if (call.method == "hk.gogovan.printTestPageHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.printTestPageHMA300L") {
             let cmd = PTCommandCPCL()
             cmd.printSelfInspectionPage()
             PTDispatcher.share().send(cmd.cmdData as Data)
             result(true)
-        } else if (call.method == "hk.gogovan.setPrintAreaSizeHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.setPrintAreaSizeHMA300L") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
@@ -92,7 +92,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "hk.gogovan.addText") {
+        } else if (call.method == "hk.gogovan.label_printer.addText") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
@@ -110,11 +110,12 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "hk.gogovan.print") {
+        } else if (call.method == "hk.gogovan.label_printer.print") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
             if let cmd = currentCommand {
+                cmd.encoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding.init(CFStringEncodings.GB_18030_2000.rawValue))
                 if (currentPaperType == PTCPCLNewPaperType.paperLabel) {
                     cmd.cpclForm()
                 }
@@ -123,7 +124,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 currentCommand = PTCommandCPCL() // After printing, throw away the old data.
                 result(true)
             }
-        } else if (call.method == "hk.gogovan.setPaperType") {
+        } else if (call.method == "hk.gogovan.label_printer.setPaperType") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
@@ -141,7 +142,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "hk.gogovan.setBold") {
+        } else if (call.method == "hk.gogovan.label_printer.setBold") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
@@ -160,7 +161,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "hk.gogovan.setTextSize") {
+        } else if (call.method == "hk.gogovan.label_printer.setTextSize") {
             if (currentCommand == nil) {
                 currentCommand = PTCommandCPCL()
             }
