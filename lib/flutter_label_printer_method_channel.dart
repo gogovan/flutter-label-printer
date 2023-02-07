@@ -73,9 +73,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addText(TextParams params) async {
+  Future<bool> addTextHMA300L(TextParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addText',
+      'hk.gogovan.label_printer.addTextHMA300L',
       <String, dynamic>{
         'rotate': params.rotate.rot,
         'font': params.font.code,
@@ -89,16 +89,16 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> print() async {
-    final result = await methodChannel.invokeMethod<bool>('hk.gogovan.label_printer.print');
+  Future<bool> printHMA300L() async {
+    final result = await methodChannel.invokeMethod<bool>('hk.gogovan.label_printer.printHMA300L');
 
     return result ?? false;
   }
 
   @override
-  Future<bool> setPaperType(PaperType type) async {
+  Future<bool> setPaperTypeHMA300L(PaperType type) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setPaperType',
+      'hk.gogovan.label_printer.setPaperTypeHMA300L',
       <String, dynamic> {
         'paperType': type.code,
       },
@@ -108,9 +108,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setBold(int size) async {
+  Future<bool> setBoldHMA300L(int size) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setBold',
+      'hk.gogovan.label_printer.setBoldHMA300L',
       <String, dynamic> {
         'size': size,
       },
@@ -120,9 +120,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setTextSize(int width, int height) async {
+  Future<bool> setTextSizeHMA300L(int width, int height) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setTextSize',
+      'hk.gogovan.label_printer.setTextSizeHMA300L',
       <String, dynamic> {
         'width': width,
         'height': height,

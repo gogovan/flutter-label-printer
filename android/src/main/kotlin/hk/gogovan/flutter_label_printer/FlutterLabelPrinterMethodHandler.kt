@@ -94,7 +94,7 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
-                "hk.gogovan.label_printer.addText" -> {
+                "hk.gogovan.label_printer.addTextHMA300L" -> {
                     try {
                         val rotate = call.argument<Int>("rotate")
                         val font = call.argument<Int>("font")
@@ -108,7 +108,7 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
-                "hk.gogovan.label_printer.print" -> {
+                "hk.gogovan.label_printer.printHMA300L" -> {
                     PrinterHelper.Country("CHINA")
                     PrinterHelper.LanguageEncode = "GB_2312"
                     if (currentPaperType == 1) {
@@ -117,7 +117,7 @@ class FlutterLabelPrinterMethodHandler(
                     PrinterHelper.Print()
                     result.success(true)
                 }
-                "hk.gogovan.label_printer.setPaperType" -> {
+                "hk.gogovan.label_printer.setPaperTypeHMA300L" -> {
                     try {
                         val paperType = call.argument<Int>("paperType") ?: 0
                         val returnCode = PrinterHelper.setPaperFourInch(paperType)
@@ -131,7 +131,7 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
-                "hk.gogovan.label_printer.setBold" -> {
+                "hk.gogovan.label_printer.setBoldHMA300L" -> {
                     try {
                         val size = max(0, min(5, call.argument<Int>("size") ?: 0))
                         val returnCode = PrinterHelper.SetBold(size.toString())
@@ -141,7 +141,7 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
-                "hk.gogovan.label_printer.setTextSize" -> {
+                "hk.gogovan.label_printer.setTextSizeHMA300L" -> {
                     try {
                         val width = max(1, min(16, call.argument<Int>("width") ?: 1))
                         val height = max(1, min(16, call.argument<Int>("height") ?: 1))

@@ -81,7 +81,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addText(params);
+      return FlutterLabelPrinterPlatform.instance.addTextHMA300L(params);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -96,7 +96,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.print();
+      return FlutterLabelPrinterPlatform.instance.printHMA300L();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -111,7 +111,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setPaperType(type);
+      return FlutterLabelPrinterPlatform.instance.setPaperTypeHMA300L(type);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -126,7 +126,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setBold(size);
+      return FlutterLabelPrinterPlatform.instance.setBoldHMA300L(size);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -141,7 +141,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setTextSize(width, height);
+      return FlutterLabelPrinterPlatform.instance.setTextSizeHMA300L(width, height);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
