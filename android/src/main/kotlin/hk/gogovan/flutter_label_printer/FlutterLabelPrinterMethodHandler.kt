@@ -140,6 +140,7 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
                     } else {
                         try {
+                            // TODO API for setting language and country
                             PrinterHelper.LanguageEncode = "gb2312"
                             PrinterHelper.Country("CHINA")
 
@@ -165,7 +166,7 @@ class FlutterLabelPrinterMethodHandler(
                                 y.toString(),
                                 text
                             )
-                            // val returnCode = PrinterHelper.PrintTextCPCL(rotateP, 16, x.toString(), y.toString(), text, 0, false, 100)
+
                             result.success(returnCode >= 0)
                         } catch (e: ClassCastException) {
                             result.error(
@@ -181,10 +182,10 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
                     } else {
                         if (!paperTypeSet) {
-
+                            log.w("Paper Type is not set. This may result in unexpected behavior in printing.")
                         }
                         if (!areaSizeSet) {
-
+                            log.w("Print Area Size is not set. This may result in unexpected behavior in printing.")
                         }
 
                         if (currentPaperType == 1) {

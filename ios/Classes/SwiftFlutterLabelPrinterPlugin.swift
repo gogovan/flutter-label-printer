@@ -11,6 +11,11 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
     
     var currentPaperType: PTCPCLNewPaperType? = nil
     
+    var paperTypeSet = false
+    var areaSizeSet = false
+    
+    let log = Log()
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "hk.gogovan.label_printer.flutter_label_printer", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterLabelPrinterPlugin()
@@ -95,6 +100,9 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let vRes = PTCPCLLabelResolution(rawValue: UInt(verticalRes)),
                    let cmd = currentCommand {
                     cmd.cpclLabel(withOffset: offset, hRes: hRes, vRes: vRes, height: height, quantity: quantity)
+                    
+                    areaSizeSet = true
+                    
                     result(true)
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
@@ -130,13 +138,23 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     currentCommand = PTCommandCPCL()
                 }
                 if let cmd = currentCommand {
+                    if (!paperTypeSet) {
+                        log.w(msg: "Paper Type is not set. This may result in unexpected behavior in printing.")
+                    }
+                    if (!areaSizeSet) {
+                        log.w(msg: "Print Area Size is not set. This may result in unexpected behavior in printing.")
+                    }
+                    
                     cmd.encoding = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding.init(CFStringEncodings.GB_18030_2000.rawValue))
                     if (currentPaperType == PTCPCLNewPaperType.paperLabel) {
                         cmd.cpclForm()
                     }
                     cmd.cpclPrint();
                     PTDispatcher.share().send(cmd.cmdData as Data)
+                    
                     currentCommand = PTCommandCPCL() // After printing, throw away the old data.
+                    areaSizeSet = false
+                    
                     result(true)
                 }
             }
@@ -156,6 +174,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     currentPaperType = type
                     let def = UserDefaults()
                     def.set(currentPaperType?.rawValue, forKey: SwiftFlutterLabelPrinterPlugin.SHARED_PREF_PAPER_TYPE)
+                    paperTypeSet = true
                     
                     result(true)
                 } else {
