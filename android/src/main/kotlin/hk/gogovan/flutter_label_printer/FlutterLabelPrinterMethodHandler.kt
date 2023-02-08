@@ -96,21 +96,31 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.addTextHMA300L" -> {
                     try {
+                        PrinterHelper.LanguageEncode = "GB_2312"
+                        PrinterHelper.Country("CHINA")
+
                         val rotate = call.argument<Int>("rotate")
                         val font = call.argument<Int>("font")
                         val x = call.argument<Int>("x")
                         val y = call.argument<Int>("y")
                         val text = call.argument<String>("text")
-                        // val returnCode = PrinterHelper.Text(rotate.toString(), font.toString(), "0", x.toString(), y.toString(), text)
-                        val returnCode = PrinterHelper.PrintTextCPCL(rotate.toString(), 16, x.toString(), y.toString(), text, 0, false, 0)
+
+                        val rotateP = when (rotate) {
+                            0 -> PrinterHelper.TEXT
+                            90 -> PrinterHelper.TEXT90
+                            180 -> PrinterHelper.TEXT180
+                            270 -> PrinterHelper.TEXT270
+                            else -> throw ClassCastException()
+                        }
+
+                        val returnCode = PrinterHelper.Text(rotateP, font.toString(), "0", x.toString(), y.toString(), text)
+                        // val returnCode = PrinterHelper.PrintTextCPCL(rotateP, 16, x.toString(), y.toString(), text, 0, false, 100)
                         result.success(returnCode >= 0)
                     } catch (e: ClassCastException) {
                         result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
                 "hk.gogovan.label_printer.printHMA300L" -> {
-                    PrinterHelper.Country("CHINA")
-                    PrinterHelper.LanguageEncode = "GB_2312"
                     if (currentPaperType == 1) {
                         PrinterHelper.Form()
                     }

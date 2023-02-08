@@ -13,8 +13,8 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
   final offsetController = TextEditingController();
   final heightController = TextEditingController();
   final quantityController = TextEditingController();
-  var hRes = LabelResolution.res100;
-  var vRes = LabelResolution.res100;
+  var hRes = LabelResolution.res200;
+  var vRes = LabelResolution.res200;
 
   Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
