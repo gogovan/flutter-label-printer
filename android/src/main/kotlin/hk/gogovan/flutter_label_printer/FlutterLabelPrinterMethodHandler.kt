@@ -19,6 +19,9 @@ class FlutterLabelPrinterMethodHandler(
 
     private var currentPaperType: Int? = null
 
+    private var paperTypeSet = false
+    private var areaSizeSet = false
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if (currentPaperType == null) {
             val pref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
@@ -32,134 +35,199 @@ class FlutterLabelPrinterMethodHandler(
                     result.success(response)
                 }
                 "hk.gogovan.label_printer.connectHMA300L" -> {
-                    val address = call.argument<String>("address")
-                    if (address == null) {
-                        result.error(
-                            "1000",
-                            "Unable to extract arguments.",
-                            Throwable().stackTraceToString()
-                        )
+                    if (PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer already connected.", Throwable().stackTraceToString())
                     } else {
-                        when (PrinterHelper.portOpenBT(context, address)) {
-                            0 -> {
-                                result.success(true)
-                            }
-                            -1 -> {
-                                result.error(
-                                    "1008",
-                                    "Connection timed out.",
-                                    Throwable().stackTraceToString()
-                                )
-                            }
-                            -2 -> {
-                                result.error(
-                                    "1007",
-                                    "Bluetooth address incorrect.",
-                                    Throwable().stackTraceToString()
-                                )
-                            }
-                            else -> {
-                                result.error(
-                                    "1006",
-                                    "Connection error.",
-                                    Throwable().stackTraceToString()
-                                )
+                        val address = call.argument<String>("address")
+                        if (address == null) {
+                            result.error(
+                                "1000",
+                                "Unable to extract arguments.",
+                                Throwable().stackTraceToString()
+                            )
+                        } else {
+                            when (PrinterHelper.portOpenBT(context, address)) {
+                                0 -> {
+                                    result.success(true)
+                                }
+                                -1 -> {
+                                    result.error(
+                                        "1008",
+                                        "Connection timed out.",
+                                        Throwable().stackTraceToString()
+                                    )
+                                }
+                                -2 -> {
+                                    result.error(
+                                        "1007",
+                                        "Bluetooth address incorrect.",
+                                        Throwable().stackTraceToString()
+                                    )
+                                }
+                                else -> {
+                                    result.error(
+                                        "1006",
+                                        "Connection error.",
+                                        Throwable().stackTraceToString()
+                                    )
+                                }
                             }
                         }
                     }
                 }
                 "hk.gogovan.label_printer.disconnectHMA300L" -> {
-                    result.success(PrinterHelper.portClose())
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        result.success(PrinterHelper.portClose())
+                    }
                 }
                 "hk.gogovan.label_printer.printTestPageHMA300L" -> {
-                    printTestPage()
-                    result.success(true)
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        printTestPage()
+                        result.success(true)
+                    }
                 }
                 "hk.gogovan.label_printer.setPrintAreaSizeHMA300L" -> {
-                    try {
-                        val offset = call.argument<Int>("offset")
-                        val horizontalRes = call.argument<Int>("horizontalRes")
-                        val verticalRes = call.argument<Int>("verticalRes")
-                        val height = call.argument<Int>("height")
-                        val quantity = call.argument<Int>("quantity")
-                        val returnCode = PrinterHelper.printAreaSize(
-                            offset?.toString() ?: "0",
-                            horizontalRes?.toString() ?: "200",
-                            verticalRes?.toString() ?: "200",
-                            height?.toString() ?: "0",
-                            quantity?.toString() ?: "1",
-                        )
-                        result.success(returnCode >= 0)
-                    } catch (e: ClassCastException) {
-                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        try {
+                            val offset = call.argument<Int>("offset")
+                            val horizontalRes = call.argument<Int>("horizontalRes")
+                            val verticalRes = call.argument<Int>("verticalRes")
+                            val height = call.argument<Int>("height")
+                            val quantity = call.argument<Int>("quantity")
+                            val returnCode = PrinterHelper.printAreaSize(
+                                offset?.toString() ?: "0",
+                                horizontalRes?.toString() ?: "200",
+                                verticalRes?.toString() ?: "200",
+                                height?.toString() ?: "0",
+                                quantity?.toString() ?: "1",
+                            )
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
                     }
                 }
                 "hk.gogovan.label_printer.addTextHMA300L" -> {
-                    try {
-                        PrinterHelper.LanguageEncode = "GB_2312"
-                        PrinterHelper.Country("CHINA")
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        try {
+                            PrinterHelper.LanguageEncode = "GB_2312"
+                            PrinterHelper.Country("CHINA")
 
-                        val rotate = call.argument<Int>("rotate")
-                        val font = call.argument<Int>("font")
-                        val x = call.argument<Int>("x")
-                        val y = call.argument<Int>("y")
-                        val text = call.argument<String>("text")
+                            val rotate = call.argument<Int>("rotate")
+                            val font = call.argument<Int>("font")
+                            val x = call.argument<Int>("x")
+                            val y = call.argument<Int>("y")
+                            val text = call.argument<String>("text")
 
-                        val rotateP = when (rotate) {
-                            0 -> PrinterHelper.TEXT
-                            90 -> PrinterHelper.TEXT90
-                            180 -> PrinterHelper.TEXT180
-                            270 -> PrinterHelper.TEXT270
-                            else -> throw ClassCastException()
+                            val rotateP = when (rotate) {
+                                0 -> PrinterHelper.TEXT
+                                90 -> PrinterHelper.TEXT90
+                                180 -> PrinterHelper.TEXT180
+                                270 -> PrinterHelper.TEXT270
+                                else -> throw ClassCastException()
+                            }
+
+                            val returnCode = PrinterHelper.Text(
+                                rotateP,
+                                font.toString(),
+                                "0",
+                                x.toString(),
+                                y.toString(),
+                                text
+                            )
+                            // val returnCode = PrinterHelper.PrintTextCPCL(rotateP, 16, x.toString(), y.toString(), text, 0, false, 100)
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
                         }
-
-                        val returnCode = PrinterHelper.Text(rotateP, font.toString(), "0", x.toString(), y.toString(), text)
-                        // val returnCode = PrinterHelper.PrintTextCPCL(rotateP, 16, x.toString(), y.toString(), text, 0, false, 100)
-                        result.success(returnCode >= 0)
-                    } catch (e: ClassCastException) {
-                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
                     }
                 }
                 "hk.gogovan.label_printer.printHMA300L" -> {
-                    if (currentPaperType == 1) {
-                        PrinterHelper.Form()
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        if (currentPaperType == 1) {
+                            PrinterHelper.Form()
+                        }
+                        PrinterHelper.Print()
+                        result.success(true)
                     }
-                    PrinterHelper.Print()
-                    result.success(true)
                 }
                 "hk.gogovan.label_printer.setPaperTypeHMA300L" -> {
-                    try {
-                        val paperType = call.argument<Int>("paperType") ?: 0
-                        val returnCode = PrinterHelper.setPaperFourInch(paperType)
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        try {
+                            val paperType = call.argument<Int>("paperType") ?: 0
+                            val returnCode = PrinterHelper.setPaperFourInch(paperType)
 
-                        currentPaperType = paperType
-                        val pref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-                        pref.edit().putInt(SHARED_PREF_PAPER_TYPE, paperType).apply()
+                            currentPaperType = paperType
+                            val pref =
+                                context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+                            pref.edit().putInt(SHARED_PREF_PAPER_TYPE, paperType).apply()
 
-                        result.success(returnCode >= 0)
-                    } catch (e: ClassCastException) {
-                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
                     }
                 }
                 "hk.gogovan.label_printer.setBoldHMA300L" -> {
-                    try {
-                        val size = max(0, min(5, call.argument<Int>("size") ?: 0))
-                        val returnCode = PrinterHelper.SetBold(size.toString())
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        try {
+                            val size = max(0, min(5, call.argument<Int>("size") ?: 0))
+                            val returnCode = PrinterHelper.SetBold(size.toString())
 
-                        result.success(returnCode >= 0)
-                    } catch (e: ClassCastException) {
-                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
                     }
                 }
                 "hk.gogovan.label_printer.setTextSizeHMA300L" -> {
-                    try {
-                        val width = max(1, min(16, call.argument<Int>("width") ?: 1))
-                        val height = max(1, min(16, call.argument<Int>("height") ?: 1))
-                        val returnCode = PrinterHelper.SetMag(width.toString(), height.toString())
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        try {
+                            val width = max(1, min(16, call.argument<Int>("width") ?: 1))
+                            val height = max(1, min(16, call.argument<Int>("height") ?: 1))
+                            val returnCode =
+                                PrinterHelper.SetMag(width.toString(), height.toString())
 
-                        result.success(returnCode >= 0)
-                    } catch (e: ClassCastException) {
-                        result.error("1009", "Unable to extract arguments", Throwable().stackTraceToString())
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
                     }
                 }
                 else -> {
