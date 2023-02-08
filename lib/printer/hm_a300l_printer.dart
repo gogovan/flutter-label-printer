@@ -60,6 +60,10 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
+  Future<void> setLogLevel(int level) async {
+
+  }
+
   Future<bool> setPrintAreaSize(PrintAreaSizeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException('Device not connected.', StackTrace.current.toString());

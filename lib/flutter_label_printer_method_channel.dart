@@ -23,35 +23,46 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<bool> stopSearchHMA300L() async {
-    final result =
-        await methodChannel.invokeMethod<bool>('hk.gogovan.label_printer.stopSearchHMA300L');
+    final result = await methodChannel
+        .invokeMethod<bool>('hk.gogovan.label_printer.stopSearchHMA300L');
 
     return result ?? false;
   }
 
   @override
   Future<bool> connectHMA300L(String address) async {
-    final result = await methodChannel
-        .invokeMethod<bool>('hk.gogovan.label_printer.connectHMA300L', <String, dynamic>{
-      'address': address,
-    });
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.connectHMA300L',
+      <String, dynamic>{
+        'address': address,
+      },
+    );
 
     return result ?? false;
   }
 
   @override
   Future<bool> disconnectHMA300L() async {
-    final result =
-        await methodChannel.invokeMethod<bool>('hk.gogovan.label_printer.disconnectHMA300L');
+    final result = await methodChannel
+        .invokeMethod<bool>('hk.gogovan.label_printer.disconnectHMA300L');
 
     return result ?? false;
   }
 
   @override
   Future<bool> printTestPageHMA300L() async {
-    final result = await methodChannel.invokeMethod<bool>('hk.gogovan.label_printer.printTestPageHMA300L');
+    final result = await methodChannel
+        .invokeMethod<bool>('hk.gogovan.label_printer.printTestPageHMA300L');
 
     return result ?? false;
+  }
+
+  @override
+  Future<void> setLogLevel(int level) async {
+    await methodChannel.invokeMethod<void>(
+      'hk.gogovan.label_printer.setLogLevel',
+      <String, dynamic>{'level': level},
+    );
   }
 
   @override
@@ -90,7 +101,8 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<bool> printHMA300L() async {
-    final result = await methodChannel.invokeMethod<bool>('hk.gogovan.label_printer.printHMA300L');
+    final result = await methodChannel
+        .invokeMethod<bool>('hk.gogovan.label_printer.printHMA300L');
 
     return result ?? false;
   }
@@ -99,7 +111,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   Future<bool> setPaperTypeHMA300L(PaperType type) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.setPaperTypeHMA300L',
-      <String, dynamic> {
+      <String, dynamic>{
         'paperType': type.code,
       },
     );
@@ -111,7 +123,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   Future<bool> setBoldHMA300L(int size) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.setBoldHMA300L',
-      <String, dynamic> {
+      <String, dynamic>{
         'size': size,
       },
     );
@@ -123,7 +135,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   Future<bool> setTextSizeHMA300L(int width, int height) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.setTextSizeHMA300L',
-      <String, dynamic> {
+      <String, dynamic>{
         'width': width,
         'height': height,
       },

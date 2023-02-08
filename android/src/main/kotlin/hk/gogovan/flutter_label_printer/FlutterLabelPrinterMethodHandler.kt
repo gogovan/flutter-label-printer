@@ -3,6 +3,7 @@ package hk.gogovan.flutter_label_printer
 import android.content.Context
 import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
+import hk.gogovan.flutter_label_printer.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.lang.Integer.max
@@ -22,6 +23,8 @@ class FlutterLabelPrinterMethodHandler(
     private var paperTypeSet = false
     private var areaSizeSet = false
 
+    private val log = Log()
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if (currentPaperType == null) {
             val pref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
@@ -30,6 +33,18 @@ class FlutterLabelPrinterMethodHandler(
 
         try {
             when (call.method) {
+                "hk.gogovan.label_printer.setLogLevel" -> {
+                    try {
+                        val level = call.argument<Int>("level") ?: 2
+                        log.setLogLevel(level)
+                    } catch (e: ClassCastException) {
+                        result.error(
+                            "1009",
+                            "Unable to extract arguments",
+                            Throwable().stackTraceToString()
+                        )
+                    }
+                }
                 "hk.gogovan.label_printer.stopSearchHMA300L" -> {
                     val response = bluetoothSearcher?.stopScan()
                     result.success(response)
@@ -107,6 +122,9 @@ class FlutterLabelPrinterMethodHandler(
                                 height?.toString() ?: "0",
                                 quantity?.toString() ?: "1",
                             )
+
+                            areaSizeSet = true
+
                             result.success(returnCode >= 0)
                         } catch (e: ClassCastException) {
                             result.error(
@@ -122,7 +140,7 @@ class FlutterLabelPrinterMethodHandler(
                         result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
                     } else {
                         try {
-                            PrinterHelper.LanguageEncode = "GB_2312"
+                            PrinterHelper.LanguageEncode = "gb2312"
                             PrinterHelper.Country("CHINA")
 
                             val rotate = call.argument<Int>("rotate")
@@ -162,10 +180,20 @@ class FlutterLabelPrinterMethodHandler(
                     if (!PrinterHelper.IsOpened()) {
                         result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
                     } else {
+                        if (!paperTypeSet) {
+
+                        }
+                        if (!areaSizeSet) {
+
+                        }
+
                         if (currentPaperType == 1) {
                             PrinterHelper.Form()
                         }
                         PrinterHelper.Print()
+
+                        areaSizeSet = false
+
                         result.success(true)
                     }
                 }
@@ -181,6 +209,7 @@ class FlutterLabelPrinterMethodHandler(
                             val pref =
                                 context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
                             pref.edit().putInt(SHARED_PREF_PAPER_TYPE, paperType).apply()
+                            paperTypeSet = true
 
                             result.success(returnCode >= 0)
                         } catch (e: ClassCastException) {

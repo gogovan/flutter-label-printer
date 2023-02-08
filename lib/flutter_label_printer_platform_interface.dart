@@ -47,6 +47,12 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
+  Future<void> setLogLevel(int level) {
+    throw UnimplementedError(
+      'setLogLevel() has not been implemented.',
+    );
+  }
+
   Future<bool> setPrintAreaSizeHMA300L(PrintAreaSizeParams params) {
     throw UnimplementedError(
       'setPrintAreaSizeHMA300L() has not been implemented.',
