@@ -65,11 +65,6 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  /// Before printing with the Hanyin HM-A300L, the print area size and paper type
-  /// should be set. Print area size should be set per every print.
-  /// Print area size can be set with `setPrintAreaSizeHMA300L()`.
-  /// Paper type can be set with `setPaperTypeHMA300L()`
-  /// Failure of doing so may result in unexpected behavior in printing.
   Future<bool> printHMA300L() {
     throw UnimplementedError(
       'print() has not been implemented.',
@@ -82,14 +77,12 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  /// Command to set boldness of text. Size should be within 0 to 5.
   Future<bool> setBoldHMA300L(int size) {
     throw UnimplementedError(
       'setBold() has not been implemented.',
     );
   }
 
-  /// Command to set size of text. Size should be within 1 to 16.
   Future<bool> setTextSizeHMA300L(int width, int height) {
     throw UnimplementedError(
       'setTextSize() has not been implemented.',

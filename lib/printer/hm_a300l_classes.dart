@@ -1,5 +1,6 @@
 // ignore_for_file: no-magic-number, for enum codes and some default values.
 
+/// Resolution of printing in dpi (dots per inch).
 enum LabelResolution {
   res100(100),
   res200(200);

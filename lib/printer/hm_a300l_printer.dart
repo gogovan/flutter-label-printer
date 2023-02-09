@@ -14,6 +14,10 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 ///
 /// For all functions, unless otherwise specified, returns true on success.
 ///
+/// Before sending any print commands, the print area size should be set using `setPrintAreaSize` and paper type should be set using `setPaperType`.
+/// `setPaperType` can be called once per session, however `setPrintAreaSize` should be called for every print command.
+/// Failure of doing so may result in unexpected behavior in printing.
+///
 /// You should call `connect` first to connect the printer.
 /// All commands throw InvalidConnectionStateException if the printer is not connected.
 class HMA300LPrinter extends PrinterInterface {
@@ -63,6 +67,8 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
+  /// Set logging level.
+  /// `level` should be from 0 to 5, indicating from VERBOSE, DEBUG, INFO, WARN, ERROR to ASSERT levels.
   Future<void> setLogLevel(int level) async =>
       FlutterLabelPrinterPlatform.instance.setLogLevel(level);
 
@@ -121,6 +127,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
+  /// Command to set paper type currently used on the printer.
   Future<bool> setPaperType(PaperType type) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
@@ -139,6 +146,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
+  /// Command to set boldness of text. Size should be within 0 to 5.
   Future<bool> setBold(int size) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
@@ -157,6 +165,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
+  /// Command to set size of text. Size should be within 1 to 16.
   Future<bool> setTextSize(int width, int height) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
