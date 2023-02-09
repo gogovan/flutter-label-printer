@@ -70,8 +70,9 @@ enum PaperType {
   final int code;
 }
 
+@immutable
 class PrintAreaSizeParams {
-  PrintAreaSizeParams({
+  const PrintAreaSizeParams({
     this.offset = 0,
     this.horizontalRes = LabelResolution.res200,
     this.verticalRes = LabelResolution.res200,
@@ -79,15 +80,39 @@ class PrintAreaSizeParams {
     this.quantity = 1,
   });
 
-  int offset;
-  LabelResolution horizontalRes;
-  LabelResolution verticalRes;
-  int height;
-  int quantity;
+  final int offset;
+  final LabelResolution horizontalRes;
+  final LabelResolution verticalRes;
+  final int height;
+  final int quantity;
+
+  @override
+  String toString() =>
+      'PrintAreaSizeParams{offset: $offset, horizontalRes: $horizontalRes, verticalRes: $verticalRes, height: $height, quantity: $quantity}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PrintAreaSizeParams &&
+          runtimeType == other.runtimeType &&
+          offset == other.offset &&
+          horizontalRes == other.horizontalRes &&
+          verticalRes == other.verticalRes &&
+          height == other.height &&
+          quantity == other.quantity;
+
+  @override
+  int get hashCode =>
+      offset.hashCode ^
+      horizontalRes.hashCode ^
+      verticalRes.hashCode ^
+      height.hashCode ^
+      quantity.hashCode;
 }
 
+@immutable
 class TextParams {
-  TextParams({
+  const TextParams({
     this.rotate = Rotation90.text,
     this.font = Font.font0,
     required this.xPosition,
@@ -95,27 +120,56 @@ class TextParams {
     required this.text,
   });
 
-  Rotation90 rotate;
-  Font font;
-  int xPosition;
-  int yPosition;
-  String text;
+  final Rotation90 rotate;
+  final Font font;
+  final int xPosition;
+  final int yPosition;
+  final String text;
+
+  @override
+  String toString() =>
+      'TextParams{rotate: $rotate, font: $font, xPosition: $xPosition, yPosition: $yPosition, text: $text}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TextParams &&
+          runtimeType == other.runtimeType &&
+          rotate == other.rotate &&
+          font == other.font &&
+          xPosition == other.xPosition &&
+          yPosition == other.yPosition &&
+          text == other.text;
+
+  @override
+  int get hashCode =>
+      rotate.hashCode ^
+      font.hashCode ^
+      xPosition.hashCode ^
+      yPosition.hashCode ^
+      text.hashCode;
 }
 
 /// Printer status.
 @immutable
 class PrinterStatus {
   const PrinterStatus(this.code);
+
   final int code;
 
   bool isBusy() => code & 1 == 1;
+
   bool isOutOfPaper() => code & 2 == 2;
+
   bool isCaseOpened() => code & 4 == 4;
+
   bool isBatteryLow() => code & 8 == 8;
+
   bool isNormal() => code == 0;
 
   @override
-  String toString() => 'isBusy: ${isBusy()}, isOutOfPaper: ${isOutOfPaper()}, isCaseOpened: ${isCaseOpened()}, isBatteryLow: ${isBatteryLow()}, code=$code';
+  String toString() =>
+      'isBusy: ${isBusy()}, isOutOfPaper: ${isOutOfPaper()}, isCaseOpened: ${isCaseOpened()}, isBatteryLow: ${isBatteryLow()}, code=$code';
 
   @override
   bool operator ==(Object other) =>
