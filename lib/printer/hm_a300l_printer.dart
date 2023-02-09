@@ -48,7 +48,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> printTestPage() async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
-          'Device not connected.', StackTrace.current.toString());
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
 
     try {
@@ -67,7 +69,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> setPrintAreaSize(PrintAreaSizeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
-          'Device not connected.', StackTrace.current.toString());
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
 
     try {
@@ -84,7 +88,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> addText(TextParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
-          'Device not connected.', StackTrace.current.toString());
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
 
     try {
@@ -100,7 +106,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> print() async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
-          'Device not connected.', StackTrace.current.toString());
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
 
     try {
@@ -116,7 +124,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> setPaperType(PaperType type) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
-          'Device not connected.', StackTrace.current.toString());
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
 
     try {
@@ -132,7 +142,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> setBold(int size) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
-          'Device not connected.', StackTrace.current.toString());
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
 
     try {
@@ -148,7 +160,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> setTextSize(int width, int height) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
-          'Device not connected.', StackTrace.current.toString());
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
 
     try {
