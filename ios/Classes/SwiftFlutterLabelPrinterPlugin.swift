@@ -253,5 +253,5 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }
     }
-    
+
 }

@@ -8,6 +8,7 @@ import 'package:flutter_label_printer/printer_search_result/printer_search_resul
 import 'package:flutter_label_printer_example/add_text.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
 import 'package:flutter_label_printer_example/set_text_size.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final HMA300LSearcher _searcher = HMA300LSearcher();
+  HMA300LPrinter? _printer;
 
   List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
@@ -73,6 +75,7 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         _connected = true;
       });
+
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
