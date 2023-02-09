@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_label_printer/flutter_label_printer.dart';
+import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
+import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
+import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,35 +18,81 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _flutterLabelPrinterPlugin = FlutterLabelPrinter();
+  HMA300LSearcher _searcher = HMA300LSearcher();
+  HMA300LPrinter? _printer;
+
+  String _searchResultString = '';
+  List<PrinterSearchResult> _searchResults = [];
+  bool _searching = false;
+  bool _connected = false;
+
+  final connectIndexController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    initPlatformState();
+  void dispose() {
+    connectIndexController.dispose();
+    super.dispose();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
+  Future<void> _startSearch() async {
     try {
-      platformVersion =
-          await _flutterLabelPrinterPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      setState(() {
+        _searching = true;
+      });
+
+      _searcher.search().listen((event) {
+        setState(() {
+          _searchResults = event;
+        });
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
     }
+  }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+  Future<void> _stopSearch() async {
+    try {
+      await _searcher.stopSearch();
+      setState(() {
+        _searching = false;
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  Future<void> _connect() async {
+    try {
+      PrinterSearchResult? result = _searchResults[int.parse(connectIndexController.text)];
+      if (result != null) {
+        _printer = HMA300LPrinter(result);
+        await _printer?.connect();
+        setState(() {
+          _connected = true;
+        });
+      }
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _disconnect() async {
+    try {
+      await _printer?.disconnect();
+      setState(() {
+        _connected = false;
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _printTestPage() async {
+    try {
+      await _printer?.printTestPage();
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
   }
 
   @override
@@ -52,10 +100,28 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('flutter_label_printer example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: [
+              Text('Searching = $_searching'),
+              ElevatedButton(onPressed: _startSearch, child: const Text('Start search')),
+              Text('Search Result = ${_searchResults.toString()}\n'),
+              ElevatedButton(onPressed: _stopSearch, child: const Text('Stop search')),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Index of Search result to Connect Bluetooth to',
+                ),
+                keyboardType: TextInputType.number,
+                controller: connectIndexController,
+              ),
+              ElevatedButton(onPressed: _connect, child: const Text('Connect')),
+              Text('Connected = $_connected\n'),
+              ElevatedButton(onPressed: _printTestPage, child: const Text('Print Test Page')),
+              ElevatedButton(onPressed: _disconnect, child: const Text('Disconnect')),
+            ],
+          )
         ),
       ),
     );

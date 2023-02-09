@@ -5,6 +5,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   /// Constructs a FlutterLabelPrinterPlatform.
   FlutterLabelPrinterPlatform() : super(token: _token);
 
+  // ignore: no-object-declaration, needed, directly from Flutter template code.
   static final Object _token = Object();
 
   static FlutterLabelPrinterPlatform _instance =
@@ -23,7 +24,25 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Stream<List<String>> searchHMA300L() {
+    throw UnimplementedError('searchHMA300L() has not been implemented.');
+  }
+
+  Future<bool> stopSearchHMA300L() {
+    throw UnimplementedError('stopSearchHMA300L() has not been implemented.');
+  }
+
+  Future<bool> connectHMA300L(String address) {
+    throw UnimplementedError('connectHMA300L() has not been implemented.');
+  }
+
+  Future<bool> disconnectHMA300L() {
+    throw UnimplementedError('disconnectHMA300L() has not been implemented.');
+  }
+
+  Future<bool> printTestPageHMA300L() {
+    throw UnimplementedError(
+      'printTestPageHMA300L() has not been implemented.',
+    );
   }
 }
