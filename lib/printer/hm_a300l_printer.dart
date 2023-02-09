@@ -196,7 +196,8 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      final code = await FlutterLabelPrinterPlatform.instance.getStatusHMA300L();
+      final code =
+          await FlutterLabelPrinterPlatform.instance.getStatusHMA300L();
 
       return PrinterStatus(code);
     } on PlatformException catch (ex, st) {
