@@ -1,5 +1,7 @@
 // ignore_for_file: no-magic-number, for enum codes and some default values.
 
+import 'package:flutter/foundation.dart';
+
 /// Resolution of printing in dpi (dots per inch).
 enum LabelResolution {
   res100(100),
@@ -98,4 +100,30 @@ class TextParams {
   int xPosition;
   int yPosition;
   String text;
+}
+
+/// Printer status.
+@immutable
+class PrinterStatus {
+  const PrinterStatus(this.code);
+  final int code;
+
+  bool isBusy() => code & 1 == 1;
+  bool isOutOfPaper() => code & 2 == 2;
+  bool isCaseOpened() => code & 4 == 4;
+  bool isBatteryLow() => code & 8 == 8;
+  bool isNormal() => code == 0;
+
+  @override
+  String toString() => 'isBusy: ${isBusy()}, isOutOfPaper: ${isOutOfPaper()}, isCaseOpened: ${isCaseOpened()}, isBatteryLow: ${isBatteryLow()}, code=$code';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PrinterStatus &&
+          runtimeType == other.runtimeType &&
+          code == other.code;
+
+  @override
+  int get hashCode => code.hashCode;
 }

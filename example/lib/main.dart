@@ -93,7 +93,8 @@ class _MyAppState extends State<MyApp> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       await MyApp.printer?.printTestPage();
-      scaffoldMessenger.showSnackBar(const SnackBar(content: Text("Test page printed.")));
+      scaffoldMessenger
+          .showSnackBar(const SnackBar(content: Text("Test page printed.")));
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -113,35 +114,44 @@ class _MyAppState extends State<MyApp> {
   Future<void> _setPaperType(BuildContext context) async {
     try {
       final answer = await showDialog<PaperType>(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: const Text('Set Paper Type'),
-            children: [
-              SimpleDialogOption(
-                child: const Text('Continuous'),
-                onPressed: () { Navigator.pop(context, PaperType.continuous); },
-              ),
-              SimpleDialogOption(
-                child: const Text('Label'),
-                onPressed: () { Navigator.pop(context, PaperType.label); },
-              ),
-              SimpleDialogOption(
-                child: const Text('2 Inch Black Mark'),
-                onPressed: () { Navigator.pop(context, PaperType.blackMark2Inch); },
-              ),
-              SimpleDialogOption(
-                child: const Text('3 Inch Black Mark'),
-                onPressed: () { Navigator.pop(context, PaperType.blackMark3Inch); },
-              ),
-              SimpleDialogOption(
-                child: const Text('4 Inch Black Mark'),
-                onPressed: () { Navigator.pop(context, PaperType.blackMark4Inch); },
-              ),
-            ]
-          );
-        }
-      ) ?? PaperType.continuous;
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                    title: const Text('Set Paper Type'),
+                    children: [
+                      SimpleDialogOption(
+                        child: const Text('Continuous'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.continuous);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('Label'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.label);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('2 Inch Black Mark'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.blackMark2Inch);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('3 Inch Black Mark'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.blackMark3Inch);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('4 Inch Black Mark'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.blackMark4Inch);
+                        },
+                      ),
+                    ]);
+              }) ??
+          PaperType.continuous;
       await MyApp.printer?.setPaperType(answer);
     } catch (ex, st) {
       print('Exception: $ex\n$st');
@@ -151,20 +161,34 @@ class _MyAppState extends State<MyApp> {
   Future<void> _setBold(BuildContext context) async {
     try {
       final answer = await showDialog<int>(
-          context: context,
-          builder: (BuildContext context) {
-            return SimpleDialog(
-                title: const Text('Set Bold'),
-                children: List.generate(6, (index) =>
-                    SimpleDialogOption(
-                      child: Text(index.toString()),
-                      onPressed: () { Navigator.pop(context, index); },
-                    )
-                )
-            );
-          }
-      ) ?? 0;
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                    title: const Text('Set Bold'),
+                    children: List.generate(
+                        6,
+                        (index) => SimpleDialogOption(
+                              child: Text(index.toString()),
+                              onPressed: () {
+                                Navigator.pop(context, index);
+                              },
+                            )));
+              }) ??
+          0;
       await MyApp.printer?.setBold(answer);
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _getStatus(BuildContext context) async {
+    try {
+      final result = await MyApp.printer?.getStatus();
+      await showDialog(context: context, builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Status = $result')
+        );
+      });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -207,12 +231,20 @@ class _MyAppState extends State<MyApp> {
                           onPressed: _connect, child: const Text('Connect')),
                       Text('Connected = $_connected\n'),
                       ElevatedButton(
+                          onPressed: () => _getStatus(context),
+                          child: const Text('Get Status')),
+                      ElevatedButton(
                           onPressed: () => _printTestPage(context),
                           child: const Text('Print Test Page')),
                       ElevatedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SetPrintAreaSize()));
-                          }, child: const Text('Set Print Area Size')),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SetPrintAreaSize()));
+                          },
+                          child: const Text('Set Print Area Size')),
                       ElevatedButton(
                           onPressed: () => _setPaperType(context),
                           child: const Text('Set Paper Type')),
@@ -221,15 +253,22 @@ class _MyAppState extends State<MyApp> {
                           child: const Text('Set Bold')),
                       ElevatedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SetTextSize()));
-                          }, child: const Text('Set Text Size')),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SetTextSize()));
+                          },
+                          child: const Text('Set Text Size')),
                       ElevatedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const AddText()));
-                          }, child: const Text('Add Text')),
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddText()));
+                          },
+                          child: const Text('Add Text')),
                       ElevatedButton(
-                          onPressed: _print,
-                          child: const Text('Print')),
+                          onPressed: _print, child: const Text('Print')),
                       ElevatedButton(
                           onPressed: _disconnect,
                           child: const Text('Disconnect')),

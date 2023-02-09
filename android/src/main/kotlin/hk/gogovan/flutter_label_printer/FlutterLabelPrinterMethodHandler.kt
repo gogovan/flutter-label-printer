@@ -260,6 +260,14 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
+                "hk.gogovan.label_printer.getStatusHMA300L" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        val status = PrinterHelper.getstatus()
+                        result.success(status)
+                    }
+                }
                 else -> {
                     result.notImplemented()
                 }

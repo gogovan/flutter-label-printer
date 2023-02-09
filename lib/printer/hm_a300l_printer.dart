@@ -184,4 +184,26 @@ class HMA300LPrinter extends PrinterInterface {
       );
     }
   }
+
+  /// Get status of the printer. It may be unable to return a status while the printer is printing.
+  /// Use when there are issues printing after print commands are sent.
+  Future<PrinterStatus> getStatus() async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      final code = await FlutterLabelPrinterPlatform.instance.getStatusHMA300L();
+
+      return PrinterStatus(code);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }

@@ -231,6 +231,24 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
+        } else if (call.method == "hk.gogovan.label_printer.getStatusHMA300L") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                PTDispatcher.share().whenReceiveData({ (temp) in
+                    if let data = temp {
+                        if data.count == 1 {
+                            result(data[0])
+                        }
+                    } else {
+                        result(FlutterError(code: "1009", message: "Unable to receive data", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
+                })
+                
+                let cmd = PTCommandCPCL()
+                cmd.cpclGetPaperStatus()
+                PTDispatcher.share().send(cmd.cmdData as Data)
+            }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }

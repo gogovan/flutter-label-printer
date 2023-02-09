@@ -143,4 +143,12 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<int> getStatusHMA300L() async {
+    final result = await methodChannel
+        .invokeMethod<int>('hk.gogovan.label_printer.getStatusHMA300L');
+
+    return result ?? -1;
+  }
 }

@@ -61,31 +61,37 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
 
   Future<bool> addTextHMA300L(TextParams params) {
     throw UnimplementedError(
-      'addText() has not been implemented.',
+      'addTextHMA300L() has not been implemented.',
     );
   }
 
   Future<bool> printHMA300L() {
     throw UnimplementedError(
-      'print() has not been implemented.',
+      'printHMA300L() has not been implemented.',
     );
   }
 
   Future<bool> setPaperTypeHMA300L(PaperType type) {
     throw UnimplementedError(
-      'setPaperType() has not been implemented.',
+      'setPaperTypeHMA300L() has not been implemented.',
     );
   }
 
   Future<bool> setBoldHMA300L(int size) {
     throw UnimplementedError(
-      'setBold() has not been implemented.',
+      'setBoldHMA300L() has not been implemented.',
     );
   }
 
   Future<bool> setTextSizeHMA300L(int width, int height) {
     throw UnimplementedError(
-      'setTextSize() has not been implemented.',
+      'setTextSizeHMA300L() has not been implemented.',
+    );
+  }
+
+  Future<int> getStatusHMA300L() {
+    throw UnimplementedError(
+      'getStatusHMA300L() has not been implemented.',
     );
   }
 }
