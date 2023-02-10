@@ -6,6 +6,7 @@ import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
+import 'package:flutter_label_printer_example/pre_post_feed.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
 import 'package:flutter_label_printer_example/set_text_size.dart';
 import 'package:flutter/services.dart';
@@ -75,7 +76,6 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         _connected = true;
       });
-
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -187,11 +187,11 @@ class _MyAppState extends State<MyApp> {
   Future<void> _getStatus(BuildContext context) async {
     try {
       final result = await MyApp.printer?.getStatus();
-      await showDialog(context: context, builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Status = $result')
-        );
-      });
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(title: Text('Status = $result'));
+          });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -270,6 +270,14 @@ class _MyAppState extends State<MyApp> {
                                     builder: (context) => const AddText()));
                           },
                           child: const Text('Add Text')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const PrePostFeed()));
+                          },
+                          child: const Text('Pre/post feed')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(

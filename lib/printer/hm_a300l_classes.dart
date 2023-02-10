@@ -157,6 +157,8 @@ class PrinterStatus {
 
   final int code;
 
+  bool isFailure() => code == -1;
+
   bool isBusy() => code & 1 == 1;
 
   bool isOutOfPaper() => code & 2 == 2;
@@ -169,7 +171,7 @@ class PrinterStatus {
 
   @override
   String toString() =>
-      'isBusy: ${isBusy()}, isOutOfPaper: ${isOutOfPaper()}, isCaseOpened: ${isCaseOpened()}, isBatteryLow: ${isBatteryLow()}, code=$code';
+      'isFail: ${isFailure()}, isBusy: ${isBusy()}, isOutOfPaper: ${isOutOfPaper()}, isCaseOpened: ${isCaseOpened()}, isBatteryLow: ${isBatteryLow()}, code=$code';
 
   @override
   bool operator ==(Object other) =>

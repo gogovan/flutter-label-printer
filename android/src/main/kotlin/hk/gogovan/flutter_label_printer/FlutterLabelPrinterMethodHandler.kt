@@ -25,6 +25,8 @@ class FlutterLabelPrinterMethodHandler(
 
     private val log = Log()
 
+    private var currentPostFeed = 0
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if (currentPaperType == null) {
             val pref = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
@@ -191,6 +193,12 @@ class FlutterLabelPrinterMethodHandler(
                         if (currentPaperType == 1) {
                             PrinterHelper.Form()
                         }
+
+                        if (currentPostFeed != 0) {
+                            PrinterHelper.Postfeed(currentPostFeed.toString())
+                            currentPostFeed = 0
+                        }
+
                         PrinterHelper.Print()
 
                         areaSizeSet = false
@@ -266,6 +274,43 @@ class FlutterLabelPrinterMethodHandler(
                     } else {
                         val status = PrinterHelper.getstatus()
                         result.success(status)
+                    }
+                }
+                "hk.gogovan.label_printer.prefeedHMA300L" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        try {
+                            val dot = call.argument<Int>("dot") ?: 0
+                            val returnCode = PrinterHelper.Prefeed(dot.toString())
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.postfeedHMA300L" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                    } else {
+                        try {
+                            val dot = call.argument<Int>("dot") ?: 0
+                            // Printer's Postfeed can only be called after Form, store the value.
+                            currentPostFeed += dot
+
+                            result.success(true)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
                     }
                 }
                 else -> {

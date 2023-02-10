@@ -151,4 +151,28 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? -1;
   }
+
+  @override
+  Future<bool> prefeedHMA300L(int dot) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.prefeedHMA300L',
+      <String, dynamic>{
+        'dot': dot,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> postfeedHMA300L(int dot) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.postfeedHMA300L',
+      <String, dynamic>{
+        'dot': dot,
+      },
+    );
+
+    return result ?? false;
+  }
 }
