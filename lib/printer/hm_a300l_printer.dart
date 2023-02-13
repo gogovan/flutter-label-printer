@@ -225,22 +225,4 @@ class HMA300LPrinter extends PrinterInterface {
       );
     }
   }
-
-  Future<bool> postfeed(int dot) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
-
-    try {
-      return FlutterLabelPrinterPlatform.instance.postfeedHMA300L(dot);
-    } on PlatformException catch (ex, st) {
-      Error.throwWithStackTrace(
-        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
-        st,
-      );
-    }
-  }
 }

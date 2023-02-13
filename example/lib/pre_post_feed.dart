@@ -10,7 +10,6 @@ class PrePostFeed extends StatefulWidget {
 
 class _PrePostFeedState extends State<PrePostFeed> {
   final prefeedController = TextEditingController();
-  final postfeedController = TextEditingController();
 
   Future<void> _onPrefeedPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -18,17 +17,6 @@ class _PrePostFeedState extends State<PrePostFeed> {
       await MyApp.printer?.prefeed(int.parse(prefeedController.text));
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text("Prefeed Set")));
-    } catch (ex, st) {
-      print('Exception: $ex\n$st');
-    }
-  }
-
-  Future<void> _onPostfeedPressed(context) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    try {
-      await MyApp.printer?.postfeed(int.parse(postfeedController.text));
-      scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text("Postfeed Set")));
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -51,16 +39,6 @@ class _PrePostFeedState extends State<PrePostFeed> {
           ElevatedButton(
               onPressed: () => _onPrefeedPressed(context),
               child: const Text("Set prefeed")),
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Postfeed',
-            ),
-            keyboardType: TextInputType.number,
-            controller: postfeedController,
-          ),
-          ElevatedButton(
-              onPressed: () => _onPostfeedPressed(context),
-              child: const Text("Set postfeed")),
           ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
