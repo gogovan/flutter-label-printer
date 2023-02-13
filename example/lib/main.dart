@@ -5,6 +5,7 @@ import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
+import 'package:flutter_label_printer_example/add_barcode.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
 import 'package:flutter_label_printer_example/prefeed.dart';
 import 'package:flutter_label_printer_example/set_page_width.dart';
@@ -275,6 +276,9 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () => _printTestPage(context),
                           child: const Text('Print Test Page')),
                       ElevatedButton(
+                          onPressed: () => _setPaperType(context),
+                          child: const Text('Set Paper Type')),
+                      ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -284,8 +288,21 @@ class _MyAppState extends State<MyApp> {
                           },
                           child: const Text('Set Print Area Size')),
                       ElevatedButton(
-                          onPressed: () => _setPaperType(context),
-                          child: const Text('Set Paper Type')),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SetPageWidth()));
+                          },
+                          child: const Text('Set Page Width')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Prefeed()));
+                          },
+                          child: const Text('Prefeed')),
                       ElevatedButton(
                           onPressed: () => _setBold(context),
                           child: const Text('Set Bold')),
@@ -297,6 +314,9 @@ class _MyAppState extends State<MyApp> {
                                     builder: (context) => const SetTextSize()));
                           },
                           child: const Text('Set Text Size')),
+                      ElevatedButton(
+                          onPressed: () => _setAlign(context),
+                          child: const Text('Set Align')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -310,20 +330,9 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Prefeed()));
+                                    builder: (context) => const AddBarcode()));
                           },
-                          child: const Text('Prefeed')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SetPageWidth()));
-                          },
-                          child: const Text('Set Page Width')),
-                      ElevatedButton(
-                          onPressed: () => _setAlign(context),
-                          child: const Text('Set Align')),
+                          child: const Text('Add Barcode')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(

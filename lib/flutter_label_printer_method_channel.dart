@@ -187,4 +187,23 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> addBarcode(BarcodeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addBarcode',
+      <String, dynamic>{
+        'orientation': params.orientation.code,
+        'type': params.type.code,
+        'width': params.barWidthUnit,
+        'ratio': params.ratio.code,
+        'height': params.height,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'data': params.data,
+      },
+    );
+
+    return result ?? false;
+  }
 }

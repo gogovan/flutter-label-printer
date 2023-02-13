@@ -112,4 +112,10 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
       'setAlignHMA300L() has not been implemented.',
     );
   }
+
+  Future<bool> addBarcode(BarcodeParams params) {
+    throw UnimplementedError(
+      'setAlignHMA300L() has not been implemented.',
+    );
+  }
 }

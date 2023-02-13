@@ -80,6 +80,53 @@ enum PrinterTextAlign {
   final int code;
 }
 
+enum PrintOrientation {
+  horizontal(0),
+  vertical(1);
+
+  const PrintOrientation(this.code);
+
+  final int code;
+}
+
+enum BarcodeType {
+  upca(0),
+  upce(1),
+  ean13(2),
+  ean8(3),
+  code39(4),
+  code93(5),
+  code128(6),
+  codabar(7);
+
+  const BarcodeType(this.code);
+
+  final int code;
+}
+
+enum BarcodeRatio {
+  ratio0(0),
+  ratio1(1),
+  ratio2(2),
+  ratio3(3),
+  ratio4(4),
+  ratio20(20),
+  ratio21(21),
+  ratio22(22),
+  ratio23(23),
+  ratio24(24),
+  ratio25(25),
+  ratio26(26),
+  ratio27(27),
+  ratio28(28),
+  ratio29(29),
+  ratio30(30);
+
+  const BarcodeRatio(this.code);
+
+  final int code;
+}
+
 @immutable
 class PrintAreaSizeParams {
   const PrintAreaSizeParams({
@@ -158,6 +205,58 @@ class TextParams {
       xPosition.hashCode ^
       yPosition.hashCode ^
       text.hashCode;
+}
+
+@immutable
+class BarcodeParams {
+  const BarcodeParams({
+    this.orientation = PrintOrientation.horizontal,
+    required this.type,
+    required this.ratio,
+    required this.barWidthUnit,
+    required this.height,
+    required this.xPosition,
+    required this.yPosition,
+    required this.data,
+  });
+
+  final PrintOrientation orientation;
+  final BarcodeType type;
+  final int barWidthUnit;
+  final BarcodeRatio ratio;
+  final int height;
+  final int xPosition;
+  final int yPosition;
+  final String data;
+
+  @override
+  String toString() =>
+      'BarcodeParams{orientation: $orientation, type: $type, barWidthUnit: $barWidthUnit, ratio: $ratio, height: $height, x: $xPosition, y: $yPosition, data: $data}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BarcodeParams &&
+          runtimeType == other.runtimeType &&
+          orientation == other.orientation &&
+          type == other.type &&
+          barWidthUnit == other.barWidthUnit &&
+          ratio == other.ratio &&
+          height == other.height &&
+          xPosition == other.xPosition &&
+          yPosition == other.yPosition &&
+          data == other.data;
+
+  @override
+  int get hashCode =>
+      orientation.hashCode ^
+      type.hashCode ^
+      barWidthUnit.hashCode ^
+      ratio.hashCode ^
+      height.hashCode ^
+      xPosition.hashCode ^
+      yPosition.hashCode ^
+      data.hashCode;
 }
 
 /// Printer status.

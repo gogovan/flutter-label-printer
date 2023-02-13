@@ -261,4 +261,22 @@ class HMA300LPrinter extends PrinterInterface {
       );
     }
   }
+
+  Future<bool> addBarcode(BarcodeParams params) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addBarcode(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }

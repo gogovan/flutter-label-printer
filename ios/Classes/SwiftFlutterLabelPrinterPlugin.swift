@@ -309,14 +309,48 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let cmd = currentCommand {
                     if (align == 0) {
                         cmd.cpclLeft()
+                        result(true)
                     } else if (align == 1) {
                         cmd.cpclCenter()
+                        result(true)
                     } else if (align == 2) {
                         cmd.cpclRight()
+                        result(true)
                     } else {
                         result(FlutterError(code: "1009", message: "Invalid Align argument: \(align)", details: Thread.callStackSymbols.joined(separator: "\n")))
                     }
-                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addBarcode") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let orientation = args["orientation"] as? Int,
+                   let type = args["type"] as? Int,
+                   let width = args["width"] as? Int,
+                   let ratio = args["ratio"] as? Int,
+                   let height = args["height"] as? Int,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let data = args["data"] as? String,
+                   let typeEnum = PTCPCLBarcodeStyle(rawValue: UInt(type)),
+                   let ratioEnum = PTCPCLBarcodeBarRatio(rawValue: UInt(ratio)),
+                   let cmd = currentCommand {
+                    if (orientation == 0) {
+                        cmd.cpclBarcode(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
+                        result(true)
+                    } else if (orientation == 1) {
+                        cmd.cpclBarcodeVertical(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
+                        result(true)
+                    } else {
+                        result(FlutterError(code: "1009", message: "Invalid orientation argument: \(orientation)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
