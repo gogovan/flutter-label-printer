@@ -33,7 +33,7 @@ class _PrePostFeedState extends State<PrePostFeed> {
             decoration: const InputDecoration(
               hintText: 'Prefeed',
             ),
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(signed: true),
             controller: prefeedController,
           ),
           ElevatedButton(

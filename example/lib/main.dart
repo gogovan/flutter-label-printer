@@ -277,7 +277,7 @@ class _MyAppState extends State<MyApp> {
                                 MaterialPageRoute(
                                     builder: (context) => const PrePostFeed()));
                           },
-                          child: const Text('Pre/post feed')),
+                          child: const Text('Prefeed')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(
