@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
+import 'package:flutter_label_printer_example/add_text.dart';
+import 'package:flutter_label_printer_example/pre_post_feed.dart';
+import 'package:flutter_label_printer_example/set_print_area_size.dart';
+import 'package:flutter_label_printer_example/set_text_size.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,15 +18,16 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  static HMA300LPrinter? printer;
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  HMA300LSearcher _searcher = HMA300LSearcher();
+  final HMA300LSearcher _searcher = HMA300LSearcher();
   HMA300LPrinter? _printer;
 
-  String _searchResultString = '';
   List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
   bool _connected = false;
@@ -63,14 +69,13 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _connect() async {
     try {
-      PrinterSearchResult? result = _searchResults[int.parse(connectIndexController.text)];
-      if (result != null) {
-        _printer = HMA300LPrinter(result);
-        await _printer?.connect();
-        setState(() {
-          _connected = true;
-        });
-      }
+      PrinterSearchResult? result =
+          _searchResults[int.parse(connectIndexController.text)];
+      MyApp.printer = HMA300LPrinter(result);
+      await MyApp.printer?.connect();
+      setState(() {
+        _connected = true;
+      });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -78,7 +83,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _disconnect() async {
     try {
-      await _printer?.disconnect();
+      await MyApp.printer?.disconnect();
       setState(() {
         _connected = false;
       });
@@ -87,9 +92,106 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> _printTestPage() async {
+  Future<void> _printTestPage(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await _printer?.printTestPage();
+      await MyApp.printer?.printTestPage();
+      scaffoldMessenger
+          .showSnackBar(const SnackBar(content: Text("Test page printed.")));
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _print() async {
+    try {
+      await MyApp.printer?.print();
+      setState(() {
+        _connected = false;
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _setPaperType(BuildContext context) async {
+    try {
+      final answer = await showDialog<PaperType>(
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                    title: const Text('Set Paper Type'),
+                    children: [
+                      SimpleDialogOption(
+                        child: const Text('Continuous'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.continuous);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('Label'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.label);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('2 Inch Black Mark'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.blackMark2Inch);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('3 Inch Black Mark'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.blackMark3Inch);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text('4 Inch Black Mark'),
+                        onPressed: () {
+                          Navigator.pop(context, PaperType.blackMark4Inch);
+                        },
+                      ),
+                    ]);
+              }) ??
+          PaperType.continuous;
+      await MyApp.printer?.setPaperType(answer);
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _setBold(BuildContext context) async {
+    try {
+      final answer = await showDialog<int>(
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                    title: const Text('Set Bold'),
+                    children: List.generate(
+                        6,
+                        (index) => SimpleDialogOption(
+                              child: Text(index.toString()),
+                              onPressed: () {
+                                Navigator.pop(context, index);
+                              },
+                            )));
+              }) ??
+          0;
+      await MyApp.printer?.setBold(answer);
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _getStatus(BuildContext context) async {
+    try {
+      final result = await MyApp.printer?.getStatus();
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(title: Text('Status = $result'));
+          });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -99,31 +201,94 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('flutter_label_printer example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Text('Searching = $_searching'),
-              ElevatedButton(onPressed: _startSearch, child: const Text('Start search')),
-              Text('Search Result = ${_searchResults.toString()}\n'),
-              ElevatedButton(onPressed: _stopSearch, child: const Text('Stop search')),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Index of Search result to Connect Bluetooth to',
+          appBar: AppBar(
+            title: const Text('flutter_label_printer example app'),
+          ),
+          body: LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                          onPressed: _startSearch,
+                          child: const Text('Start search')),
+                      Text('Searching = $_searching'),
+                      Text('Search Result = ${_searchResults.toString()}\n'),
+                      ElevatedButton(
+                          onPressed: _stopSearch,
+                          child: const Text('Stop search')),
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText:
+                              'Index of Search result to Connect Bluetooth to',
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: connectIndexController,
+                      ),
+                      ElevatedButton(
+                          onPressed: _connect, child: const Text('Connect')),
+                      Text('Connected = $_connected\n'),
+                      ElevatedButton(
+                          onPressed: () => _getStatus(context),
+                          child: const Text('Get Status')),
+                      ElevatedButton(
+                          onPressed: () => _printTestPage(context),
+                          child: const Text('Print Test Page')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SetPrintAreaSize()));
+                          },
+                          child: const Text('Set Print Area Size')),
+                      ElevatedButton(
+                          onPressed: () => _setPaperType(context),
+                          child: const Text('Set Paper Type')),
+                      ElevatedButton(
+                          onPressed: () => _setBold(context),
+                          child: const Text('Set Bold')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SetTextSize()));
+                          },
+                          child: const Text('Set Text Size')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddText()));
+                          },
+                          child: const Text('Add Text')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const PrePostFeed()));
+                          },
+                          child: const Text('Prefeed')),
+                      ElevatedButton(
+                          onPressed: _print, child: const Text('Print')),
+                      ElevatedButton(
+                          onPressed: _disconnect,
+                          child: const Text('Disconnect')),
+                    ],
+                  ),
                 ),
-                keyboardType: TextInputType.number,
-                controller: connectIndexController,
-              ),
-              ElevatedButton(onPressed: _connect, child: const Text('Connect')),
-              Text('Connected = $_connected\n'),
-              ElevatedButton(onPressed: _printTestPage, child: const Text('Print Test Page')),
-              ElevatedButton(onPressed: _disconnect, child: const Text('Disconnect')),
-            ],
-          )
-        ),
-      ),
+              );
+            },
+          )),
     );
   }
 }

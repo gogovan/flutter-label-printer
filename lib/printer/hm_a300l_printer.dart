@@ -1,11 +1,25 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
 /// Interface a Hanyin (HPRT) HM-A300L printer.
+///
+/// All printing commands (such as addText) are sent directly to the official Hanyin SDK. They are stored and managed by Hanyin SDK.
+/// Only the function "print" would actually start printing.
+///
+/// For all functions, unless otherwise specified, returns true on success.
+///
+/// Before sending any print commands, the print area size should be set using `setPrintAreaSize` and paper type should be set using `setPaperType`.
+/// `setPaperType` can be called once per session, however `setPrintAreaSize` should be called for every print command.
+/// Failure of doing so may result in unexpected behavior in printing.
+///
+/// You should call `connect` first to connect the printer.
+/// All commands throw InvalidConnectionStateException if the printer is not connected.
 class HMA300LPrinter extends PrinterInterface {
   HMA300LPrinter(super.device);
 
@@ -36,8 +50,174 @@ class HMA300LPrinter extends PrinterInterface {
 
   @override
   Future<bool> printTestPage() async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
     try {
       return FlutterLabelPrinterPlatform.instance.printTestPageHMA300L();
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  /// Set logging level.
+  /// `level` should be from 0 to 5, indicating from VERBOSE, DEBUG, INFO, WARN, ERROR to ASSERT levels.
+  Future<void> setLogLevel(int level) async =>
+      FlutterLabelPrinterPlatform.instance.setLogLevel(level);
+
+  Future<bool> setPrintAreaSize(PrintAreaSizeParams params) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance
+          .setPrintAreaSizeHMA300L(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addText(TextParams params) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addTextHMA300L(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> print() async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.printHMA300L();
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  /// Command to set paper type currently used on the printer.
+  Future<bool> setPaperType(PaperType type) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.setPaperTypeHMA300L(type);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  /// Command to set boldness of text. Size should be within 0 to 5.
+  Future<bool> setBold(int size) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.setBoldHMA300L(size);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  /// Command to set size of text. Size should be within 1 to 16.
+  Future<bool> setTextSize(int width, int height) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance
+          .setTextSizeHMA300L(width, height);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  /// Get status of the printer. It may be unable to return a status while the printer is printing.
+  /// Use when there are issues printing after print commands are sent.
+  Future<PrinterStatus> getStatus() async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      final code =
+          await FlutterLabelPrinterPlatform.instance.getStatusHMA300L();
+
+      return PrinterStatus(code);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> prefeed(int dot) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.prefeedHMA300L(dot);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

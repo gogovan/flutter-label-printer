@@ -3,6 +3,7 @@
 import 'package:flutter_label_printer/exception/connection_exception.dart';
 import 'package:flutter_label_printer/exception/connection_id_exception.dart';
 import 'package:flutter_label_printer/exception/connection_timeout_exception.dart';
+import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/exception/label_printer_exception.dart';
 import 'package:flutter_label_printer/exception/missing_permission_exception.dart';
@@ -35,6 +36,8 @@ LabelPrinterException getExceptionFromCode(
       return ConnectionIdException(message, stacktrace);
     case 1008:
       return ConnectionTimeoutException(message, stacktrace);
+    case 1009:
+      return InvalidArgumentException(message, stacktrace);
   }
 
   // All codes should be covered. This should not happen. Fallback.
