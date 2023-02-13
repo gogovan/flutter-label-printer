@@ -100,4 +100,16 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
       'prefeedHMA300L() has not been implemented.',
     );
   }
+
+  Future<bool> setPageWidthHMA300L(int width) {
+    throw UnimplementedError(
+      'setPageWidthHMA300L() has not been implemented.',
+    );
+  }
+
+  Future<bool> setAlignHMA300L(int align) {
+    throw UnimplementedError(
+      'setAlignHMA300L() has not been implemented.',
+    );
+  }
 }

@@ -70,6 +70,16 @@ enum PaperType {
   final int code;
 }
 
+enum PrinterTextAlign {
+  left(0),
+  center(1),
+  right(2);
+
+  const PrinterTextAlign(this.code);
+
+  final int code;
+}
+
 @immutable
 class PrintAreaSizeParams {
   const PrintAreaSizeParams({

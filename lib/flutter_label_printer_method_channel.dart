@@ -163,4 +163,28 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> setPageWidthHMA300L(int width) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.setPageWidthHMA300L',
+      <String, dynamic>{
+        'width': width,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> setAlignHMA300L(int align) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.setAlignHMA300L',
+      <String, dynamic>{
+        'align': align,
+      },
+    );
+
+    return result ?? false;
+  }
 }

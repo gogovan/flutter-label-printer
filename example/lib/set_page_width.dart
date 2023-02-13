@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
-class PrePostFeed extends StatefulWidget {
-  const PrePostFeed({Key? key}) : super(key: key);
+class SetPageWidth extends StatefulWidget {
+  const SetPageWidth({Key? key}) : super(key: key);
 
   @override
-  State<PrePostFeed> createState() => _PrePostFeedState();
+  State<SetPageWidth> createState() => _SetPageWidthState();
 }
 
-class _PrePostFeedState extends State<PrePostFeed> {
-  final prefeedController = TextEditingController();
+class _SetPageWidthState extends State<SetPageWidth> {
+  final pageWidthController = TextEditingController();
 
-  Future<void> _onPrefeedPressed(context) async {
+  Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.prefeed(int.parse(prefeedController.text));
+      await MyApp.printer?.setPageWidth(int.parse(pageWidthController.text));
       scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text("Prefeed Set")));
+          const SnackBar(content: Text("Page Width Set")));
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -31,14 +31,14 @@ class _PrePostFeedState extends State<PrePostFeed> {
         body: Column(children: [
           TextField(
             decoration: const InputDecoration(
-              hintText: 'Prefeed',
+              hintText: 'Page Width',
             ),
-            keyboardType: const TextInputType.numberWithOptions(signed: true),
-            controller: prefeedController,
+            keyboardType: const TextInputType.numberWithOptions(),
+            controller: pageWidthController,
           ),
           ElevatedButton(
-              onPressed: () => _onPrefeedPressed(context),
-              child: const Text("Set prefeed")),
+              onPressed: () => _onPressed(context),
+              child: const Text("Set Page Width")),
           ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);

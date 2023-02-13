@@ -265,6 +265,62 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
+        } else if (call.method == "hk.gogovan.label_printer.setPageWidthHMA300L") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let width = args["width"] as? Int,
+                   let cmd = currentCommand {
+                    cmd.cpclPageWidth(width)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.setAlignHMA300L") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let width = args["width"] as? Int,
+                   let cmd = currentCommand {
+                    cmd.cpclPageWidth(width)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.setAlignHMA300L") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let align = args["align"] as? Int,
+                   let cmd = currentCommand {
+                    if (align == 0) {
+                        cmd.cpclLeft()
+                    } else if (align == 1) {
+                        cmd.cpclCenter()
+                    } else if (align == 2) {
+                        cmd.cpclRight()
+                    } else {
+                        result(FlutterError(code: "1009", message: "Invalid Align argument: \(align)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }

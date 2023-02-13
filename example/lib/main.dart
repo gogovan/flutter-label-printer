@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
+import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
-import 'package:flutter_label_printer_example/pre_post_feed.dart';
+import 'package:flutter_label_printer_example/prefeed.dart';
+import 'package:flutter_label_printer_example/set_page_width.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
 import 'package:flutter_label_printer_example/set_text_size.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -197,6 +197,41 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _setAlign(BuildContext context) async {
+    try {
+      final answer = await showDialog<PrinterTextAlign>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+                title: const Text('Set Align'),
+                children: [
+                  SimpleDialogOption(
+                    child: const Text('Left'),
+                    onPressed: () {
+                      Navigator.pop(context, PrinterTextAlign.left);
+                    },
+                  ),
+                  SimpleDialogOption(
+                    child: const Text('Center'),
+                    onPressed: () {
+                      Navigator.pop(context, PrinterTextAlign.center);
+                    },
+                  ),
+                  SimpleDialogOption(
+                    child: const Text('Right'),
+                    onPressed: () {
+                      Navigator.pop(context, PrinterTextAlign.right);
+                    },
+                  ),
+                ]);
+          }) ??
+          PrinterTextAlign.left;
+      await MyApp.printer?.setAlign(answer);
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -275,9 +310,20 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const PrePostFeed()));
+                                    builder: (context) => const Prefeed()));
                           },
                           child: const Text('Prefeed')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SetPageWidth()));
+                          },
+                          child: const Text('Set Page Width')),
+                      ElevatedButton(
+                          onPressed: () => _setAlign(context),
+                          child: const Text('Set Align')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(
