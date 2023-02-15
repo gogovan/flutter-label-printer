@@ -339,17 +339,41 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let x = args["x"] as? Int,
                    let y = args["y"] as? Int,
                    let data = args["data"] as? String,
+                   let showData = args["showData"] as? Bool,
+                   let dataFont = args["dataFont"] as? Int?,
+                   let dataTextSize = args["dataTextSize"] as? Int?,
+                   let dataTextOffset = args["dataTextOffset"] as? Int?,
                    let typeEnum = PTCPCLBarcodeStyle(rawValue: UInt(type)),
                    let ratioEnum = PTCPCLBarcodeBarRatio(rawValue: UInt(ratio)),
                    let cmd = currentCommand {
-                    if (orientation == 0) {
-                        cmd.cpclBarcode(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
-                        result(true)
-                    } else if (orientation == 1) {
-                        cmd.cpclBarcodeVertical(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
-                        result(true)
+                    guard (!(showData && (dataFont == nil || dataTextSize == nil || dataTextOffset == nil))) else {
+                        result(FlutterError(code: "1009", message: "showData requested but required params are not provided", details: Thread.callStackSymbols.joined(separator: "\n")))
+                        return
+                    }
+                    if let dataFontN = dataFont,
+                       let dataTextSizeN = dataTextSize,
+                       let dataTextOffsetN = dataTextOffset,
+                       let dataFontEnum = PTCPCLTextFontName(rawValue: UInt(dataFontN)) {
+                        if (showData) {
+                            cmd.cpclBarcodeText(withFont: dataFontEnum, fontSize: dataTextSizeN, offset: dataTextOffsetN)
+                        }
+                        
+                        if (orientation == 0) {
+                            cmd.cpclBarcode(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
+                            result(true)
+                        } else if (orientation == 1) {
+                            cmd.cpclBarcodeVertical(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
+                            result(true)
+                        } else {
+                            result(FlutterError(code: "1009", message: "Invalid orientation argument: \(orientation)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                            return
+                        }
+                        
+                        if (showData) {
+                            cmd.cpclBarcodeTextOff()
+                        }
                     } else {
-                        result(FlutterError(code: "1009", message: "Invalid orientation argument: \(orientation)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                        result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                     }
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))

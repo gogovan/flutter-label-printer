@@ -201,6 +201,10 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
         'x': params.xPosition,
         'y': params.yPosition,
         'data': params.data,
+        'showData': params.dataTextParams != null,
+        'dataFont': params.dataTextParams?.font.code,
+        'dataTextSize': params.dataTextParams?.size,
+        'dataTextOffset': params.dataTextParams?.offset,
       },
     );
 

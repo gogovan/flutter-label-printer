@@ -13,11 +13,15 @@ class _AddBarcodeState extends State<AddBarcode> {
   var _orientation = PrintOrientation.horizontal;
   var _type = BarcodeType.code128;
   var _ratio = BarcodeRatio.ratio0;
+  var _showData = false;
+  var _dataTextFont = Font.font0;
   final _xController = TextEditingController();
   final _yController = TextEditingController();
   final _widthController = TextEditingController();
   final _heightController = TextEditingController();
   final _dataController = TextEditingController();
+  final _dataTextSizeController = TextEditingController();
+  final _dataTextOffsetController = TextEditingController();
 
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
@@ -31,6 +35,11 @@ class _AddBarcodeState extends State<AddBarcode> {
         barWidthUnit: int.parse(_widthController.text),
         height: int.parse(_heightController.text),
         data: _dataController.text,
+        dataTextParams: BarcodeDataTextParams(
+          font: _dataTextFont,
+          size: int.parse(_dataTextSizeController.text),
+          offset: int.parse(_dataTextOffsetController.text),
+        )
       ));
       navigator.pop();
     } catch (ex, st) {
@@ -181,6 +190,62 @@ class _AddBarcodeState extends State<AddBarcode> {
                       ),
                       keyboardType: TextInputType.text,
                       controller: _dataController,
+                    ),
+                    const Text('Show Data'),
+                    Checkbox(value: _showData, onChanged: (value) {
+                      _showData = value ?? false;
+                      setState(() {});
+                    }),
+                    const Text('Data Font'),
+                    DropdownButton<Font>(
+                      items: const [
+                        DropdownMenuItem(
+                            value: Font.font0, child: Text('Font 0:12x24。')),
+                        DropdownMenuItem(
+                            value: Font.font1,
+                            child: Text('Font 1:12x24(中文模式下打印繁体)，英文模式下字体变成(9x17)大小')),
+                        DropdownMenuItem(
+                            value: Font.font2, child: Text('Font 2:8x16。')),
+                        DropdownMenuItem(
+                            value: Font.font3, child: Text('Font 3:20x20。')),
+                        DropdownMenuItem(
+                            value: Font.font4,
+                            child: Text('Font 4:32x32或者16x32，由ID3字体宽高各放大两倍。')),
+                        DropdownMenuItem(
+                            value: Font.font7,
+                            child: Text('Font 7:24x24或者12x24，视中英文而定。')),
+                        DropdownMenuItem(
+                            value: Font.font8,
+                            child: Text('Font 8:24x24或者12x24，视中英文而定。')),
+                        DropdownMenuItem(
+                            value: Font.font20,
+                            child: Text('Font 20:16x16或者8x16，视中英文而定。')),
+                        DropdownMenuItem(
+                            value: Font.font28,
+                            child: Text('Font 24:24x24或者12x24，视中英文而定。')),
+                        DropdownMenuItem(
+                            value: Font.font55,
+                            child: Text('Font 55:16x16或者8x16，视中英文而定。')),
+                      ],
+                      onChanged: (item) {
+                        _dataTextFont = item!;
+                        setState(() {});
+                      },
+                      value: _dataTextFont,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Data text size',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: _dataTextSizeController,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Data text offset',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: _dataTextOffsetController,
                     ),
                     ElevatedButton(
                         onPressed: () => _onPressed(context),

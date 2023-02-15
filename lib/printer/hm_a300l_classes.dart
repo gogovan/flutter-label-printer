@@ -218,6 +218,7 @@ class BarcodeParams {
     required this.xPosition,
     required this.yPosition,
     required this.data,
+    this.dataTextParams,
   });
 
   final PrintOrientation orientation;
@@ -228,10 +229,11 @@ class BarcodeParams {
   final int xPosition;
   final int yPosition;
   final String data;
+  final BarcodeDataTextParams? dataTextParams;
 
   @override
   String toString() =>
-      'BarcodeParams{orientation: $orientation, type: $type, barWidthUnit: $barWidthUnit, ratio: $ratio, height: $height, x: $xPosition, y: $yPosition, data: $data}';
+      'BarcodeParams{orientation: $orientation, type: $type, barWidthUnit: $barWidthUnit, ratio: $ratio, height: $height, xPosition: $xPosition, yPosition: $yPosition, data: $data, dataTextParams: $dataTextParams}';
 
   @override
   bool operator ==(Object other) =>
@@ -245,7 +247,8 @@ class BarcodeParams {
           height == other.height &&
           xPosition == other.xPosition &&
           yPosition == other.yPosition &&
-          data == other.data;
+          data == other.data &&
+          dataTextParams == other.dataTextParams;
 
   @override
   int get hashCode =>
@@ -256,7 +259,37 @@ class BarcodeParams {
       height.hashCode ^
       xPosition.hashCode ^
       yPosition.hashCode ^
-      data.hashCode;
+      data.hashCode ^
+      dataTextParams.hashCode;
+}
+
+@immutable
+class BarcodeDataTextParams {
+  const BarcodeDataTextParams({
+    required this.font,
+    required this.size,
+    required this.offset,
+  });
+
+  final Font font;
+  final int size;
+  final int offset;
+
+  @override
+  String toString() =>
+      'BarcodeDataTextParams{font: $font, size: $size, offset: $offset}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BarcodeDataTextParams &&
+          runtimeType == other.runtimeType &&
+          font == other.font &&
+          size == other.size &&
+          offset == other.offset;
+
+  @override
+  int get hashCode => font.hashCode ^ size.hashCode ^ offset.hashCode;
 }
 
 /// Printer status.

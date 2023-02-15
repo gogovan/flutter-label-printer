@@ -397,6 +397,10 @@ class FlutterLabelPrinterMethodHandler(
                             val x = call.argument<Int>("x") ?: 0
                             val y = call.argument<Int>("y") ?: 0
                             val data = call.argument<String>("data") ?: ""
+                            val showData = call.argument<Boolean>("showData") ?: false
+                            val dataFont = call.argument<Int?>("dataFont")
+                            val dataTextSize = call.argument<Int?>("dataTextSize")
+                            val dataTextOffset = call.argument<Int?>("dataTextOffset")
 
                             val orientationEnum = when (orientation) {
                                 0 -> PrinterHelper.BARCODE
@@ -417,6 +421,9 @@ class FlutterLabelPrinterMethodHandler(
                             if (!((ratio in 0..4) || (ratio in 20..30))) {
                                 throw ClassCastException("Invalid ratio value $ratio")
                             }
+                            if (showData && (dataFont == null || dataTextSize == null || dataTextOffset == null)) {
+                                throw ClassCastException("showData is requested but required params are not provided.")
+                            }
 
                             val returnCode = PrinterHelper.Barcode(
                                 orientationEnum,
@@ -426,10 +433,10 @@ class FlutterLabelPrinterMethodHandler(
                                 height.toString(),
                                 x.toString(),
                                 y.toString(),
-                                false,
-                                "",
-                                "",
-                                "",
+                                showData,
+                                dataFont.toString(),
+                                dataTextSize.toString(),
+                                dataTextOffset.toString(),
                                 data
                             )
 
