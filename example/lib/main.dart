@@ -6,6 +6,7 @@ import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_barcode.dart';
+import 'package:flutter_label_printer_example/add_qrcode.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
 import 'package:flutter_label_printer_example/prefeed.dart';
 import 'package:flutter_label_printer_example/set_page_width.dart';
@@ -333,6 +334,14 @@ class _MyAppState extends State<MyApp> {
                                     builder: (context) => const AddBarcode()));
                           },
                           child: const Text('Add Barcode')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddQRCode()));
+                          },
+                          child: const Text('Add QRCode')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(

@@ -210,4 +210,21 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> addQRCode(QRCodeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addQRCode',
+      <String, dynamic>{
+        'orientation': params.orientation.code,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'model': params.model.code,
+        'unitSize': params.unitSize,
+        'data': params.data,
+      },
+    );
+
+    return result ?? false;
+  }
 }

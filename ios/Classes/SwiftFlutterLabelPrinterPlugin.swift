@@ -360,10 +360,8 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                         
                         if (orientation == 0) {
                             cmd.cpclBarcode(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
-                            result(true)
                         } else if (orientation == 1) {
                             cmd.cpclBarcodeVertical(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
-                            result(true)
                         } else {
                             result(FlutterError(code: "1009", message: "Invalid orientation argument: \(orientation)", details: Thread.callStackSymbols.joined(separator: "\n")))
                             return
@@ -372,11 +370,46 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                         if (showData) {
                             cmd.cpclBarcodeTextOff()
                         }
+                        
+                        result(true)
                     } else {
                         result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                     }
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addQRCode") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let orientation = args["orientation"] as? Int,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let model = args["model"] as? Int,
+                   let unitSize = args["unitSize"] as? Int,
+                   let data = args["data"] as? String,
+                   let modelEnum = PTCPCLQRCodeModel(rawValue: UInt(model)),
+                   let unitWidthEnum = PTCPCLQRCodeUnitWidth(rawValue: UInt(unitSize)),
+                   let cmd = currentCommand {
+                    if (orientation == 0) {
+                        cmd.cpclBarcodeQRcode(withXPos: x, yPos: y, model: modelEnum, unitWidth: unitWidthEnum)
+                    } else if (orientation == 1) {
+                        cmd.cpclBarcodeVerticalQRcode(withXPos: x, yPos: y, model: modelEnum, unitWidth: unitWidthEnum)
+                    } else {
+                        result(FlutterError(code: "1009", message: "Invalid orientation argument: \(orientation)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                        return
+                    }
+                    
+                    cmd.cpclBarcodeQRCodeCorrectionLecel(PTCPCLQRCodeCorrectionLevel.M, characterMode: PTCPCLQRCodeDataInputMode.A, context: data)
+                    cmd.cpclBarcodeQRcodeEnd()
+                    
+                    result(true)
                 }
             }
         } else {

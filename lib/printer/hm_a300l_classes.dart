@@ -127,6 +127,15 @@ enum BarcodeRatio {
   final int code;
 }
 
+enum QRCodeModel {
+  normal(1),
+  extraSymbols(2);
+
+  const QRCodeModel(this.code);
+
+  final int code;
+}
+
 @immutable
 class PrintAreaSizeParams {
   const PrintAreaSizeParams({
@@ -290,6 +299,49 @@ class BarcodeDataTextParams {
 
   @override
   int get hashCode => font.hashCode ^ size.hashCode ^ offset.hashCode;
+}
+
+@immutable
+class QRCodeParams {
+  const QRCodeParams({
+    required this.orientation,
+    required this.xPosition,
+    required this.yPosition,
+    required this.model,
+    required this.unitSize,
+    required this.data,
+  });
+
+  final PrintOrientation orientation;
+  final int xPosition;
+  final int yPosition;
+  final QRCodeModel model;
+  final int unitSize;
+  final String data;
+
+  @override
+  String toString() => 'QRCodeParams{orientation: $orientation, xPosition: $xPosition, yPosition: $yPosition, model: $model, unitSize: $unitSize, data: $data}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is QRCodeParams &&
+          runtimeType == other.runtimeType &&
+          orientation == other.orientation &&
+          xPosition == other.xPosition &&
+          yPosition == other.yPosition &&
+          model == other.model &&
+          unitSize == other.unitSize &&
+          data == other.data;
+
+  @override
+  int get hashCode =>
+      orientation.hashCode ^
+      xPosition.hashCode ^
+      yPosition.hashCode ^
+      model.hashCode ^
+      unitSize.hashCode ^
+      data.hashCode;
 }
 
 /// Printer status.

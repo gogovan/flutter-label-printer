@@ -450,6 +450,50 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
+                "hk.gogovan.label_printer.addQRCode" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val orientation = call.argument<Int>("orientation") ?: 0
+                            val x = call.argument<Int>("x") ?: 0
+                            val y = call.argument<Int>("y") ?: 0
+                            val model = call.argument<Int>("model") ?: 0
+                            val unitSize = call.argument<Int>("unitSize") ?: 0
+                            val data = call.argument<String>("data") ?: ""
+
+                            val orientationEnum = when (orientation) {
+                                0 -> PrinterHelper.BARCODE
+                                1 -> PrinterHelper.VBARCODE
+                                else -> throw ClassCastException("Invalid orientation value $orientation")
+                            }
+                            if (unitSize !in 1..32) {
+                                throw ClassCastException("Invalid Unit size value $orientation")
+                            }
+
+                            val returnCode = PrinterHelper.PrintQR(
+                                orientationEnum,
+                                x.toString(),
+                                y.toString(),
+                                model.toString(),
+                                unitSize.toString(),
+                                data
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
                 else -> {
                     result.notImplemented()
                 }
