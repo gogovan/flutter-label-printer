@@ -227,4 +227,36 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> addRectangle(Rect rect, int strokeWidth) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addRectangle',
+      <String, dynamic>{
+        'x0': rect.left.round(),
+        'y0': rect.top.round(),
+        'x1': rect.right.round(),
+        'y1': rect.bottom.round(),
+        'width': strokeWidth,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addLine(Rect rect, int strokeWidth) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addLine',
+      <String, dynamic>{
+        'x0': rect.left.round(),
+        'y0': rect.top.round(),
+        'x1': rect.right.round(),
+        'y1': rect.bottom.round(),
+        'width': strokeWidth,
+      },
+    );
+
+    return result ?? false;
+  }
 }

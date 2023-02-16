@@ -410,6 +410,52 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     cmd.cpclBarcodeQRcodeEnd()
                     
                     result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addRectangle") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let x0 = args["x0"] as? Int,
+                   let y0 = args["y0"] as? Int,
+                   let x1 = args["x1"] as? Int,
+                   let y1 = args["y1"] as? Int,
+                   let width = args["width"] as? Int,
+                   let cmd = currentCommand {
+                    cmd.cpclBox(withXPos: x0, yPos: y0, xEnd: x1, yEnd: y1, thickness: width)
+                    
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addLine") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let x0 = args["x0"] as? Int,
+                   let y0 = args["y0"] as? Int,
+                   let x1 = args["x1"] as? Int,
+                   let y1 = args["y1"] as? Int,
+                   let width = args["width"] as? Int,
+                   let cmd = currentCommand {
+                    cmd.cpclLine(withXPos: x0, yPos: y0, xEnd: x1, yEnd: y1, thickness: width)
+                    
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
         } else {

@@ -297,4 +297,40 @@ class HMA300LPrinter extends PrinterInterface {
       );
     }
   }
+
+  Future<bool> addRectangle(Rect rect, int strokeWidth) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addRectangle(rect, strokeWidth);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addLine(Rect rect, int strokeWidth) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addLine(rect, strokeWidth);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }

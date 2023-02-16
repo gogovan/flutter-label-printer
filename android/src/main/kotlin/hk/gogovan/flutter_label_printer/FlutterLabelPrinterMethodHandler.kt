@@ -494,6 +494,72 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
+                "hk.gogovan.label_printer.addRectangle" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val x0 = call.argument<Int>("x0") ?: 0
+                            val y0 = call.argument<Int>("y0") ?: 0
+                            val x1 = call.argument<Int>("x1") ?: 0
+                            val y1 = call.argument<Int>("y1") ?: 0
+                            val width = call.argument<Int>("width") ?: 1
+
+                            val returnCode = PrinterHelper.Box(
+                                x0.toString(),
+                                y0.toString(),
+                                x1.toString(),
+                                y1.toString(),
+                                width.toString()
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.addLine" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val x0 = call.argument<Int>("x0") ?: 0
+                            val y0 = call.argument<Int>("y0") ?: 0
+                            val x1 = call.argument<Int>("x1") ?: 0
+                            val y1 = call.argument<Int>("y1") ?: 0
+                            val width = call.argument<Int>("width") ?: 1
+
+                            val returnCode = PrinterHelper.Line(
+                                x0.toString(),
+                                y0.toString(),
+                                x1.toString(),
+                                y1.toString(),
+                                width.toString()
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
                 else -> {
                     result.notImplemented()
                 }
