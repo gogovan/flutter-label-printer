@@ -111,4 +111,7 @@ await _printer?.disconnect();
 
 # Issues
 
+## HM-A300L
+- Currently in iOS it can only print very small images, otherwise the printer will be stuck and unable to do anything, and can only be fixed by restarting the printer.
+
 # Contributing

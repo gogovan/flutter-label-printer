@@ -330,7 +330,8 @@ class QRCodeParams {
   final String data;
 
   @override
-  String toString() => 'QRCodeParams{orientation: $orientation, xPosition: $xPosition, yPosition: $yPosition, model: $model, unitSize: $unitSize, data: $data}';
+  String toString() =>
+      'QRCodeParams{orientation: $orientation, xPosition: $xPosition, yPosition: $yPosition, model: $model, unitSize: $unitSize, data: $data}';
 
   @override
   bool operator ==(Object other) =>

@@ -307,7 +307,8 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addRectangle(rect, strokeWidth);
+      return FlutterLabelPrinterPlatform.instance
+          .addRectangle(rect, strokeWidth);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
