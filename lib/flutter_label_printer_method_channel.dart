@@ -259,4 +259,21 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> addImage(PrintImageParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addImage',
+      <String, dynamic>{
+        'imagePath': params.imagePath,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'mode': params.mode.code,
+        'compress': params.compress,
+        'package': params.package,
+      },
+    );
+
+    return result ?? false;
+  }
 }

@@ -1,6 +1,8 @@
 package hk.gogovan.flutter_label_printer
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import hk.gogovan.flutter_label_printer.util.Log
@@ -560,12 +562,59 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
+                "hk.gogovan.label_printer.addImage" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val imagePath = call.argument<String>("imagePath")
+                            val x = call.argument<Int>("x") ?: 0
+                            val y = call.argument<Int>("y") ?: 0
+                            val mode = call.argument<Int>("mode") ?: 0
+
+                            val image = BitmapFactory.decodeFile(imagePath)
+                            if (image == null) {
+                                result.error(
+                                    "1010",
+                                    "Unable to load the file $imagePath.",
+                                    Throwable().stackTraceToString()
+                                )
+                                return
+                            }
+
+                            // compressType does not work and crashes the app if compressed.
+                            val returnCode = PrinterHelper.printBitmapCPCL(image, x, y, mode, 0, 0)
+
+                            if (returnCode <= -2) {
+                                result.error(
+                                    "1010",
+                                    "Unable to print the file $imagePath. Code = $returnCode",
+                                    Throwable().stackTraceToString()
+                                )
+                                return
+                            }
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
                 else -> {
                     result.notImplemented()
                 }
             }
         } catch (e: PluginException) {
             result.error(e.code.toString(), e.message, e.stackTraceToString())
+        } catch (e: Exception) {
+            result.error("1000", e.message, e.stackTraceToString())
         }
     }
 

@@ -129,13 +129,19 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
 
   Future<bool> addRectangle(Rect rect, int strokeWidth) {
     throw UnimplementedError(
-      'addQRCode() has not been implemented.',
+      'addRectangle() has not been implemented.',
     );
   }
 
   Future<bool> addLine(Rect rect, int strokeWidth) {
     throw UnimplementedError(
-      'addQRCode() has not been implemented.',
+      'addLine() has not been implemented.',
+    );
+  }
+
+  Future<bool> addImage(PrintImageParams params) {
+    throw UnimplementedError(
+      'addImage() has not been implemented.',
     );
   }
 }

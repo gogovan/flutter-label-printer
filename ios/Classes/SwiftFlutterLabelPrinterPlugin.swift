@@ -289,22 +289,6 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     currentCommand = PTCommandCPCL()
                 }
                 if let args = call.arguments as? [String:Any],
-                   let width = args["width"] as? Int,
-                   let cmd = currentCommand {
-                    cmd.cpclPageWidth(width)
-                    result(true)
-                } else {
-                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
-                }
-            }
-        } else if (call.method == "hk.gogovan.label_printer.setAlignHMA300L") {
-            if (PTDispatcher.share().printerConnected == nil) {
-                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
-            } else {
-                if (currentCommand == nil) {
-                    currentCommand = PTCommandCPCL()
-                }
-                if let args = call.arguments as? [String:Any],
                    let align = args["align"] as? Int,
                    let cmd = currentCommand {
                     if (align == 0) {
@@ -454,6 +438,48 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     cmd.cpclLine(withXPos: x0, yPos: y0, xEnd: x1, yEnd: y1, thickness: width)
                     
                     result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addImage") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let imagePath = args["imagePath"] as? String,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let mode = args["mode"] as? Int,
+                   let modeEnum = PTBitmapMode(rawValue: mode),
+                   let cmd = currentCommand {
+//                    guard let dataProvider = CGDataProvider(filename: imagePath) else {
+//                        result(FlutterError(code: "1010", message: "Unable to load the file \(imagePath).", details: Thread.callStackSymbols.joined(separator: "\n")))
+//                        return
+//                    }
+//                    var image: CGImage? = nil
+//                    image = CGImage.init(pngDataProviderSource: dataProvider, decode: nil, shouldInterpolate: false, intent: CGColorRenderingIntent.defaultIntent)
+//                    if (image == nil) {
+//                        image = CGImage.init(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: false, intent: CGColorRenderingIntent.defaultIntent)
+//                    }
+                    let url = URL(fileURLWithPath: imagePath)
+                    guard let imageData = NSData(contentsOf: url) else {
+                        result(FlutterError(code: "1010", message: "Unable to load the file \(imagePath).", details: Thread.callStackSymbols.joined(separator: "\n")))
+                        return
+                    }
+                    let image = UIImage(data: imageData as Data)
+                    
+                    if let loadedImage = image?.cgImage {
+                        // Compress does not work and crashes the printer if compressed.
+                        cmd.cpclPrintBitmap(withXPos: x, yPos: y, image: loadedImage, bitmapMode: modeEnum, compress: PTBitmapCompressMode.none, isPackage: false)
+                        result(true)
+                    } else {
+                        result(FlutterError(code: "1010", message: "Unable to load the file \(imagePath).", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }

@@ -136,6 +136,16 @@ enum QRCodeModel {
   final int code;
 }
 
+enum PrintImageMode {
+  binary(0),
+  dithering(1),
+  cluster(2);
+
+  const PrintImageMode(this.code);
+
+  final int code;
+}
+
 @immutable
 class PrintAreaSizeParams {
   const PrintAreaSizeParams({
@@ -342,6 +352,27 @@ class QRCodeParams {
       model.hashCode ^
       unitSize.hashCode ^
       data.hashCode;
+}
+
+@immutable
+class PrintImageParams {
+  const PrintImageParams({
+    required this.imagePath,
+    required this.xPosition,
+    required this.yPosition,
+    this.mode = PrintImageMode.binary,
+    this.compress = true,
+    this.package = false,
+  });
+
+  /// Path to the image to be printed, in either PNG or JPG format.
+  /// Size should be set accordingly. At 200 dpi, 8px in image corresponds to 1mm printed.
+  final String imagePath;
+  final int xPosition;
+  final int yPosition;
+  final PrintImageMode mode;
+  final bool compress;
+  final bool package;
 }
 
 /// Printer status.

@@ -6,6 +6,7 @@ import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer_example/add_barcode.dart';
+import 'package:flutter_label_printer_example/add_image.dart';
 import 'package:flutter_label_printer_example/add_line.dart';
 import 'package:flutter_label_printer_example/add_qrcode.dart';
 import 'package:flutter_label_printer_example/add_rectangle.dart';
@@ -110,9 +111,6 @@ class _MyAppState extends State<MyApp> {
   Future<void> _print() async {
     try {
       await MyApp.printer?.print();
-      setState(() {
-        _connected = false;
-      });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -360,6 +358,14 @@ class _MyAppState extends State<MyApp> {
                                     builder: (context) => const AddLine()));
                           },
                           child: const Text('Add Line')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddImage()));
+                          },
+                          child: const Text('Add Image')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(
