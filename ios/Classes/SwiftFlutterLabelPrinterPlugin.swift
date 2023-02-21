@@ -457,15 +457,6 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let mode = args["mode"] as? Int,
                    let modeEnum = PTBitmapMode(rawValue: mode),
                    let cmd = currentCommand {
-//                    guard let dataProvider = CGDataProvider(filename: imagePath) else {
-//                        result(FlutterError(code: "1010", message: "Unable to load the file \(imagePath).", details: Thread.callStackSymbols.joined(separator: "\n")))
-//                        return
-//                    }
-//                    var image: CGImage? = nil
-//                    image = CGImage.init(pngDataProviderSource: dataProvider, decode: nil, shouldInterpolate: false, intent: CGColorRenderingIntent.defaultIntent)
-//                    if (image == nil) {
-//                        image = CGImage.init(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: false, intent: CGColorRenderingIntent.defaultIntent)
-//                    }
                     let url = URL(fileURLWithPath: imagePath)
                     guard let imageData = NSData(contentsOf: url) else {
                         result(FlutterError(code: "1010", message: "Unable to load the file \(imagePath).", details: Thread.callStackSymbols.joined(separator: "\n")))
