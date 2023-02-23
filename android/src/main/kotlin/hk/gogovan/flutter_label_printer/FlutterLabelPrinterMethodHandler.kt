@@ -1,6 +1,8 @@
 package hk.gogovan.flutter_label_printer
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import hk.gogovan.flutter_label_printer.util.Log
@@ -12,7 +14,7 @@ import java.lang.Integer.min
 class FlutterLabelPrinterMethodHandler(
     private val context: Context,
     private val bluetoothSearcher: BluetoothSearcher?,
-): MethodChannel.MethodCallHandler {
+) : MethodChannel.MethodCallHandler {
     companion object {
         const val SHARED_PREF_NAME = "hk.gogovan.label_printer.flutter_label_printer"
         const val SHARED_PREF_PAPER_TYPE = "paper_type"
@@ -24,8 +26,6 @@ class FlutterLabelPrinterMethodHandler(
     private var areaSizeSet = false
 
     private val log = Log()
-
-    private var currentPostFeed = 0
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if (currentPaperType == null) {
@@ -53,7 +53,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.connectHMA300L" -> {
                     if (PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer already connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer already connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         val address = call.argument<String>("address")
                         if (address == null) {
@@ -94,14 +98,22 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.disconnectHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         result.success(PrinterHelper.portClose())
                     }
                 }
                 "hk.gogovan.label_printer.printTestPageHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         printTestPage()
                         result.success(true)
@@ -109,7 +121,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.setPrintAreaSizeHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         try {
                             val offset = call.argument<Int>("offset")
@@ -139,7 +155,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.addTextHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         try {
                             // TODO API for setting language and country
@@ -181,7 +201,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.printHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         if (!paperTypeSet) {
                             log.w("Paper Type is not set. This may result in unexpected behavior in printing.")
@@ -194,11 +218,6 @@ class FlutterLabelPrinterMethodHandler(
                             PrinterHelper.Form()
                         }
 
-                        if (currentPostFeed != 0) {
-                            PrinterHelper.Postfeed(currentPostFeed.toString())
-                            currentPostFeed = 0
-                        }
-
                         PrinterHelper.Print()
 
                         areaSizeSet = false
@@ -208,7 +227,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.setPaperTypeHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         try {
                             val paperType = call.argument<Int>("paperType") ?: 0
@@ -232,7 +255,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.setBoldHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         try {
                             val size = max(0, min(5, call.argument<Int>("size") ?: 0))
@@ -250,7 +277,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.setTextSizeHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         try {
                             val width = max(1, min(16, call.argument<Int>("width") ?: 1))
@@ -270,7 +301,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.getStatusHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         val status = PrinterHelper.getstatus()
                         result.success(status)
@@ -278,7 +313,11 @@ class FlutterLabelPrinterMethodHandler(
                 }
                 "hk.gogovan.label_printer.prefeedHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         try {
                             val dot = call.argument<Int>("dot") ?: 0
@@ -294,16 +333,271 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
-                "hk.gogovan.label_printer.postfeedHMA300L" -> {
+                "hk.gogovan.label_printer.setPageWidthHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
-                        result.error("1005", "Printer not connected.", Throwable().stackTraceToString())
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
                     } else {
                         try {
-                            val dot = call.argument<Int>("dot") ?: 0
-                            // Printer's Postfeed can only be called after Form, store the value.
-                            currentPostFeed += dot
+                            val width = call.argument<Int>("width") ?: 0
+                            val returnCode = PrinterHelper.PageWidth(width.toString())
 
-                            result.success(true)
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.setAlignHMA300L" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val enum = when (val align = call.argument<Int>("align") ?: 0) {
+                                0 -> PrinterHelper.LEFT
+                                1 -> PrinterHelper.CENTER
+                                2 -> PrinterHelper.RIGHT
+                                else -> throw ClassCastException("Invalid align value $align")
+                            }
+                            val returnCode = PrinterHelper.Align(enum)
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.addBarcode" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val orientation = call.argument<Int>("orientation") ?: 0
+                            val type = call.argument<Int>("type") ?: 0
+                            val width = call.argument<Int>("width") ?: 0
+                            val ratio = call.argument<Int>("ratio") ?: 0
+                            val height = call.argument<Int>("height") ?: 0
+                            val x = call.argument<Int>("x") ?: 0
+                            val y = call.argument<Int>("y") ?: 0
+                            val data = call.argument<String>("data") ?: ""
+                            val showData = call.argument<Boolean>("showData") ?: false
+                            val dataFont = call.argument<Int?>("dataFont")
+                            val dataTextSize = call.argument<Int?>("dataTextSize")
+                            val dataTextOffset = call.argument<Int?>("dataTextOffset")
+
+                            val orientationEnum = when (orientation) {
+                                0 -> PrinterHelper.BARCODE
+                                1 -> PrinterHelper.VBARCODE
+                                else -> throw ClassCastException("Invalid orientation value $orientation")
+                            }
+                            val typeEnum = when (type) {
+                                0 -> PrinterHelper.UPCA
+                                1 -> PrinterHelper.UPCE
+                                2 -> PrinterHelper.EAN13
+                                3 -> PrinterHelper.EAN8
+                                4 -> PrinterHelper.code39
+                                5 -> PrinterHelper.code93
+                                6 -> PrinterHelper.code128
+                                7 -> PrinterHelper.CODABAR
+                                else -> throw ClassCastException("Invalid type value $type")
+                            }
+                            if (!((ratio in 0..4) || (ratio in 20..30))) {
+                                throw ClassCastException("Invalid ratio value $ratio")
+                            }
+                            if (showData && (dataFont == null || dataTextSize == null || dataTextOffset == null)) {
+                                throw ClassCastException("showData is requested but required params are not provided.")
+                            }
+
+                            val returnCode = PrinterHelper.Barcode(
+                                orientationEnum,
+                                typeEnum,
+                                width.toString(),
+                                ratio.toString(),
+                                height.toString(),
+                                x.toString(),
+                                y.toString(),
+                                showData,
+                                dataFont.toString(),
+                                dataTextSize.toString(),
+                                dataTextOffset.toString(),
+                                data
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.addQRCode" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val orientation = call.argument<Int>("orientation") ?: 0
+                            val x = call.argument<Int>("x") ?: 0
+                            val y = call.argument<Int>("y") ?: 0
+                            val model = call.argument<Int>("model") ?: 0
+                            val unitSize = call.argument<Int>("unitSize") ?: 0
+                            val data = call.argument<String>("data") ?: ""
+
+                            val orientationEnum = when (orientation) {
+                                0 -> PrinterHelper.BARCODE
+                                1 -> PrinterHelper.VBARCODE
+                                else -> throw ClassCastException("Invalid orientation value $orientation")
+                            }
+                            if (unitSize !in 1..32) {
+                                throw ClassCastException("Invalid Unit size value $orientation")
+                            }
+
+                            val returnCode = PrinterHelper.PrintQR(
+                                orientationEnum,
+                                x.toString(),
+                                y.toString(),
+                                model.toString(),
+                                unitSize.toString(),
+                                data
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.addRectangle" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val x0 = call.argument<Int>("x0") ?: 0
+                            val y0 = call.argument<Int>("y0") ?: 0
+                            val x1 = call.argument<Int>("x1") ?: 0
+                            val y1 = call.argument<Int>("y1") ?: 0
+                            val width = call.argument<Int>("width") ?: 1
+
+                            val returnCode = PrinterHelper.Box(
+                                x0.toString(),
+                                y0.toString(),
+                                x1.toString(),
+                                y1.toString(),
+                                width.toString()
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.addLine" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val x0 = call.argument<Int>("x0") ?: 0
+                            val y0 = call.argument<Int>("y0") ?: 0
+                            val x1 = call.argument<Int>("x1") ?: 0
+                            val y1 = call.argument<Int>("y1") ?: 0
+                            val width = call.argument<Int>("width") ?: 1
+
+                            val returnCode = PrinterHelper.Line(
+                                x0.toString(),
+                                y0.toString(),
+                                x1.toString(),
+                                y1.toString(),
+                                width.toString()
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+                "hk.gogovan.label_printer.addImage" -> {
+                    if (!PrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val imagePath = call.argument<String>("imagePath")
+                            val x = call.argument<Int>("x") ?: 0
+                            val y = call.argument<Int>("y") ?: 0
+                            val mode = call.argument<Int>("mode") ?: 0
+
+                            val image = BitmapFactory.decodeFile(imagePath)
+                            if (image == null) {
+                                result.error(
+                                    "1010",
+                                    "Unable to load the file $imagePath.",
+                                    Throwable().stackTraceToString()
+                                )
+                                return
+                            }
+
+                            // compressType does not work and crashes the app if compressed.
+                            val returnCode = PrinterHelper.printBitmapCPCL(image, x, y, mode, 0, 0)
+
+                            if (returnCode <= -2) {
+                                result.error(
+                                    "1010",
+                                    "Unable to print the file $imagePath. Code = $returnCode",
+                                    Throwable().stackTraceToString()
+                                )
+                                return
+                            }
+                            result.success(returnCode >= 0)
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
@@ -319,6 +613,8 @@ class FlutterLabelPrinterMethodHandler(
             }
         } catch (e: PluginException) {
             result.error(e.code.toString(), e.message, e.stackTraceToString())
+        } catch (e: Exception) {
+            result.error("1000", e.message, e.stackTraceToString())
         }
     }
 

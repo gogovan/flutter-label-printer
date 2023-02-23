@@ -163,4 +163,117 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
     return result ?? false;
   }
+
+  @override
+  Future<bool> setPageWidthHMA300L(int width) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.setPageWidthHMA300L',
+      <String, dynamic>{
+        'width': width,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> setAlignHMA300L(int align) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.setAlignHMA300L',
+      <String, dynamic>{
+        'align': align,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addBarcode(BarcodeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addBarcode',
+      <String, dynamic>{
+        'orientation': params.orientation.code,
+        'type': params.type.code,
+        'width': params.barWidthUnit,
+        'ratio': params.ratio.code,
+        'height': params.height,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'data': params.data,
+        'showData': params.dataTextParams != null,
+        'dataFont': params.dataTextParams?.font.code,
+        'dataTextSize': params.dataTextParams?.size,
+        'dataTextOffset': params.dataTextParams?.offset,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addQRCode(QRCodeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addQRCode',
+      <String, dynamic>{
+        'orientation': params.orientation.code,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'model': params.model.code,
+        'unitSize': params.unitSize,
+        'data': params.data,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addRectangle(Rect rect, int strokeWidth) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addRectangle',
+      <String, dynamic>{
+        'x0': rect.left.round(),
+        'y0': rect.top.round(),
+        'x1': rect.right.round(),
+        'y1': rect.bottom.round(),
+        'width': strokeWidth,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addLine(Rect rect, int strokeWidth) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addLine',
+      <String, dynamic>{
+        'x0': rect.left.round(),
+        'y0': rect.top.round(),
+        'x1': rect.right.round(),
+        'y1': rect.bottom.round(),
+        'width': strokeWidth,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addImage(PrintImageParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addImage',
+      <String, dynamic>{
+        'imagePath': params.imagePath,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'mode': params.mode.code,
+        'compress': params.compress,
+        'package': params.package,
+      },
+    );
+
+    return result ?? false;
+  }
 }

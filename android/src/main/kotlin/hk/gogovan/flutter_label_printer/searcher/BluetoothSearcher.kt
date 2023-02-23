@@ -227,9 +227,6 @@ class BluetoothSearcher(private val context: Context) : Closeable {
             }
             return
         }
-        coroutineScope.launch {
-            pluginExceptionFlow.emit(PluginException(1000, "Unexpected error occurred"))
-        }
     }
 
     fun handlePermissionResult(

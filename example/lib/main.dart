@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter_label_printer/printer/HM_A300L_printer.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer_searcher/HM_A300L_searcher.dart';
+import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
+import 'package:flutter_label_printer_example/add_barcode.dart';
+import 'package:flutter_label_printer_example/add_image.dart';
+import 'package:flutter_label_printer_example/add_line.dart';
+import 'package:flutter_label_printer_example/add_qrcode.dart';
+import 'package:flutter_label_printer_example/add_rectangle.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
-import 'package:flutter_label_printer_example/pre_post_feed.dart';
+import 'package:flutter_label_printer_example/prefeed.dart';
+import 'package:flutter_label_printer_example/set_page_width.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
 import 'package:flutter_label_printer_example/set_text_size.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -106,9 +111,6 @@ class _MyAppState extends State<MyApp> {
   Future<void> _print() async {
     try {
       await MyApp.printer?.print();
-      setState(() {
-        _connected = false;
-      });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -197,6 +199,41 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _setAlign(BuildContext context) async {
+    try {
+      final answer = await showDialog<PrinterTextAlign>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+                title: const Text('Set Align'),
+                children: [
+                  SimpleDialogOption(
+                    child: const Text('Left'),
+                    onPressed: () {
+                      Navigator.pop(context, PrinterTextAlign.left);
+                    },
+                  ),
+                  SimpleDialogOption(
+                    child: const Text('Center'),
+                    onPressed: () {
+                      Navigator.pop(context, PrinterTextAlign.center);
+                    },
+                  ),
+                  SimpleDialogOption(
+                    child: const Text('Right'),
+                    onPressed: () {
+                      Navigator.pop(context, PrinterTextAlign.right);
+                    },
+                  ),
+                ]);
+          }) ??
+          PrinterTextAlign.left;
+      await MyApp.printer?.setAlign(answer);
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -240,6 +277,9 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () => _printTestPage(context),
                           child: const Text('Print Test Page')),
                       ElevatedButton(
+                          onPressed: () => _setPaperType(context),
+                          child: const Text('Set Paper Type')),
+                      ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -249,8 +289,21 @@ class _MyAppState extends State<MyApp> {
                           },
                           child: const Text('Set Print Area Size')),
                       ElevatedButton(
-                          onPressed: () => _setPaperType(context),
-                          child: const Text('Set Paper Type')),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SetPageWidth()));
+                          },
+                          child: const Text('Set Page Width')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Prefeed()));
+                          },
+                          child: const Text('Prefeed')),
                       ElevatedButton(
                           onPressed: () => _setBold(context),
                           child: const Text('Set Bold')),
@@ -262,6 +315,9 @@ class _MyAppState extends State<MyApp> {
                                     builder: (context) => const SetTextSize()));
                           },
                           child: const Text('Set Text Size')),
+                      ElevatedButton(
+                          onPressed: () => _setAlign(context),
+                          child: const Text('Set Align')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -275,9 +331,41 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const PrePostFeed()));
+                                    builder: (context) => const AddBarcode()));
                           },
-                          child: const Text('Prefeed')),
+                          child: const Text('Add Barcode')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddQRCode()));
+                          },
+                          child: const Text('Add QRCode')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddRectangle()));
+                          },
+                          child: const Text('Add Rectangle')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddLine()));
+                          },
+                          child: const Text('Add Line')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddImage()));
+                          },
+                          child: const Text('Add Image')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(

@@ -39,64 +39,72 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
         appBar: AppBar(
           title: const Text('Set Print Area Size'),
         ),
-        body: Column(children: [
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Offset',
-            ),
-            keyboardType: TextInputType.number,
-            controller: offsetController,
-          ),
-          const Text('Horizontal Resolution'),
-          DropdownButton<LabelResolution>(
-            items: const [
-              DropdownMenuItem(
-                  value: LabelResolution.res100, child: Text('100')),
-              DropdownMenuItem(
-                  value: LabelResolution.res200, child: Text('200')),
-            ],
-            onChanged: (item) {
-              hRes = item!;
-              setState(() {});
-            },
-            value: hRes,
-          ),
-          const Text('Vertical Resolution'),
-          DropdownButton<LabelResolution>(
-            items: const [
-              DropdownMenuItem(
-                  value: LabelResolution.res100, child: Text('100')),
-              DropdownMenuItem(
-                  value: LabelResolution.res200, child: Text('200')),
-            ],
-            onChanged: (item) {
-              vRes = item!;
-              setState(() {});
-            },
-            value: vRes,
-          ),
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Height',
-            ),
-            keyboardType: TextInputType.number,
-            controller: heightController,
-          ),
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Quantity',
-            ),
-            keyboardType: TextInputType.number,
-            controller: quantityController,
-          ),
-          ElevatedButton(
-              onPressed: () => _onPressed(context),
-              child: const Text("Set Print Area Size")),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Back"))
-        ]));
+        body: LayoutBuilder(builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: Column(children: [
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Offset',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: offsetController,
+                    ),
+                    const Text('Horizontal Resolution'),
+                    DropdownButton<LabelResolution>(
+                      items: const [
+                        DropdownMenuItem(
+                            value: LabelResolution.res100, child: Text('100')),
+                        DropdownMenuItem(
+                            value: LabelResolution.res200, child: Text('200')),
+                      ],
+                      onChanged: (item) {
+                        hRes = item!;
+                        setState(() {});
+                      },
+                      value: hRes,
+                    ),
+                    const Text('Vertical Resolution'),
+                    DropdownButton<LabelResolution>(
+                      items: const [
+                        DropdownMenuItem(
+                            value: LabelResolution.res100, child: Text('100')),
+                        DropdownMenuItem(
+                            value: LabelResolution.res200, child: Text('200')),
+                      ],
+                      onChanged: (item) {
+                        vRes = item!;
+                        setState(() {});
+                      },
+                      value: vRes,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Height',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: heightController,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Quantity',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: quantityController,
+                    ),
+                    ElevatedButton(
+                        onPressed: () => _onPressed(context),
+                        child: const Text("Set Print Area Size")),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Back"))
+                  ])));
+        }));
   }
 }

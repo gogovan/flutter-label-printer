@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -98,6 +100,48 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   Future<bool> prefeedHMA300L(int dot) {
     throw UnimplementedError(
       'prefeedHMA300L() has not been implemented.',
+    );
+  }
+
+  Future<bool> setPageWidthHMA300L(int width) {
+    throw UnimplementedError(
+      'setPageWidthHMA300L() has not been implemented.',
+    );
+  }
+
+  Future<bool> setAlignHMA300L(int align) {
+    throw UnimplementedError(
+      'setAlignHMA300L() has not been implemented.',
+    );
+  }
+
+  Future<bool> addBarcode(BarcodeParams params) {
+    throw UnimplementedError(
+      'addBarcode() has not been implemented.',
+    );
+  }
+
+  Future<bool> addQRCode(QRCodeParams params) {
+    throw UnimplementedError(
+      'addQRCode() has not been implemented.',
+    );
+  }
+
+  Future<bool> addRectangle(Rect rect, int strokeWidth) {
+    throw UnimplementedError(
+      'addRectangle() has not been implemented.',
+    );
+  }
+
+  Future<bool> addLine(Rect rect, int strokeWidth) {
+    throw UnimplementedError(
+      'addLine() has not been implemented.',
+    );
+  }
+
+  Future<bool> addImage(PrintImageParams params) {
+    throw UnimplementedError(
+      'addImage() has not been implemented.',
     );
   }
 }

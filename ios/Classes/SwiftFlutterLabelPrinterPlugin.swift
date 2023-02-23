@@ -265,6 +265,216 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
+        } else if (call.method == "hk.gogovan.label_printer.setPageWidthHMA300L") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let width = args["width"] as? Int,
+                   let cmd = currentCommand {
+                    cmd.cpclPageWidth(width)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.setAlignHMA300L") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let align = args["align"] as? Int,
+                   let cmd = currentCommand {
+                    if (align == 0) {
+                        cmd.cpclLeft()
+                        result(true)
+                    } else if (align == 1) {
+                        cmd.cpclCenter()
+                        result(true)
+                    } else if (align == 2) {
+                        cmd.cpclRight()
+                        result(true)
+                    } else {
+                        result(FlutterError(code: "1009", message: "Invalid Align argument: \(align)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addBarcode") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let orientation = args["orientation"] as? Int,
+                   let type = args["type"] as? Int,
+                   let width = args["width"] as? Int,
+                   let ratio = args["ratio"] as? Int,
+                   let height = args["height"] as? Int,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let data = args["data"] as? String,
+                   let showData = args["showData"] as? Bool,
+                   let dataFont = args["dataFont"] as? Int?,
+                   let dataTextSize = args["dataTextSize"] as? Int?,
+                   let dataTextOffset = args["dataTextOffset"] as? Int?,
+                   let typeEnum = PTCPCLBarcodeStyle(rawValue: UInt(type)),
+                   let ratioEnum = PTCPCLBarcodeBarRatio(rawValue: UInt(ratio)),
+                   let cmd = currentCommand {
+                    guard (!(showData && (dataFont == nil || dataTextSize == nil || dataTextOffset == nil))) else {
+                        result(FlutterError(code: "1009", message: "showData requested but required params are not provided", details: Thread.callStackSymbols.joined(separator: "\n")))
+                        return
+                    }
+                    if let dataFontN = dataFont,
+                       let dataTextSizeN = dataTextSize,
+                       let dataTextOffsetN = dataTextOffset,
+                       let dataFontEnum = PTCPCLTextFontName(rawValue: UInt(dataFontN)) {
+                        if (showData) {
+                            cmd.cpclBarcodeText(withFont: dataFontEnum, fontSize: dataTextSizeN, offset: dataTextOffsetN)
+                        }
+                        
+                        if (orientation == 0) {
+                            cmd.cpclBarcode(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
+                        } else if (orientation == 1) {
+                            cmd.cpclBarcodeVertical(typeEnum, width: width, ratio: ratioEnum, height: height, x: x, y: y, barcode: data)
+                        } else {
+                            result(FlutterError(code: "1009", message: "Invalid orientation argument: \(orientation)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                            return
+                        }
+                        
+                        if (showData) {
+                            cmd.cpclBarcodeTextOff()
+                        }
+                        
+                        result(true)
+                    } else {
+                        result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addQRCode") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let orientation = args["orientation"] as? Int,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let model = args["model"] as? Int,
+                   let unitSize = args["unitSize"] as? Int,
+                   let data = args["data"] as? String,
+                   let modelEnum = PTCPCLQRCodeModel(rawValue: UInt(model)),
+                   let unitWidthEnum = PTCPCLQRCodeUnitWidth(rawValue: UInt(unitSize)),
+                   let cmd = currentCommand {
+                    if (orientation == 0) {
+                        cmd.cpclBarcodeQRcode(withXPos: x, yPos: y, model: modelEnum, unitWidth: unitWidthEnum)
+                    } else if (orientation == 1) {
+                        cmd.cpclBarcodeVerticalQRcode(withXPos: x, yPos: y, model: modelEnum, unitWidth: unitWidthEnum)
+                    } else {
+                        result(FlutterError(code: "1009", message: "Invalid orientation argument: \(orientation)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                        return
+                    }
+                    
+                    cmd.cpclBarcodeQRCodeCorrectionLecel(PTCPCLQRCodeCorrectionLevel.M, characterMode: PTCPCLQRCodeDataInputMode.A, context: data)
+                    cmd.cpclBarcodeQRcodeEnd()
+                    
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addRectangle") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let x0 = args["x0"] as? Int,
+                   let y0 = args["y0"] as? Int,
+                   let x1 = args["x1"] as? Int,
+                   let y1 = args["y1"] as? Int,
+                   let width = args["width"] as? Int,
+                   let cmd = currentCommand {
+                    cmd.cpclBox(withXPos: x0, yPos: y0, xEnd: x1, yEnd: y1, thickness: width)
+                    
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addLine") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let x0 = args["x0"] as? Int,
+                   let y0 = args["y0"] as? Int,
+                   let x1 = args["x1"] as? Int,
+                   let y1 = args["y1"] as? Int,
+                   let width = args["width"] as? Int,
+                   let cmd = currentCommand {
+                    cmd.cpclLine(withXPos: x0, yPos: y0, xEnd: x1, yEnd: y1, thickness: width)
+                    
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.addImage") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentCommand == nil) {
+                    currentCommand = PTCommandCPCL()
+                }
+                
+                if let args = call.arguments as? [String:Any],
+                   let imagePath = args["imagePath"] as? String,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let mode = args["mode"] as? Int,
+                   let modeEnum = PTBitmapMode(rawValue: mode),
+                   let cmd = currentCommand {
+                    let url = URL(fileURLWithPath: imagePath)
+                    guard let imageData = NSData(contentsOf: url) else {
+                        result(FlutterError(code: "1010", message: "Unable to load the file \(imagePath).", details: Thread.callStackSymbols.joined(separator: "\n")))
+                        return
+                    }
+                    let image = UIImage(data: imageData as Data)
+                    
+                    if let loadedImage = image?.cgImage {
+                        // Compress does not work and crashes the printer if compressed.
+                        cmd.cpclPrintBitmap(withXPos: x, yPos: y, image: loadedImage, bitmapMode: modeEnum, compress: PTBitmapCompressMode.none, isPackage: false)
+                        result(true)
+                    } else {
+                        result(FlutterError(code: "1010", message: "Unable to load the file \(imagePath).", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
         } else {
             result(FlutterError(code: "1000", message: "Unknown call method received: \(call.method)", details: Thread.callStackSymbols.joined(separator: "\n")))
         }

@@ -10,6 +10,7 @@ Integrate printers with Flutter apps.
 # Supported Printers
 
 - Hanyin (HPRT) HM-A300L
+    - HM-A400 and HM-A300S shares the same native SDK and hence should work in theory, but they are untested.
 
 # Setup
 
@@ -109,5 +110,8 @@ await _printer?.disconnect();
 ```
 
 # Issues
+
+## HM-A300L
+- Currently in iOS it can only print very small images, otherwise the printer will be stuck and unable to do anything, and can only be fixed by restarting the printer.
 
 # Contributing
