@@ -35,6 +35,7 @@ abstract class PrinterInterface {
   ///
   /// Implementors should connect to the specified device, and the device should be ready to use when this method returns normally.
   /// This method should be idempotent - multiple invocation of this method should not result in errors or multiple connections.
+  @protected
   Future<bool> connectImpl(PrinterSearchResult device);
 
   /// Disconnect to the currently connected device.
@@ -51,11 +52,12 @@ abstract class PrinterInterface {
     }
   }
 
-  /// Implementors should implement this method to disconnect the printer,.
+  /// Implementors should implement this method to disconnect the printer.
   /// Return true if connection successful, false otherwise.
   ///
   /// Implementors should disconnect the current device, and do any cleanup needed.
   /// This method should be idempotent - multiple invocation of this method should not result in errors or multiple disconnections.
+  @protected
   Future<bool> disconnectImpl();
 
   /// Signal the printer and print a test page.

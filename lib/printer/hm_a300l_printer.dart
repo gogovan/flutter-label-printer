@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
@@ -6,6 +7,8 @@ import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
+import 'package:flutter_label_printer/templating/model/print_area_size.dart';
+import 'package:flutter_label_printer/templating/printer_template_interface.dart';
 
 /// Interface a Hanyin (HPRT) HM-A300L printer.
 ///
@@ -20,7 +23,7 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 ///
 /// You should call `connect` first to connect the printer.
 /// All commands throw InvalidConnectionStateException if the printer is not connected.
-class HMA300LPrinter extends PrinterInterface {
+class HMA300LPrinter extends PrinterTemplateInterface {
   HMA300LPrinter(super.device);
 
   @override
@@ -72,13 +75,40 @@ class HMA300LPrinter extends PrinterInterface {
   Future<void> setLogLevel(int level) async =>
       FlutterLabelPrinterPlatform.instance.setLogLevel(level);
 
-  Future<bool> setPrintAreaSize(PrintAreaSizeParams params) async {
+  @override
+  Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
         StackTrace.current.toString(),
       );
     }
+
+    final height = printAreaSize.height;
+    if (height == null) {
+      throw InvalidArgumentException(
+        'Height must not be null',
+        StackTrace.current.toString(),
+      );
+    }
+    LabelResolution? hRes, vRes;
+    for (final LabelResolution res in LabelResolution.values) {
+      if (printAreaSize.horizontalResolution == res.res) {
+        hRes = res;
+      }
+    }
+    for (final LabelResolution res in LabelResolution.values) {
+      if (printAreaSize.verticalResolution == res.res) {
+        vRes = res;
+      }
+    }
+
+    final PrintAreaSizeParams params = PrintAreaSizeParams(
+      offset: printAreaSize.originX?.toInt() ?? 0,
+      horizontalRes: hRes ?? LabelResolution.res200,
+      verticalRes: vRes ?? LabelResolution.res200,
+      height: height.toInt(),
+    );
 
     try {
       return FlutterLabelPrinterPlatform.instance

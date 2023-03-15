@@ -72,9 +72,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.setPrintAreaSizeHMA300L',
       <String, dynamic>{
-        'offset': params.offset,
-        'horizontalRes': params.horizontalRes.res,
-        'verticalRes': params.verticalRes.res,
+        'offset': params.originX,
+        'horizontalRes': params.horizontalResolution,
+        'verticalRes': params.verticalResolution,
         'height': params.height,
         'quantity': params.quantity,
       },

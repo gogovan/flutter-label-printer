@@ -1,6 +1,7 @@
 // ignore_for_file: no-magic-number, for enum codes and some default values.
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/model/print_area_size.dart';
 
 /// Resolution of printing in dpi (dots per inch).
 enum LabelResolution {
@@ -147,43 +148,36 @@ enum PrintImageMode {
 }
 
 @immutable
-class PrintAreaSizeParams {
-  const PrintAreaSizeParams({
-    this.offset = 0,
-    this.horizontalRes = LabelResolution.res200,
-    this.verticalRes = LabelResolution.res200,
-    required this.height,
+class PrintAreaSizeParams extends PrintAreaSize {
+  PrintAreaSizeParams({
+    int offset = 0,
+    LabelResolution horizontalRes = LabelResolution.res200,
+    LabelResolution verticalRes = LabelResolution.res200,
+    required int height,
     this.quantity = 1,
-  });
+  }) : super(
+    originX: offset.toDouble(),
+    originY: 0,
+    horizontalResolution: horizontalRes.res.toDouble(),
+    verticalResolution: verticalRes.res.toDouble(),
+    height: height.toDouble(),
+  );
 
-  final int offset;
-  final LabelResolution horizontalRes;
-  final LabelResolution verticalRes;
-  final int height;
   final int quantity;
 
   @override
-  String toString() =>
-      'PrintAreaSizeParams{offset: $offset, horizontalRes: $horizontalRes, verticalRes: $verticalRes, height: $height, quantity: $quantity}';
+  String toString() => 'PrintAreaSizeParams{quantity: $quantity} super ${super.toString()}';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PrintAreaSizeParams &&
+      super == other &&
+          other is PrintAreaSizeParams &&
           runtimeType == other.runtimeType &&
-          offset == other.offset &&
-          horizontalRes == other.horizontalRes &&
-          verticalRes == other.verticalRes &&
-          height == other.height &&
           quantity == other.quantity;
 
   @override
-  int get hashCode =>
-      offset.hashCode ^
-      horizontalRes.hashCode ^
-      verticalRes.hashCode ^
-      height.hashCode ^
-      quantity.hashCode;
+  int get hashCode => super.hashCode ^ quantity.hashCode;
 }
 
 @immutable

@@ -115,3 +115,10 @@ await _printer?.disconnect();
 - Currently in iOS it can only print very small images, otherwise the printer will be stuck and unable to do anything, and can only be fixed by restarting the printer.
 
 # Contributing
+
+## Adding a new printer
+
+1. Implement `PrinterSearcherInterface` for searching your printer.
+2. Implement `PrinterSearchResult` as the result object returned by your `PrinterSearcherInterface`.
+3. If your printer is intended to be used with the Templating system, implement `PrinterTemplateInterface` to support templating.
+    1. Otherwise, Implement `PrinterInterface` for basic connectivity of your printer. 
