@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
@@ -7,11 +6,6 @@ import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
-import 'package:flutter_label_printer/templating/model/print_area_size.dart';
-import 'package:flutter_label_printer/templating/model/print_text.dart';
-import 'package:flutter_label_printer/templating/model/print_text_align.dart';
-import 'package:flutter_label_printer/templating/model/print_text_style.dart';
-import 'package:flutter_label_printer/templating/printer_template_interface.dart';
 
 /// Interface a Hanyin (HPRT) HM-A300L printer.
 ///
@@ -26,7 +20,7 @@ import 'package:flutter_label_printer/templating/printer_template_interface.dart
 ///
 /// You should call `connect` first to connect the printer.
 /// All commands throw InvalidConnectionStateException if the printer is not connected.
-class HMA300LPrinter extends PrinterTemplateInterface {
+class HMA300LPrinter extends PrinterInterface {
   HMA300LPrinter(super.device);
 
   @override
@@ -78,44 +72,6 @@ class HMA300LPrinter extends PrinterTemplateInterface {
   Future<void> setLogLevel(int level) async =>
       FlutterLabelPrinterPlatform.instance.setLogLevel(level);
 
-  @override
-  Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
-
-    final height = printAreaSize.height;
-    if (height == null) {
-      throw InvalidArgumentException(
-        'Height must not be null',
-        StackTrace.current.toString(),
-      );
-    }
-    HMA300LLabelResolution? hRes, vRes;
-    for (final HMA300LLabelResolution res in HMA300LLabelResolution.values) {
-      if (printAreaSize.horizontalResolution == res.res) {
-        hRes = res;
-      }
-    }
-    for (final HMA300LLabelResolution res in HMA300LLabelResolution.values) {
-      if (printAreaSize.verticalResolution == res.res) {
-        vRes = res;
-      }
-    }
-
-    final HMA300LPrintAreaSizeParams params = HMA300LPrintAreaSizeParams(
-      offset: printAreaSize.originX?.toInt() ?? 0,
-      horizontalRes: hRes ?? HMA300LLabelResolution.res200,
-      verticalRes: vRes ?? HMA300LLabelResolution.res200,
-      height: height.toInt(),
-    );
-
-    return setPrintAreaSizeParams(params);
-  }
-
   Future<bool> setPrintAreaSizeParams(HMA300LPrintAreaSizeParams printAreaSizeParams) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
@@ -135,7 +91,7 @@ class HMA300LPrinter extends PrinterTemplateInterface {
     }
   }
 
-  Future<bool> addText(HMA300LTextParams params) async {
+  Future<bool> addTextParams(HMA300LTextParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

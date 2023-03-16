@@ -19,7 +19,7 @@ class _AddTextState extends State<AddText> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addText(HMA300LTextParams(
+      await MyApp.printer?.addTextParams(HMA300LTextParams(
         rotate: rotation,
         font: font,
         xPosition: int.parse(xController.text),
