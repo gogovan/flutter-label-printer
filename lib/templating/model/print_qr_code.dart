@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 @immutable
-class QRCode {
-  const QRCode({
+class PrintQRCode {
+  const PrintQRCode({
     required this.xPosition,
     required this.yPosition,
     required this.data,
@@ -20,7 +20,7 @@ class QRCode {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is QRCode &&
+      other is PrintQRCode &&
           runtimeType == other.runtimeType &&
           xPosition == other.xPosition &&
           yPosition == other.yPosition &&

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_label_printer/templating/model/barcode_type.dart';
+import 'package:flutter_label_printer/templating/model/print_barcode_type.dart';
 
 @immutable
-class Barcode {
-  const Barcode({
+class PrintBarcode {
+  const PrintBarcode({
     required this.type,
     required this.xPosition,
     required this.yPosition,
@@ -12,7 +12,7 @@ class Barcode {
     required this.height,
   });
 
-  final BarcodeType type;
+  final PrintBarcodeType type;
   final double xPosition;
   final double yPosition;
   final double barLineWidth;
@@ -25,7 +25,7 @@ class Barcode {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Barcode &&
+      other is PrintBarcode &&
           runtimeType == other.runtimeType &&
           type == other.type &&
           xPosition == other.xPosition &&

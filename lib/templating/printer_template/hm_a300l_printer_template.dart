@@ -2,13 +2,13 @@ import 'package:flutter_label_printer/exception/invalid_argument_exception.dart'
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
-import 'package:flutter_label_printer/templating/model/barcode.dart';
-import 'package:flutter_label_printer/templating/model/barcode_type.dart';
+import 'package:flutter_label_printer/templating/model/print_barcode.dart';
+import 'package:flutter_label_printer/templating/model/print_barcode_type.dart';
 import 'package:flutter_label_printer/templating/model/print_area_size.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_align.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
-import 'package:flutter_label_printer/templating/model/qr_code.dart';
+import 'package:flutter_label_printer/templating/model/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/printer_template_interface.dart';
 
 /// Interface for Templating for the Hanyin (HPRT) HM-A300L Printer.
@@ -107,7 +107,7 @@ class HMA300LPrinterInterface extends HMA300LPrinter
   }
 
   @override
-  Future<bool> addBarcode(Barcode barcode) {
+  Future<bool> addBarcode(PrintBarcode barcode) {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -117,28 +117,28 @@ class HMA300LPrinterInterface extends HMA300LPrinter
 
     final HMA300LBarcodeType barcodeType;
     switch (barcode.type) {
-      case BarcodeType.upca:
+      case PrintBarcodeType.upca:
         barcodeType = HMA300LBarcodeType.upca;
         break;
-      case BarcodeType.upce:
+      case PrintBarcodeType.upce:
         barcodeType = HMA300LBarcodeType.upce;
         break;
-      case BarcodeType.ean13:
+      case PrintBarcodeType.ean13:
         barcodeType = HMA300LBarcodeType.ean13;
         break;
-      case BarcodeType.ean8:
+      case PrintBarcodeType.ean8:
         barcodeType = HMA300LBarcodeType.ean8;
         break;
-      case BarcodeType.code39:
+      case PrintBarcodeType.code39:
         barcodeType = HMA300LBarcodeType.code39;
         break;
-      case BarcodeType.code93:
+      case PrintBarcodeType.code93:
         barcodeType = HMA300LBarcodeType.code93;
         break;
-      case BarcodeType.code128:
+      case PrintBarcodeType.code128:
         barcodeType = HMA300LBarcodeType.code128;
         break;
-      case BarcodeType.codabar:
+      case PrintBarcodeType.codabar:
         barcodeType = HMA300LBarcodeType.codabar;
         break;
       default:
@@ -161,7 +161,7 @@ class HMA300LPrinterInterface extends HMA300LPrinter
   }
 
   @override
-  Future<bool> addQRCode(QRCode qrCode) {
+  Future<bool> addQRCode(PrintQRCode qrCode) {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
