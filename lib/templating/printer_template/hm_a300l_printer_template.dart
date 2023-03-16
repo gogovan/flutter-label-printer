@@ -2,6 +2,8 @@ import 'package:flutter_label_printer/exception/invalid_argument_exception.dart'
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
+import 'package:flutter_label_printer/templating/model/barcode.dart';
+import 'package:flutter_label_printer/templating/model/barcode_type.dart';
 import 'package:flutter_label_printer/templating/model/print_area_size.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_align.dart';
@@ -67,7 +69,9 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     final bool alignResult;
     if (style != null) {
       sizeResult = await setTextSize(
-          style.width?.toInt() ?? 1, style.height?.toInt() ?? 1);
+        style.width?.toInt() ?? 1,
+        style.height?.toInt() ?? 1,
+      );
       boldResult = await setBold(style.bold?.toInt() ?? 1);
 
       HMA300LPrinterTextAlign hmA300lAlign;
@@ -99,5 +103,57 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     final textResult = await addTextParams(textParams);
 
     return sizeResult && boldResult && alignResult && textResult;
+  }
+
+  @override
+  Future<bool> addBarcode(Barcode barcode) {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    final HMA300LBarcodeType barcodeType;
+    switch (barcode.type) {
+      case BarcodeType.upca:
+        barcodeType = HMA300LBarcodeType.upca;
+        break;
+      case BarcodeType.upce:
+        barcodeType = HMA300LBarcodeType.upce;
+        break;
+      case BarcodeType.ean13:
+        barcodeType = HMA300LBarcodeType.ean13;
+        break;
+      case BarcodeType.ean8:
+        barcodeType = HMA300LBarcodeType.ean8;
+        break;
+      case BarcodeType.code39:
+        barcodeType = HMA300LBarcodeType.code39;
+        break;
+      case BarcodeType.code93:
+        barcodeType = HMA300LBarcodeType.code93;
+        break;
+      case BarcodeType.code128:
+        barcodeType = HMA300LBarcodeType.code128;
+        break;
+      case BarcodeType.codabar:
+        barcodeType = HMA300LBarcodeType.codabar;
+        break;
+      default:
+        throw UnsupportedError('Barcode format ${barcode.type} is unsupported on the HM-A300L.');
+    }
+
+    final barcodeParams = HMA300LBarcodeParams(
+      type: barcodeType,
+      ratio: HMA300LBarcodeRatio.ratio0,
+      barWidthUnit: barcode.barLineWidth.toInt(),
+      height: barcode.height.toInt(),
+      xPosition: barcode.xPosition.toInt(),
+      yPosition: barcode.yPosition.toInt(),
+      data: barcode.data,
+    );
+
+    return addBarcodeParams(barcodeParams);
   }
 }

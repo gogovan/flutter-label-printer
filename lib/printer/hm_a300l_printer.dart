@@ -262,7 +262,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addBarcode(HMA300LBarcodeParams params) async {
+  Future<bool> addBarcodeParams(HMA300LBarcodeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

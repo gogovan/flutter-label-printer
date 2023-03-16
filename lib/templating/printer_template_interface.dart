@@ -1,4 +1,5 @@
 import 'package:flutter_label_printer/printer/printer_interface.dart';
+import 'package:flutter_label_printer/templating/model/barcode.dart';
 import 'package:flutter_label_printer/templating/model/print_area_size.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
@@ -9,4 +10,6 @@ abstract class PrinterTemplateInterface extends PrinterInterface {
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize);
 
   Future<bool> addText(PrintText printText, PrintTextStyle style);
+
+  Future<bool> addBarcode(Barcode barcode);
 }
