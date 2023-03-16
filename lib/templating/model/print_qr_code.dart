@@ -7,12 +7,14 @@ class PrintQRCode {
     required this.yPosition,
     required this.data,
     this.unitSize = 1,
+    this.rotation = 0,
   });
 
   final double xPosition;
   final double yPosition;
   final double unitSize;
   final String data;
+  final double rotation;
 
   @override
   String toString() => 'QRCode{xPosition: $xPosition, yPosition: $yPosition, unitSize: $unitSize, data: $data}';

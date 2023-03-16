@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_label_printer/templating/model/print_barcode_type.dart';
 
 @immutable
 class PrintBarcode {
@@ -10,6 +9,7 @@ class PrintBarcode {
     required this.data,
     this.barLineWidth = 1,
     required this.height,
+    this.rotation = 0,
   });
 
   final PrintBarcodeType type;
@@ -18,6 +18,7 @@ class PrintBarcode {
   final double barLineWidth;
   final double height;
   final String data;
+  final double rotation;
 
   @override
   String toString() => 'Barcode{type: $type, xPosition: $xPosition, yPosition: $yPosition, barLineWidth: $barLineWidth, height: $height, data: $data}';
@@ -42,4 +43,8 @@ class PrintBarcode {
       barLineWidth.hashCode ^
       height.hashCode ^
       data.hashCode;
+}
+
+enum PrintBarcodeType {
+  code11, code39, code93, code128, codabar, ean2, ean5, ean8, ean13, interleaved2of5, msi, patchCode, pharmacode, plessey, telepen, upca, upce
 }

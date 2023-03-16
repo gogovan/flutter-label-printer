@@ -7,12 +7,14 @@ class PrintText {
     required this.text,
     required this.xPosition,
     required this.yPosition,
+    this.rotation = 0,
     this.style,
   });
 
   final String text;
   final double xPosition;
   final double yPosition;
+  final double rotation;
   final PrintTextStyle? style;
 
   @override

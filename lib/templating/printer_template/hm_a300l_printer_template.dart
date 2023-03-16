@@ -2,14 +2,13 @@ import 'package:flutter_label_printer/exception/invalid_argument_exception.dart'
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
-import 'package:flutter_label_printer/templating/model/print_barcode.dart';
-import 'package:flutter_label_printer/templating/model/print_barcode_type.dart';
 import 'package:flutter_label_printer/templating/model/print_area_size.dart';
+import 'package:flutter_label_printer/templating/model/print_barcode.dart';
 import 'package:flutter_label_printer/templating/model/print_image.dart';
+import 'package:flutter_label_printer/templating/model/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_align.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
-import 'package:flutter_label_printer/templating/model/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/printer_template_interface.dart';
 
 /// Interface for Templating for the Hanyin (HPRT) HM-A300L Printer.
@@ -53,6 +52,38 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     );
 
     return setPrintAreaSizeParams(params);
+  }
+
+  HMA300LRotation90 getHMA300LRotation(double angle) {
+    final roundedRotation = (angle / 90).round() * 90 % 360;
+    switch (roundedRotation) {
+      case 0:
+        return HMA300LRotation90.text;
+      // ignore: no-magic-number, well-formed angles.
+      case 90:
+        return HMA300LRotation90.text90;
+      // ignore: no-magic-number, well-formed angles.
+      case 180:
+        return HMA300LRotation90.text180;
+      // ignore: no-magic-number, well-formed angles.
+      case 270:
+        return HMA300LRotation90.text270;
+      default:
+        return HMA300LRotation90.text;
+    }
+  }
+
+  HMA300LPrintOrientation getHMA300LPrintOrientation(double angle) {
+    final roundedRotation = (angle / 90).round() * 90 % 180;
+    switch (roundedRotation) {
+      case 0:
+        return HMA300LPrintOrientation.horizontal;
+      // ignore: no-magic-number, well-formed angles.
+      case 90:
+        return HMA300LPrintOrientation.vertical;
+      default:
+        return HMA300LPrintOrientation.horizontal;
+    }
   }
 
   @override
@@ -101,6 +132,7 @@ class HMA300LPrinterInterface extends HMA300LPrinter
       xPosition: printText.xPosition.toInt(),
       yPosition: printText.yPosition.toInt(),
       text: printText.text,
+      rotate: getHMA300LRotation(printText.rotation),
     );
     final textResult = await addTextParams(textParams);
 
@@ -149,6 +181,7 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     }
 
     final barcodeParams = HMA300LBarcodeParams(
+      orientation: getHMA300LPrintOrientation(barcode.rotation),
       type: barcodeType,
       ratio: HMA300LBarcodeRatio.ratio0,
       barWidthUnit: barcode.barLineWidth.toInt(),
@@ -171,7 +204,7 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     }
 
     final qrCodeParams = HMA300LQRCodeParams(
-      orientation: HMA300LPrintOrientation.horizontal,
+      orientation: getHMA300LPrintOrientation(qrCode.rotation),
       xPosition: qrCode.xPosition.toInt(),
       yPosition: qrCode.yPosition.toInt(),
       model: HMA300LQRCodeModel.normal,
@@ -191,10 +224,28 @@ class HMA300LPrinterInterface extends HMA300LPrinter
       );
     }
 
+    final HMA300LPrintImageMode printImageMode;
+    switch (printImage.monochromizationAlgorithm) {
+      case MonochromizationAlgorithm.binary:
+        printImageMode = HMA300LPrintImageMode.binary;
+        break;
+      case MonochromizationAlgorithm.dithering:
+        printImageMode = HMA300LPrintImageMode.dithering;
+        break;
+      case MonochromizationAlgorithm.cluster:
+        printImageMode = HMA300LPrintImageMode.cluster;
+        break;
+      default:
+        throw UnsupportedError(
+          'Monochromization Algorithm ${printImage.monochromizationAlgorithm} is unsupported on the HM-A300L.',
+        );
+    }
+
     final imageParams = HMA300LPrintImageParams(
       imagePath: printImage.path,
       xPosition: printImage.xPosition.toInt(),
       yPosition: printImage.yPosition.toInt(),
+      mode: printImageMode,
     );
 
     return addImageParams(imageParams);
