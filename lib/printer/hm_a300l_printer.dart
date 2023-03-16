@@ -280,7 +280,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addQRCode(HMA300LQRCodeParams params) async {
+  Future<bool> addQRCodeParams(HMA300LQRCodeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

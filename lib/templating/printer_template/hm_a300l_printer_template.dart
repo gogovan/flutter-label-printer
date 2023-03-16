@@ -8,6 +8,7 @@ import 'package:flutter_label_printer/templating/model/print_area_size.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_align.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
+import 'package:flutter_label_printer/templating/model/qr_code.dart';
 import 'package:flutter_label_printer/templating/printer_template_interface.dart';
 
 /// Interface for Templating for the Hanyin (HPRT) HM-A300L Printer.
@@ -141,7 +142,9 @@ class HMA300LPrinterInterface extends HMA300LPrinter
         barcodeType = HMA300LBarcodeType.codabar;
         break;
       default:
-        throw UnsupportedError('Barcode format ${barcode.type} is unsupported on the HM-A300L.');
+        throw UnsupportedError(
+          'Barcode format ${barcode.type} is unsupported on the HM-A300L.',
+        );
     }
 
     final barcodeParams = HMA300LBarcodeParams(
@@ -156,4 +159,27 @@ class HMA300LPrinterInterface extends HMA300LPrinter
 
     return addBarcodeParams(barcodeParams);
   }
+
+  @override
+  Future<bool> addQRCode(QRCode qrCode) {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    final qrCodeParams = HMA300LQRCodeParams(
+      orientation: HMA300LPrintOrientation.horizontal,
+      xPosition: qrCode.xPosition.toInt(),
+      yPosition: qrCode.yPosition.toInt(),
+      model: HMA300LQRCodeModel.normal,
+      unitSize: qrCode.unitSize.toInt(),
+      data: qrCode.data,
+    );
+
+    return addQRCodeParams(qrCodeParams);
+  }
+
+
 }
