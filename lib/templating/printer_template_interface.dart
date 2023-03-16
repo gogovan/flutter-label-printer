@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/templating/model/print_area_size.dart';
 import 'package:flutter_label_printer/templating/model/print_barcode.dart';
+import 'package:flutter_label_printer/templating/model/print_image.dart';
 import 'package:flutter_label_printer/templating/model/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
@@ -22,5 +23,5 @@ abstract class PrinterTemplateInterface extends PrinterInterface {
 
   Future<bool> addLine(Rect rect, int strokeWidth);
 
-
+  Future<bool> addImage(PrintImage printImage);
 }

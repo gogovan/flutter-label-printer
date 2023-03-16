@@ -335,7 +335,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addImage(HMA300LPrintImageParams params) {
+  Future<bool> addImageParams(HMA300LPrintImageParams params) {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

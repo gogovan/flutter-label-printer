@@ -5,6 +5,7 @@ import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/templating/model/print_barcode.dart';
 import 'package:flutter_label_printer/templating/model/print_barcode_type.dart';
 import 'package:flutter_label_printer/templating/model/print_area_size.dart';
+import 'package:flutter_label_printer/templating/model/print_image.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_align.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
@@ -181,5 +182,21 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     return addQRCodeParams(qrCodeParams);
   }
 
+  @override
+  Future<bool> addImage(PrintImage printImage) {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
 
+    final imageParams = HMA300LPrintImageParams(
+      imagePath: printImage.path,
+      xPosition: printImage.xPosition.toInt(),
+      yPosition: printImage.yPosition.toInt(),
+    );
+
+    return addImageParams(imageParams);
+  }
 }
