@@ -67,14 +67,14 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
 
   @override
   Future<bool> setPrintAreaSizeHMA300L(
-    PrintAreaSizeParams params,
+    HMA300LPrintAreaSizeParams params,
   ) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.setPrintAreaSizeHMA300L',
       <String, dynamic>{
-        'offset': params.originX,
-        'horizontalRes': params.horizontalResolution,
-        'verticalRes': params.verticalResolution,
+        'offset': params.offset,
+        'horizontalRes': params.horizontalRes,
+        'verticalRes': params.verticalRes,
         'height': params.height,
         'quantity': params.quantity,
       },
@@ -84,7 +84,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addTextHMA300L(TextParams params) async {
+  Future<bool> addTextHMA300L(HMA300LTextParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.addTextHMA300L',
       <String, dynamic>{
@@ -108,7 +108,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setPaperTypeHMA300L(PaperType type) async {
+  Future<bool> setPaperTypeHMA300L(HMA300LPaperType type) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.setPaperTypeHMA300L',
       <String, dynamic>{
@@ -189,7 +189,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addBarcode(BarcodeParams params) async {
+  Future<bool> addBarcode(HMA300LBarcodeParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.addBarcode',
       <String, dynamic>{
@@ -212,7 +212,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addQRCode(QRCodeParams params) async {
+  Future<bool> addQRCode(HMA300LQRCodeParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.addQRCode',
       <String, dynamic>{
@@ -261,7 +261,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addImage(PrintImageParams params) async {
+  Future<bool> addImage(HMA300LPrintImageParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.addImage',
       <String, dynamic>{

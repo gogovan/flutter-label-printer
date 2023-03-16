@@ -55,13 +55,13 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> setPrintAreaSizeHMA300L(PrintAreaSizeParams params) {
+  Future<bool> setPrintAreaSizeHMA300L(HMA300LPrintAreaSizeParams params) {
     throw UnimplementedError(
       'setPrintAreaSizeHMA300L() has not been implemented.',
     );
   }
 
-  Future<bool> addTextHMA300L(TextParams params) {
+  Future<bool> addTextHMA300L(HMA300LTextParams params) {
     throw UnimplementedError(
       'addTextHMA300L() has not been implemented.',
     );
@@ -73,7 +73,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> setPaperTypeHMA300L(PaperType type) {
+  Future<bool> setPaperTypeHMA300L(HMA300LPaperType type) {
     throw UnimplementedError(
       'setPaperTypeHMA300L() has not been implemented.',
     );
@@ -115,13 +115,13 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> addBarcode(BarcodeParams params) {
+  Future<bool> addBarcode(HMA300LBarcodeParams params) {
     throw UnimplementedError(
       'addBarcode() has not been implemented.',
     );
   }
 
-  Future<bool> addQRCode(QRCodeParams params) {
+  Future<bool> addQRCode(HMA300LQRCodeParams params) {
     throw UnimplementedError(
       'addQRCode() has not been implemented.',
     );
@@ -139,7 +139,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> addImage(PrintImageParams params) {
+  Future<bool> addImage(HMA300LPrintImageParams params) {
     throw UnimplementedError(
       'addImage() has not been implemented.',
     );

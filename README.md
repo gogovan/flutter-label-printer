@@ -122,3 +122,4 @@ await _printer?.disconnect();
 2. Implement `PrinterSearchResult` as the result object returned by your `PrinterSearcherInterface`.
 3. If your printer is intended to be used with the Templating system, implement `PrinterTemplateInterface` to support templating.
     1. Otherwise, Implement `PrinterInterface` for basic connectivity of your printer. 
+4. When implementing the Templating system, avoid adding any printer-specific features into parameter classes. Convert parameter classes to a format for your printer in your printer instead.

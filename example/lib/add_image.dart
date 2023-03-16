@@ -16,14 +16,14 @@ class _AddImageState extends State<AddImage> {
   String? imagePath;
   final xController = TextEditingController();
   final yController = TextEditingController();
-  var mode = PrintImageMode.dithering;
+  var mode = HMA300LPrintImageMode.dithering;
   var compress = false;
   var package = false;
 
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addImage(PrintImageParams(
+      await MyApp.printer?.addImage(HMA300LPrintImageParams(
         imagePath: imagePath!,
         xPosition: int.parse(xController.text),
         yPosition: int.parse(yController.text),
@@ -98,14 +98,14 @@ class _AddImageState extends State<AddImage> {
                 controller: yController,
               ),
               const Text('Mode'),
-              DropdownButton<PrintImageMode>(
+              DropdownButton<HMA300LPrintImageMode>(
                 items: const [
                   DropdownMenuItem(
-                      value: PrintImageMode.binary, child: Text('Binary')),
+                      value: HMA300LPrintImageMode.binary, child: Text('Binary')),
                   DropdownMenuItem(
-                      value: PrintImageMode.cluster, child: Text('Cluster')),
+                      value: HMA300LPrintImageMode.cluster, child: Text('Cluster')),
                   DropdownMenuItem(
-                      value: PrintImageMode.dithering,
+                      value: HMA300LPrintImageMode.dithering,
                       child: Text('Dithering')),
                 ],
                 onChanged: (item) {

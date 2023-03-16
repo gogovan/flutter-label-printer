@@ -118,7 +118,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _setPaperType(BuildContext context) async {
     try {
-      final answer = await showDialog<PaperType>(
+      final answer = await showDialog<HMA300LPaperType>(
               context: context,
               builder: (BuildContext context) {
                 return SimpleDialog(
@@ -127,36 +127,36 @@ class _MyAppState extends State<MyApp> {
                       SimpleDialogOption(
                         child: const Text('Continuous'),
                         onPressed: () {
-                          Navigator.pop(context, PaperType.continuous);
+                          Navigator.pop(context, HMA300LPaperType.continuous);
                         },
                       ),
                       SimpleDialogOption(
                         child: const Text('Label'),
                         onPressed: () {
-                          Navigator.pop(context, PaperType.label);
+                          Navigator.pop(context, HMA300LPaperType.label);
                         },
                       ),
                       SimpleDialogOption(
                         child: const Text('2 Inch Black Mark'),
                         onPressed: () {
-                          Navigator.pop(context, PaperType.blackMark2Inch);
+                          Navigator.pop(context, HMA300LPaperType.blackMark2Inch);
                         },
                       ),
                       SimpleDialogOption(
                         child: const Text('3 Inch Black Mark'),
                         onPressed: () {
-                          Navigator.pop(context, PaperType.blackMark3Inch);
+                          Navigator.pop(context, HMA300LPaperType.blackMark3Inch);
                         },
                       ),
                       SimpleDialogOption(
                         child: const Text('4 Inch Black Mark'),
                         onPressed: () {
-                          Navigator.pop(context, PaperType.blackMark4Inch);
+                          Navigator.pop(context, HMA300LPaperType.blackMark4Inch);
                         },
                       ),
                     ]);
               }) ??
-          PaperType.continuous;
+          HMA300LPaperType.continuous;
       await MyApp.printer?.setPaperType(answer);
     } catch (ex, st) {
       print('Exception: $ex\n$st');
@@ -201,7 +201,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _setAlign(BuildContext context) async {
     try {
-      final answer = await showDialog<PrinterTextAlign>(
+      final answer = await showDialog<HMA300LPrinterTextAlign>(
           context: context,
           builder: (BuildContext context) {
             return SimpleDialog(
@@ -210,24 +210,24 @@ class _MyAppState extends State<MyApp> {
                   SimpleDialogOption(
                     child: const Text('Left'),
                     onPressed: () {
-                      Navigator.pop(context, PrinterTextAlign.left);
+                      Navigator.pop(context, HMA300LPrinterTextAlign.left);
                     },
                   ),
                   SimpleDialogOption(
                     child: const Text('Center'),
                     onPressed: () {
-                      Navigator.pop(context, PrinterTextAlign.center);
+                      Navigator.pop(context, HMA300LPrinterTextAlign.center);
                     },
                   ),
                   SimpleDialogOption(
                     child: const Text('Right'),
                     onPressed: () {
-                      Navigator.pop(context, PrinterTextAlign.right);
+                      Navigator.pop(context, HMA300LPrinterTextAlign.right);
                     },
                   ),
                 ]);
           }) ??
-          PrinterTextAlign.left;
+          HMA300LPrinterTextAlign.left;
       await MyApp.printer?.setAlign(answer);
     } catch (ex, st) {
       print('Exception: $ex\n$st');

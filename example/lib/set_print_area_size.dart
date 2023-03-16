@@ -13,13 +13,13 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
   final offsetController = TextEditingController();
   final heightController = TextEditingController();
   final quantityController = TextEditingController();
-  var hRes = LabelResolution.res200;
-  var vRes = LabelResolution.res200;
+  var hRes = HMA300LLabelResolution.res200;
+  var vRes = HMA300LLabelResolution.res200;
 
   Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.setPrintAreaSize(PrintAreaSizeParams(
+      await MyApp.printer?.setPrintAreaSizeParams(HMA300LPrintAreaSizeParams(
         offset: int.parse(offsetController.text),
         horizontalRes: hRes,
         verticalRes: vRes,
@@ -55,12 +55,12 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
                       controller: offsetController,
                     ),
                     const Text('Horizontal Resolution'),
-                    DropdownButton<LabelResolution>(
+                    DropdownButton<HMA300LLabelResolution>(
                       items: const [
                         DropdownMenuItem(
-                            value: LabelResolution.res100, child: Text('100')),
+                            value: HMA300LLabelResolution.res100, child: Text('100')),
                         DropdownMenuItem(
-                            value: LabelResolution.res200, child: Text('200')),
+                            value: HMA300LLabelResolution.res200, child: Text('200')),
                       ],
                       onChanged: (item) {
                         hRes = item!;
@@ -69,12 +69,12 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
                       value: hRes,
                     ),
                     const Text('Vertical Resolution'),
-                    DropdownButton<LabelResolution>(
+                    DropdownButton<HMA300LLabelResolution>(
                       items: const [
                         DropdownMenuItem(
-                            value: LabelResolution.res100, child: Text('100')),
+                            value: HMA300LLabelResolution.res100, child: Text('100')),
                         DropdownMenuItem(
-                            value: LabelResolution.res200, child: Text('200')),
+                            value: HMA300LLabelResolution.res200, child: Text('200')),
                       ],
                       onChanged: (item) {
                         vRes = item!;
