@@ -26,7 +26,7 @@ class _AddBarcodeState extends State<AddBarcode> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addBarcode(HMA300LBarcodeParams(
+      await MyApp.printer?.addBarcodeParams(HMA300LBarcodeParams(
         orientation: _orientation,
         type: _type,
         ratio: _ratio,

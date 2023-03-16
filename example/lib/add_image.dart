@@ -23,7 +23,7 @@ class _AddImageState extends State<AddImage> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addImage(HMA300LPrintImageParams(
+      await MyApp.printer?.addImageParams(HMA300LPrintImageParams(
         imagePath: imagePath!,
         xPosition: int.parse(xController.text),
         yPosition: int.parse(yController.text),
