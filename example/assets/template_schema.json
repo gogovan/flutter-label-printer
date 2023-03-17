@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://gogovan.hk/flutter_label_printer_template.schema.json",
+    "title": "Printing Template",
+    "description": "A template for printing in flutter_label_printer Flutter plugin.",
+    "type": "object",
+    "properties": {
+        "commands": {
+            "description": "List of commands for printing",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "command": {
+                        "type": "string"
+                    },
+                    "parameters": {
+                        "type": "object"
+                    }
+                }
+            }
+        }
+    },
+    "required": ["commands"]
+}

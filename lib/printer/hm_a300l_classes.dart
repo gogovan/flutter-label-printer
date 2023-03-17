@@ -162,7 +162,6 @@ class HMA300LPrintAreaSizeParams {
   final int height;
   final int quantity;
 
-
   @override
   String toString() => 'PrintAreaSizeParams{offset: $offset, horizontalRes: $horizontalRes, verticalRes: $verticalRes, height: $height, quantity: $quantity}';
 

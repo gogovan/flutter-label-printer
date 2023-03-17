@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=template_schema.json
+commands:
+  - command: size
+    parameters:
+      originX: 0
+      originY: 0
+      width: 200
+      height: 300
+  - command: text
+    parameters:
+      text: Hello world!
+      xPosition: 0
+      yPosition: 0
