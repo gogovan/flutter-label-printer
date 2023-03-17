@@ -8,8 +8,8 @@ import 'package:flutter_label_printer/templating/model/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
 
-abstract class PrinterTemplateInterface extends PrinterInterface {
-  PrinterTemplateInterface(super.device);
+abstract class TemplatablePrinterInterface extends PrinterInterface {
+  TemplatablePrinterInterface(super.device);
 
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize);
 

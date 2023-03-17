@@ -9,11 +9,11 @@ import 'package:flutter_label_printer/templating/model/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/model/print_text.dart';
 import 'package:flutter_label_printer/templating/model/print_text_align.dart';
 import 'package:flutter_label_printer/templating/model/print_text_style.dart';
-import 'package:flutter_label_printer/templating/printer_template_interface.dart';
+import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
 /// Interface for Templating for the Hanyin (HPRT) HM-A300L Printer.
 class HMA300LPrinterInterface extends HMA300LPrinter
-    implements PrinterTemplateInterface {
+    implements TemplatablePrinterInterface {
   HMA300LPrinterInterface(super.device);
 
   @override
