@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_label_printer/templating/model/print_text_style.dart';
+import 'package:flutter_label_printer/templating/command_parameters//print_text_style.dart';
+import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
-class PrintText {
+class PrintText implements CommandParameter {
   const PrintText({
     required this.text,
     required this.xPosition,

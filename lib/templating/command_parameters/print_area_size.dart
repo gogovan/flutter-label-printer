@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
-class PrintAreaSize {
+class PrintAreaSize implements CommandParameter {
   const PrintAreaSize({
     this.originX,
     this.originY,

@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
-class PrintBarcode {
+class PrintBarcode implements CommandParameter {
   const PrintBarcode({
     required this.type,
     required this.xPosition,

@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
-class PrintQRCode {
+class PrintQRCode implements CommandParameter {
   const PrintQRCode({
     required this.xPosition,
     required this.yPosition,

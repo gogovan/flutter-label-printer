@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_label_printer/templating/model/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
-class PrintTextStyle {
+class PrintTextStyle implements CommandParameter {
   const PrintTextStyle({
     this.bold,
     this.width,

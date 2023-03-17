@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
-class PrintImage {
+class PrintImage implements CommandParameter {
   const PrintImage({
     required this.path,
     required this.xPosition,

@@ -2,13 +2,13 @@ import 'package:flutter_label_printer/exception/invalid_argument_exception.dart'
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
-import 'package:flutter_label_printer/templating/model/print_area_size.dart';
-import 'package:flutter_label_printer/templating/model/print_barcode.dart';
-import 'package:flutter_label_printer/templating/model/print_image.dart';
-import 'package:flutter_label_printer/templating/model/print_qr_code.dart';
-import 'package:flutter_label_printer/templating/model/print_text.dart';
-import 'package:flutter_label_printer/templating/model/print_text_align.dart';
-import 'package:flutter_label_printer/templating/model/print_text_style.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_barcode.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_qr_code.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
 /// Interface for Templating for the Hanyin (HPRT) HM-A300L Printer.
