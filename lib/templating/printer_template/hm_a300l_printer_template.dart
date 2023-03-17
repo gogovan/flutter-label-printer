@@ -32,22 +32,9 @@ class HMA300LPrinterInterface extends HMA300LPrinter
         StackTrace.current.toString(),
       );
     }
-    HMA300LLabelResolution? hRes, vRes;
-    for (final HMA300LLabelResolution res in HMA300LLabelResolution.values) {
-      if (printAreaSize.horizontalResolution == res.res) {
-        hRes = res;
-      }
-    }
-    for (final HMA300LLabelResolution res in HMA300LLabelResolution.values) {
-      if (printAreaSize.verticalResolution == res.res) {
-        vRes = res;
-      }
-    }
 
     final HMA300LPrintAreaSizeParams params = HMA300LPrintAreaSizeParams(
       offset: printAreaSize.originX?.toInt() ?? 0,
-      horizontalRes: hRes ?? HMA300LLabelResolution.res200,
-      verticalRes: vRes ?? HMA300LLabelResolution.res200,
       height: height.toInt(),
     );
 

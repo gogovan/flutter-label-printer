@@ -2,16 +2,6 @@
 
 import 'package:flutter/foundation.dart';
 
-/// Resolution of printing in dpi (dots per inch).
-enum HMA300LLabelResolution {
-  res100(100),
-  res200(200);
-
-  const HMA300LLabelResolution(this.res);
-
-  final int res;
-}
-
 /// Rotation settings for Hanyin HM-A300L: values are angles in counterclockwise direction.
 enum HMA300LRotation90 {
   text(0),
@@ -150,20 +140,16 @@ enum HMA300LPrintImageMode {
 class HMA300LPrintAreaSizeParams {
   const HMA300LPrintAreaSizeParams({
     this.offset = 0,
-    this.horizontalRes = HMA300LLabelResolution.res200,
-    this.verticalRes = HMA300LLabelResolution.res200,
     required this.height,
     this.quantity = 1,
   });
 
   final int offset;
-  final HMA300LLabelResolution horizontalRes;
-  final HMA300LLabelResolution verticalRes;
   final int height;
   final int quantity;
 
   @override
-  String toString() => 'PrintAreaSizeParams{offset: $offset, horizontalRes: $horizontalRes, verticalRes: $verticalRes, height: $height, quantity: $quantity}';
+  String toString() => 'PrintAreaSizeParams{offset: $offset, height: $height, quantity: $quantity}';
 
   @override
   bool operator ==(Object other) =>
@@ -171,16 +157,12 @@ class HMA300LPrintAreaSizeParams {
       other is HMA300LPrintAreaSizeParams &&
           runtimeType == other.runtimeType &&
           offset == other.offset &&
-          horizontalRes == other.horizontalRes &&
-          verticalRes == other.verticalRes &&
           height == other.height &&
           quantity == other.quantity;
 
   @override
   int get hashCode =>
       offset.hashCode ^
-      horizontalRes.hashCode ^
-      verticalRes.hashCode ^
       height.hashCode ^
       quantity.hashCode;
 }
