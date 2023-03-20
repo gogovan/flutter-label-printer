@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_barcode.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
@@ -63,13 +64,17 @@ class Template {
               bold: _toDouble(style['bold']),
               width: _toDouble(style['width']),
               height: _toDouble(style['height']),
-              align: PrintTextAlign.values.byName(style['align'].toString()),
+              align: PrintTextAlign.values.asNameMap()[style['align'].toString()],
             ),
           );
           break;
         case CommandType.barcode:
+          final type = PrintBarcodeType.values.asNameMap()[paramMap['type'].toString()];
+          if (type == null) {
+            throw ArgumentError('Barcode type cannot be null');
+          }
           params = PrintBarcode(
-            type: PrintBarcodeType.values.byName(paramMap['type'].toString()),
+            type: type,
             xPosition: _toDouble(paramMap['xPosition']) ?? 0,
             yPosition: _toDouble(paramMap['yPosition']) ?? 0,
             data: paramMap['data'].toString(),

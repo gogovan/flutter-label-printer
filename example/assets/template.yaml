@@ -5,10 +5,51 @@ commands:
       paperType: label
       originX: 0
       originY: 0
-      width: 200
-      height: 300
+      width: 300
+      height: 200
   - command: text
     parameters:
       text: Hello world!
       xPosition: 0
       yPosition: 0
+      style:
+        width: 3
+        height: 3
+  - command: text
+    parameters:
+      text: Right Text.
+      xPosition: 300
+      yPosition: 0
+      style:
+        align: right
+  - command: barcode
+    parameters:
+      type: code39
+      xPosition: 0
+      yPosition: 100
+      data: ABC-123-456789
+      height: 50
+  - command: qrcode
+    parameters:
+      xPosition: 100
+      yPosition: 100
+      data: https://www.example.com
+  - command: line
+    parameters:
+      left: 10
+      right: 290
+      top: 110
+      bottom: 190
+      strokeWidth: 4
+  - command: rectangle
+    parameters:
+      left: 10
+      right: 290
+      top: 110
+      bottom: 190
+      strokeWidth: 2
+  - command: text
+    parameters:
+      text: Body text lorem ipsum dolor sit amet
+      xPosition: 150
+      yPosition: 150
