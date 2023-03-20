@@ -149,7 +149,8 @@ class HMA300LPrintAreaSizeParams {
   final int quantity;
 
   @override
-  String toString() => 'PrintAreaSizeParams{offset: $offset, height: $height, quantity: $quantity}';
+  String toString() =>
+      'PrintAreaSizeParams{offset: $offset, height: $height, quantity: $quantity}';
 
   @override
   bool operator ==(Object other) =>
@@ -161,10 +162,7 @@ class HMA300LPrintAreaSizeParams {
           quantity == other.quantity;
 
   @override
-  int get hashCode =>
-      offset.hashCode ^
-      height.hashCode ^
-      quantity.hashCode;
+  int get hashCode => offset.hashCode ^ height.hashCode ^ quantity.hashCode;
 }
 
 @immutable

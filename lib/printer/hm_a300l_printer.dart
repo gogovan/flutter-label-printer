@@ -72,7 +72,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<void> setLogLevel(int level) async =>
       FlutterLabelPrinterPlatform.instance.setLogLevel(level);
 
-  Future<bool> setPrintAreaSizeParams(HMA300LPrintAreaSizeParams printAreaSizeParams) async {
+  Future<bool> setPrintAreaSizeParams(
+    HMA300LPrintAreaSizeParams printAreaSizeParams,
+  ) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

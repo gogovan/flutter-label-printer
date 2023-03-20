@@ -22,7 +22,8 @@ class PrintAreaSize implements CommandParameter {
   final double? verticalResolution;
 
   @override
-  String toString() => 'PrintAreaSize{paperType: $paperType, originX: $originX, originY: $originY, width: $width, height: $height, horizontalResolution: $horizontalResolution, verticalResolution: $verticalResolution}';
+  String toString() =>
+      'PrintAreaSize{paperType: $paperType, originX: $originX, originY: $originY, width: $width, height: $height, horizontalResolution: $horizontalResolution, verticalResolution: $verticalResolution}';
 
   @override
   bool operator ==(Object other) =>
@@ -48,6 +49,4 @@ class PrintAreaSize implements CommandParameter {
       verticalResolution.hashCode;
 }
 
-enum PrintPaperType {
-  continuous, label
-}
+enum PrintPaperType { continuous, label }

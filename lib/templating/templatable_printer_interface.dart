@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_barcode.dart';

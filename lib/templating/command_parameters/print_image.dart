@@ -17,11 +17,11 @@ class PrintImage implements CommandParameter {
   final MonochromizationAlgorithm? monochromizationAlgorithm;
 
   PrintImage replaceString(Map<String, String> replace) => PrintImage(
-    path: path.format(replace),
-    xPosition: xPosition,
-    yPosition: yPosition,
-    monochromizationAlgorithm: monochromizationAlgorithm,
-  );
+        path: path.format(replace),
+        xPosition: xPosition,
+        yPosition: yPosition,
+        monochromizationAlgorithm: monochromizationAlgorithm,
+      );
 
   @override
   String toString() =>

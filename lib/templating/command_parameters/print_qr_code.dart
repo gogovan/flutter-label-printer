@@ -19,15 +19,16 @@ class PrintQRCode implements CommandParameter {
   final double rotation;
 
   PrintQRCode replaceString(Map<String, String> replace) => PrintQRCode(
-    xPosition: xPosition,
-    yPosition: yPosition,
-    data: data.format(replace),
-    unitSize: unitSize,
-    rotation: rotation,
-  );
+        xPosition: xPosition,
+        yPosition: yPosition,
+        data: data.format(replace),
+        unitSize: unitSize,
+        rotation: rotation,
+      );
 
   @override
-  String toString() => 'QRCode{xPosition: $xPosition, yPosition: $yPosition, unitSize: $unitSize, data: $data}';
+  String toString() =>
+      'QRCode{xPosition: $xPosition, yPosition: $yPosition, unitSize: $unitSize, data: $data}';
 
   @override
   bool operator ==(Object other) =>

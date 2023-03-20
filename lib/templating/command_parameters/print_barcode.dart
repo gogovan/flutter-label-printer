@@ -23,17 +23,18 @@ class PrintBarcode implements CommandParameter {
   final double rotation;
 
   PrintBarcode replaceString(Map<String, String> replace) => PrintBarcode(
-    type: type,
-    xPosition: xPosition,
-    yPosition: yPosition,
-    data: data.format(replace),
-    barLineWidth: barLineWidth,
-    height: height,
-    rotation: rotation,
-  );
+        type: type,
+        xPosition: xPosition,
+        yPosition: yPosition,
+        data: data.format(replace),
+        barLineWidth: barLineWidth,
+        height: height,
+        rotation: rotation,
+      );
 
   @override
-  String toString() => 'Barcode{type: $type, xPosition: $xPosition, yPosition: $yPosition, barLineWidth: $barLineWidth, height: $height, data: $data}';
+  String toString() =>
+      'Barcode{type: $type, xPosition: $xPosition, yPosition: $yPosition, barLineWidth: $barLineWidth, height: $height, data: $data}';
 
   @override
   bool operator ==(Object other) =>
@@ -58,5 +59,21 @@ class PrintBarcode implements CommandParameter {
 }
 
 enum PrintBarcodeType {
-  code11, code39, code93, code128, codabar, ean2, ean5, ean8, ean13, interleaved2of5, msi, patchCode, pharmacode, plessey, telepen, upca, upce
+  code11,
+  code39,
+  code93,
+  code128,
+  codabar,
+  ean2,
+  ean5,
+  ean8,
+  ean13,
+  interleaved2of5,
+  msi,
+  patchCode,
+  pharmacode,
+  plessey,
+  telepen,
+  upca,
+  upce
 }

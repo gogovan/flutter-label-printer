@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_barcode.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
@@ -15,7 +14,8 @@ import 'package:yaml/yaml.dart';
 double? _toDouble(x) {
   if (x == null) {
     return null;
-  } if (x is num) {
+  }
+  if (x is num) {
     return x.toDouble();
   } else if (x is String) {
     return double.parse(x);
@@ -27,6 +27,8 @@ double? _toDouble(x) {
 /// Template represents a parsed template.
 @immutable
 class Template {
+  const Template(this.commands);
+
   /// Create a Template from YAML data.
   factory Template.fromYaml(String data) {
     final obj = loadYamlNode(data);
@@ -42,81 +44,32 @@ class Template {
 
       switch (type) {
         case CommandType.size:
-          params = PrintAreaSize(
-            paperType: PrintPaperType.values.byName(paramMap['paperType'].toString()),
-            originX: _toDouble(paramMap['originX']),
-            originY: _toDouble(paramMap['originY']),
-            width: _toDouble(paramMap['width']),
-            height: _toDouble(paramMap['height']),
-            horizontalResolution: _toDouble(paramMap['horizontalResolution']),
-            verticalResolution: _toDouble(paramMap['verticalResolution']),
-          );
+          params = _getPrintAreaSize(paramMap);
           break;
         case CommandType.text:
           final styleN = paramMap['style'];
           final style = styleN is YamlMap ? styleN : null;
-          params = PrintText(
-            text: paramMap['text'].toString(),
-            xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-            yPosition: _toDouble(paramMap['yPosition']) ?? 0,
-            rotation: _toDouble(paramMap['rotation']) ?? 0,
-            style: style == null ? null : PrintTextStyle(
-              bold: _toDouble(style['bold']),
-              width: _toDouble(style['width']),
-              height: _toDouble(style['height']),
-              align: PrintTextAlign.values.asNameMap()[style['align'].toString()],
-            ),
-          );
+          params = _getPrintText(paramMap, style);
           break;
         case CommandType.barcode:
-          final type = PrintBarcodeType.values.asNameMap()[paramMap['type'].toString()];
+          final type =
+              PrintBarcodeType.values.asNameMap()[paramMap['type'].toString()];
           if (type == null) {
             throw ArgumentError('Barcode type cannot be null');
           }
-          params = PrintBarcode(
-            type: type,
-            xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-            yPosition: _toDouble(paramMap['yPosition']) ?? 0,
-            data: paramMap['data'].toString(),
-            height: _toDouble(paramMap['height']) ?? 0,
-          );
+          params = _getPrintBarcode(type, paramMap);
           break;
         case CommandType.qrcode:
-          params = PrintQRCode(
-            xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-            yPosition: _toDouble(paramMap['yPosition']) ?? 0,
-            data: paramMap['data'].toString(),
-            unitSize: _toDouble(paramMap['unitSize']) ?? 1,
-          );
+          params = _getPrintQRCode(paramMap);
           break;
         case CommandType.line:
-          params = PrintRect(
-            rect: Rect.fromLTRB(
-              _toDouble(paramMap['left']) ?? 0,
-              _toDouble(paramMap['top']) ?? 0,
-              _toDouble(paramMap['right']) ?? 0,
-              _toDouble(paramMap['bottom']) ?? 0,
-            ),
-            strokeWidth: _toDouble(paramMap['strokeWidth']) ?? 0,
-          );
+          params = _getPrintRect(paramMap);
           break;
         case CommandType.rectangle:
-          params = PrintRect(
-            rect: Rect.fromLTRB(
-              _toDouble(paramMap['left']) ?? 0,
-              _toDouble(paramMap['top']) ?? 0,
-              _toDouble(paramMap['right']) ?? 0,
-              _toDouble(paramMap['bottom']) ?? 0,
-            ),
-            strokeWidth: _toDouble(paramMap['strokeWidth']) ?? 0,
-          );
+          params = _getPrintRect(paramMap);
           break;
         case CommandType.image:
-          params = PrintImage(
-            path: paramMap['path'].toString(),
-            xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-            yPosition: _toDouble(paramMap['yPosition']) ?? 0,
-          );
+          params = _getPrintImage(paramMap);
           break;
       }
 
@@ -126,7 +79,67 @@ class Template {
     return Template(result);
   }
 
-  const Template(this.commands);
+  static PrintImage _getPrintImage(YamlMap paramMap) => PrintImage(
+        path: paramMap['path'].toString(),
+        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
+        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
+      );
+
+  static PrintRect _getPrintRect(YamlMap paramMap) => PrintRect(
+        rect: Rect.fromLTRB(
+          _toDouble(paramMap['left']) ?? 0,
+          _toDouble(paramMap['top']) ?? 0,
+          _toDouble(paramMap['right']) ?? 0,
+          _toDouble(paramMap['bottom']) ?? 0,
+        ),
+        strokeWidth: _toDouble(paramMap['strokeWidth']) ?? 0,
+      );
+
+  static PrintQRCode _getPrintQRCode(YamlMap paramMap) => PrintQRCode(
+        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
+        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
+        data: paramMap['data'].toString(),
+        unitSize: _toDouble(paramMap['unitSize']) ?? 1,
+      );
+
+  static PrintBarcode _getPrintBarcode(
+    PrintBarcodeType type,
+    YamlMap paramMap,
+  ) =>
+      PrintBarcode(
+        type: type,
+        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
+        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
+        data: paramMap['data'].toString(),
+        height: _toDouble(paramMap['height']) ?? 0,
+      );
+
+  static PrintText _getPrintText(YamlMap paramMap, YamlMap? style) => PrintText(
+        text: paramMap['text'].toString(),
+        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
+        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
+        rotation: _toDouble(paramMap['rotation']) ?? 0,
+        style: style == null
+            ? null
+            : PrintTextStyle(
+                bold: _toDouble(style['bold']),
+                width: _toDouble(style['width']),
+                height: _toDouble(style['height']),
+                align: PrintTextAlign.values
+                    .asNameMap()[style['align'].toString()],
+              ),
+      );
+
+  static PrintAreaSize _getPrintAreaSize(YamlMap paramMap) => PrintAreaSize(
+        paperType:
+            PrintPaperType.values.byName(paramMap['paperType'].toString()),
+        originX: _toDouble(paramMap['originX']),
+        originY: _toDouble(paramMap['originY']),
+        width: _toDouble(paramMap['width']),
+        height: _toDouble(paramMap['height']),
+        horizontalResolution: _toDouble(paramMap['horizontalResolution']),
+        verticalResolution: _toDouble(paramMap['verticalResolution']),
+      );
 
   final List<Command> commands;
 

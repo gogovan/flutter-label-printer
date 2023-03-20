@@ -20,12 +20,12 @@ class PrintText implements CommandParameter {
   final PrintTextStyle? style;
 
   PrintText replaceString(Map<String, String> replace) => PrintText(
-    text: text.format(replace),
-    xPosition: xPosition,
-    yPosition: yPosition,
-    rotation: rotation,
-    style: style,
-  );
+        text: text.format(replace),
+        xPosition: xPosition,
+        yPosition: yPosition,
+        rotation: rotation,
+        style: style,
+      );
 
   @override
   bool operator ==(Object other) =>
@@ -42,5 +42,6 @@ class PrintText implements CommandParameter {
       text.hashCode ^ xPosition.hashCode ^ yPosition.hashCode ^ style.hashCode;
 
   @override
-  String toString() => 'PrintText{text: $text, xPosition: $xPosition, yPosition: $yPosition, style: $style}';
+  String toString() =>
+      'PrintText{text: $text, xPosition: $xPosition, yPosition: $yPosition, style: $style}';
 }
