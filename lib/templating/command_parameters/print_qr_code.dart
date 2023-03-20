@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/string_replacer.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
@@ -16,6 +17,14 @@ class PrintQRCode implements CommandParameter {
   final double unitSize;
   final String data;
   final double rotation;
+
+  PrintQRCode replaceString(Map<String, String> replace) => PrintQRCode(
+    xPosition: xPosition,
+    yPosition: yPosition,
+    data: data.format(replace),
+    unitSize: unitSize,
+    rotation: rotation,
+  );
 
   @override
   String toString() => 'QRCode{xPosition: $xPosition, yPosition: $yPosition, unitSize: $unitSize, data: $data}';

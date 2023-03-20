@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
+import 'package:flutter_label_printer/templating/string_replacer.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
@@ -17,6 +18,14 @@ class PrintText implements CommandParameter {
   final double yPosition;
   final double rotation;
   final PrintTextStyle? style;
+
+  PrintText replaceString(Map<String, String> replace) => PrintText(
+    text: text.format(replace),
+    xPosition: xPosition,
+    yPosition: yPosition,
+    rotation: rotation,
+    style: style,
+  );
 
   @override
   bool operator ==(Object other) =>

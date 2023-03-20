@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/string_replacer.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
@@ -20,6 +21,16 @@ class PrintBarcode implements CommandParameter {
   final double height;
   final String data;
   final double rotation;
+
+  PrintBarcode replaceString(Map<String, String> replace) => PrintBarcode(
+    type: type,
+    xPosition: xPosition,
+    yPosition: yPosition,
+    data: data.format(replace),
+    barLineWidth: barLineWidth,
+    height: height,
+    rotation: rotation,
+  );
 
   @override
   String toString() => 'Barcode{type: $type, xPosition: $xPosition, yPosition: $yPosition, barLineWidth: $barLineWidth, height: $height, data: $data}';

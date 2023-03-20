@@ -16,32 +16,39 @@ import 'package:flutter_label_printer/templating/template.dart';
 /// final result = await printer.printTemplate(); // Print the template
 /// ```
 class TemplatePrinter {
-  TemplatePrinter(this.printer, this.template);
+  TemplatePrinter(this.printer, this.template, {this.replaceStrings});
 
   TemplatablePrinterInterface printer;
   Template template;
+  Map<String, String>? replaceStrings;
 
   /// Initiate printing.
   /// Return true on success, false if any command failed.
   /// If any commands failed, it will be skipped.
   Future<bool> printTemplate() async {
+    final rStrings = replaceStrings ?? {};
+
     var result = true;
     for (final cmd in template.commands) {
       switch (cmd.type) {
         case CommandType.size:
-          final cmdResult = await printer.setPrintAreaSize(cmd.params as PrintAreaSize);
+          final cmdResult =
+              await printer.setPrintAreaSize(cmd.params as PrintAreaSize);
           result = result && cmdResult;
           break;
         case CommandType.text:
-          final cmdResult = await printer.addText(cmd.params as PrintText);
+          final cmdResult = await printer
+              .addText((cmd.params as PrintText).replaceString(rStrings));
           result = result && cmdResult;
           break;
         case CommandType.barcode:
-          final cmdResult = await printer.addBarcode(cmd.params as PrintBarcode);
+          final cmdResult = await printer
+              .addBarcode((cmd.params as PrintBarcode).replaceString(rStrings));
           result = result && cmdResult;
           break;
         case CommandType.qrcode:
-          final cmdResult = await printer.addQRCode(cmd.params as PrintQRCode);
+          final cmdResult = await printer
+              .addQRCode((cmd.params as PrintQRCode).replaceString(rStrings));
           result = result && cmdResult;
           break;
         case CommandType.line:
