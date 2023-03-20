@@ -191,7 +191,7 @@ Some strings in the template can be replaced with values retrieved at runtime. P
 final map = <String, String>{'name': 'John Doe', 'age': '23'};
 final printer = TemplatePrinter(printer, template, replaceStrings: map);
 ```
-To indicate replaceable strings in the template, wrap the key with double curly braces. e.g. The `{{name}}` in any strings in the template will be replaced by the value mapped to the key `name` in `replaceStrings`, i.e. `John Doe` in the above case.
+To indicate replaceable strings in the template, wrap the key with double curly braces. e.g. The `{{name}}` in any strings in the template will be replaced by the value mapped to the key `name` in `replaceStrings`, i.e. `John Doe` in the above case. Keys are case-sensitive.
 
 String replacement is supported on all fields that takes a String:
 - Text string

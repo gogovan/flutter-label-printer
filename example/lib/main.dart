@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
     try {
       final yml = await rootBundle.loadString('assets/template.yaml');
       final template = Template.fromYaml(yml);
-      final printer = TemplatePrinter(MyApp.printer!, template);
+      final printer = TemplatePrinter(MyApp.printer!, template, replaceStrings: {'world': 'Earth'});
       await printer.printTemplate();
     } catch (ex, st) {
       print('Exception: $ex\n$st');

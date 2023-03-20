@@ -9,7 +9,7 @@ commands:
       height: 300
   - command: text
     parameters:
-      text: Hello world!
+      text: Hello {{world}}!
       xPosition: 0
       yPosition: 0
       style:
