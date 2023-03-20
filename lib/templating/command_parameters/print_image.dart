@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/templating/string_replacer.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
@@ -14,6 +15,13 @@ class PrintImage implements CommandParameter {
   final double xPosition;
   final double yPosition;
   final MonochromizationAlgorithm? monochromizationAlgorithm;
+
+  PrintImage replaceString(Map<String, String> replace) => PrintImage(
+    path: path.format(replace),
+    xPosition: xPosition,
+    yPosition: yPosition,
+    monochromizationAlgorithm: monochromizationAlgorithm,
+  );
 
   @override
   String toString() =>
