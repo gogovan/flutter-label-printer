@@ -12,7 +12,8 @@
                 "type": "object",
                 "properties": {
                     "command": {
-                        "type": "string"
+                        "type": "string",
+                        "enum": ["size", "text", "barcode", "qrcode", "line", "rectangle", "image"]
                     },
                     "parameters": {
                         "type": "object"
