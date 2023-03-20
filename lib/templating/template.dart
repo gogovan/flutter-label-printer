@@ -86,6 +86,7 @@ class Template {
             xPosition: _toDouble(paramMap['xPosition']) ?? 0,
             yPosition: _toDouble(paramMap['yPosition']) ?? 0,
             data: paramMap['data'].toString(),
+            unitSize: _toDouble(paramMap['unitSize']) ?? 1,
           );
           break;
         case CommandType.line:

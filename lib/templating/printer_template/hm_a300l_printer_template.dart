@@ -101,15 +101,15 @@ class HMA300LPrinterInterface extends HMA300LPrinter
 
     final style = printText.style;
 
-    final bool sizeResult;
-    final bool boldResult;
-    final bool alignResult;
+    bool sizeResult;
+    bool boldResult;
+    bool alignResult;
     if (style != null) {
       sizeResult = await setTextSize(
         style.width?.toInt() ?? 1,
         style.height?.toInt() ?? 1,
       );
-      boldResult = await setBold(style.bold?.toInt() ?? 1);
+      boldResult = await setBold(style.bold?.toInt() ?? 0);
 
       HMA300LPrinterTextAlign hmA300lAlign;
       switch (style.align) {
@@ -139,6 +139,12 @@ class HMA300LPrinterInterface extends HMA300LPrinter
       rotate: getHMA300LRotation(printText.rotation),
     );
     final textResult = await addTextParams(textParams);
+
+    if (style != null) {
+      sizeResult = sizeResult && await setTextSize(1, 1);
+      boldResult = boldResult && await setBold(0);
+      alignResult = alignResult && await setAlign(HMA300LPrinterTextAlign.left);
+    }
 
     return sizeResult && boldResult && alignResult && textResult;
   }
@@ -240,7 +246,7 @@ class HMA300LPrinterInterface extends HMA300LPrinter
       );
     }
 
-    return addLineParam(rect.rect, rect.strokeWidth.toInt());
+    return addRectangleParam(rect.rect, rect.strokeWidth.toInt());
   }
 
   @override
