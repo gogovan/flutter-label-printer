@@ -33,12 +33,29 @@ class HMA300LPrinterInterface extends HMA300LPrinter
       );
     }
 
+    final HMA300LPaperType paperType;
+    switch (printAreaSize.paperType) {
+      case PrintPaperType.continuous:
+        paperType = HMA300LPaperType.continuous;
+        break;
+      case PrintPaperType.label:
+        paperType = HMA300LPaperType.label;
+        break;
+      default:
+        paperType = HMA300LPaperType.continuous;
+        break;
+    }
+
+    final typeResult = await setPaperType(paperType);
+
     final HMA300LPrintAreaSizeParams params = HMA300LPrintAreaSizeParams(
       offset: printAreaSize.originX?.toInt() ?? 0,
       height: height.toInt(),
     );
 
-    return setPrintAreaSizeParams(params);
+    final sizeResult = await setPrintAreaSizeParams(params);
+
+    return typeResult && sizeResult;
   }
 
   HMA300LRotation90 getHMA300LRotation(double angle) {

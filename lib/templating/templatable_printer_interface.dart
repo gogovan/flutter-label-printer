@@ -24,4 +24,6 @@ abstract class TemplatablePrinterInterface extends PrinterInterface {
   Future<bool> addLine(PrintRect rect);
 
   Future<bool> addImage(PrintImage printImage);
+
+  Future<bool> print();
 }

@@ -23,8 +23,10 @@ double? _toDouble(x) {
   }
 }
 
+/// Template represents a parsed template.
 @immutable
 class Template {
+  /// Create a Template from YAML data.
   factory Template.fromYaml(String data) {
     final obj = loadYamlNode(data);
     final cmds = (obj.value as YamlMap)['commands'] as YamlList;
@@ -40,6 +42,7 @@ class Template {
       switch (type) {
         case CommandType.size:
           params = PrintAreaSize(
+            paperType: PrintPaperType.values.byName(paramMap['paperType'].toString()),
             originX: _toDouble(paramMap['originX']),
             originY: _toDouble(paramMap['originY']),
             width: _toDouble(paramMap['width']),
