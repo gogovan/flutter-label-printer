@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_label_printer/templating/command_parameters//print_text_style.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable

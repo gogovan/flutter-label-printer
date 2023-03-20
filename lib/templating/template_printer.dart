@@ -7,5 +7,9 @@ class TemplatePrinter {
   TemplatablePrinterInterface printer;
   Template template;
 
+  Future<bool> printTemplate() async {
+    print("printed");
 
+    return true;
+  }
 }

@@ -6,9 +6,9 @@ import 'package:flutter_label_printer/templating/command_parameters/print_area_s
 import 'package:flutter_label_printer/templating/command_parameters/print_barcode.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_qr_code.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
-import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
 /// Interface for Templating for the Hanyin (HPRT) HM-A300L Printer.
@@ -74,7 +74,7 @@ class HMA300LPrinterInterface extends HMA300LPrinter
   }
 
   @override
-  Future<bool> addText(PrintText printText, PrintTextStyle style) async {
+  Future<bool> addText(PrintText printText) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -200,6 +200,30 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     );
 
     return addQRCodeParams(qrCodeParams);
+  }
+
+  @override
+  Future<bool> addLine(PrintRect rect) {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    return addLineParam(rect.rect, rect.strokeWidth.toInt());
+  }
+
+  @override
+  Future<bool> addRectangle(PrintRect rect) {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    return addLineParam(rect.rect, rect.strokeWidth.toInt());
   }
 
   @override

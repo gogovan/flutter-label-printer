@@ -298,7 +298,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addRectangle(Rect rect, int strokeWidth) async {
+  Future<bool> addRectangleParam(Rect rect, int strokeWidth) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -317,7 +317,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addLine(Rect rect, int strokeWidth) async {
+  Future<bool> addLineParam(Rect rect, int strokeWidth) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

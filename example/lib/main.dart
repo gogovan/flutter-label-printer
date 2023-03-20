@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
+import 'package:flutter_label_printer/templating/printer_template/hm_a300l_printer_template.dart';
+import 'package:flutter_label_printer/templating/template.dart';
+import 'package:flutter_label_printer/templating/template_printer.dart';
 import 'package:flutter_label_printer_example/add_barcode.dart';
 import 'package:flutter_label_printer_example/add_image.dart';
 import 'package:flutter_label_printer_example/add_line.dart';
@@ -23,7 +27,7 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static HMA300LPrinter? printer;
+  static HMA300LPrinterInterface? printer;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -31,7 +35,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final HMA300LSearcher _searcher = HMA300LSearcher();
-  HMA300LPrinter? _printer;
 
   List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
@@ -76,7 +79,7 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result =
           _searchResults[int.parse(connectIndexController.text)];
-      MyApp.printer = HMA300LPrinter(result);
+      MyApp.printer = HMA300LPrinterInterface(result);
       await MyApp.printer?.connect();
       setState(() {
         _connected = true;
@@ -111,6 +114,17 @@ class _MyAppState extends State<MyApp> {
   Future<void> _print() async {
     try {
       await MyApp.printer?.print();
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _printTemplate() async {
+    try {
+      final yml = await rootBundle.loadString('assets/template.yaml');
+      final template = Template.fromYaml(yml);
+      final printer = TemplatePrinter(MyApp.printer!, template);
+      await printer.printTemplate();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -368,6 +382,8 @@ class _MyAppState extends State<MyApp> {
                           child: const Text('Add Image')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
+                      ElevatedButton(
+                          onPressed: _printTemplate, child: const Text('Print Template')),
                       ElevatedButton(
                           onPressed: _disconnect,
                           child: const Text('Disconnect')),
