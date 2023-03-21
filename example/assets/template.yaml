@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=template_schema.json
+commands:
+  - command: size
+    parameters:
+      paperType: label
+      originX: 0
+      originY: 0
+      width: 300
+      height: 300
+  - command: text
+    parameters:
+      text: Hello {{world}}!
+      xPosition: 0
+      yPosition: 0
+      style:
+        width: 3
+        height: 3
+  - command: text
+    parameters:
+      text: Right Text.
+      xPosition: 300
+      yPosition: 0
+      style:
+        align: right
+  - command: barcode
+    parameters:
+      type: code128
+      xPosition: 0
+      yPosition: 50
+      data: ABC-123-456789
+      height: 50
+  - command: qrcode
+    parameters:
+      xPosition: 0
+      yPosition: 100
+      unitSize: 4
+      data: https://www.example.com
+  - command: line
+    parameters:
+      left: 160
+      right: 290
+      top: 210
+      bottom: 290
+      strokeWidth: 4
+  - command: rectangle
+    parameters:
+      left: 160
+      right: 290
+      top: 210
+      bottom: 290
+      strokeWidth: 2
+  - command: text
+    parameters:
+      text: Body text lorem ipsum dolor sit amet
+      xPosition: 150
+      yPosition: 150

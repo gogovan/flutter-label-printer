@@ -2,24 +2,14 @@
 
 import 'package:flutter/foundation.dart';
 
-/// Resolution of printing in dpi (dots per inch).
-enum LabelResolution {
-  res100(100),
-  res200(200);
-
-  const LabelResolution(this.res);
-
-  final int res;
-}
-
 /// Rotation settings for Hanyin HM-A300L: values are angles in counterclockwise direction.
-enum Rotation90 {
+enum HMA300LRotation90 {
   text(0),
   text90(90),
   text180(180),
   text270(270);
 
-  const Rotation90(this.rot);
+  const HMA300LRotation90(this.rot);
 
   final int rot;
 }
@@ -39,7 +29,7 @@ enum Rotation90 {
 /// 24:24x24或者12x24，视中英文而定.
 /// 28:< chinese:28x28  english: 14x28.
 /// 55:16x16或者8x16，视中英文而定.
-enum Font {
+enum HMA300LFont {
   font0(0),
   font1(1),
   font2(2),
@@ -53,43 +43,43 @@ enum Font {
   font28(28),
   font55(55);
 
-  const Font(this.code);
+  const HMA300LFont(this.code);
 
   final int code;
 }
 
-enum PaperType {
+enum HMA300LPaperType {
   continuous(0),
   label(2),
   blackMark2Inch(4),
   blackMark3Inch(5),
   blackMark4Inch(6);
 
-  const PaperType(this.code);
+  const HMA300LPaperType(this.code);
 
   final int code;
 }
 
-enum PrinterTextAlign {
+enum HMA300LPrinterTextAlign {
   left(0),
   center(1),
   right(2);
 
-  const PrinterTextAlign(this.code);
+  const HMA300LPrinterTextAlign(this.code);
 
   final int code;
 }
 
-enum PrintOrientation {
+enum HMA300LPrintOrientation {
   horizontal(0),
   vertical(1);
 
-  const PrintOrientation(this.code);
+  const HMA300LPrintOrientation(this.code);
 
   final int code;
 }
 
-enum BarcodeType {
+enum HMA300LBarcodeType {
   upca(0),
   upce(1),
   ean13(2),
@@ -99,12 +89,12 @@ enum BarcodeType {
   code128(6),
   codabar(7);
 
-  const BarcodeType(this.code);
+  const HMA300LBarcodeType(this.code);
 
   final int code;
 }
 
-enum BarcodeRatio {
+enum HMA300LBarcodeRatio {
   ratio0(0),
   ratio1(1),
   ratio2(2),
@@ -122,82 +112,71 @@ enum BarcodeRatio {
   ratio29(29),
   ratio30(30);
 
-  const BarcodeRatio(this.code);
+  const HMA300LBarcodeRatio(this.code);
 
   final int code;
 }
 
-enum QRCodeModel {
+enum HMA300LQRCodeModel {
   normal(1),
   extraSymbols(2);
 
-  const QRCodeModel(this.code);
+  const HMA300LQRCodeModel(this.code);
 
   final int code;
 }
 
-enum PrintImageMode {
+enum HMA300LPrintImageMode {
   binary(0),
   dithering(1),
   cluster(2);
 
-  const PrintImageMode(this.code);
+  const HMA300LPrintImageMode(this.code);
 
   final int code;
 }
 
 @immutable
-class PrintAreaSizeParams {
-  const PrintAreaSizeParams({
+class HMA300LPrintAreaSizeParams {
+  const HMA300LPrintAreaSizeParams({
     this.offset = 0,
-    this.horizontalRes = LabelResolution.res200,
-    this.verticalRes = LabelResolution.res200,
     required this.height,
     this.quantity = 1,
   });
 
   final int offset;
-  final LabelResolution horizontalRes;
-  final LabelResolution verticalRes;
   final int height;
   final int quantity;
 
   @override
   String toString() =>
-      'PrintAreaSizeParams{offset: $offset, horizontalRes: $horizontalRes, verticalRes: $verticalRes, height: $height, quantity: $quantity}';
+      'PrintAreaSizeParams{offset: $offset, height: $height, quantity: $quantity}';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PrintAreaSizeParams &&
+      other is HMA300LPrintAreaSizeParams &&
           runtimeType == other.runtimeType &&
           offset == other.offset &&
-          horizontalRes == other.horizontalRes &&
-          verticalRes == other.verticalRes &&
           height == other.height &&
           quantity == other.quantity;
 
   @override
-  int get hashCode =>
-      offset.hashCode ^
-      horizontalRes.hashCode ^
-      verticalRes.hashCode ^
-      height.hashCode ^
-      quantity.hashCode;
+  int get hashCode => offset.hashCode ^ height.hashCode ^ quantity.hashCode;
 }
 
 @immutable
-class TextParams {
-  const TextParams({
-    this.rotate = Rotation90.text,
-    this.font = Font.font0,
+class HMA300LTextParams {
+  const HMA300LTextParams({
+    this.rotate = HMA300LRotation90.text,
+    this.font = HMA300LFont.font0,
     required this.xPosition,
     required this.yPosition,
     required this.text,
   });
 
-  final Rotation90 rotate;
-  final Font font;
+  final HMA300LRotation90 rotate;
+  final HMA300LFont font;
   final int xPosition;
   final int yPosition;
   final String text;
@@ -209,7 +188,7 @@ class TextParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TextParams &&
+      other is HMA300LTextParams &&
           runtimeType == other.runtimeType &&
           rotate == other.rotate &&
           font == other.font &&
@@ -227,9 +206,9 @@ class TextParams {
 }
 
 @immutable
-class BarcodeParams {
-  const BarcodeParams({
-    this.orientation = PrintOrientation.horizontal,
+class HMA300LBarcodeParams {
+  const HMA300LBarcodeParams({
+    this.orientation = HMA300LPrintOrientation.horizontal,
     required this.type,
     required this.ratio,
     required this.barWidthUnit,
@@ -240,15 +219,15 @@ class BarcodeParams {
     this.dataTextParams,
   });
 
-  final PrintOrientation orientation;
-  final BarcodeType type;
+  final HMA300LPrintOrientation orientation;
+  final HMA300LBarcodeType type;
   final int barWidthUnit;
-  final BarcodeRatio ratio;
+  final HMA300LBarcodeRatio ratio;
   final int height;
   final int xPosition;
   final int yPosition;
   final String data;
-  final BarcodeDataTextParams? dataTextParams;
+  final HMA300LBarcodeDataTextParams? dataTextParams;
 
   @override
   String toString() =>
@@ -257,7 +236,7 @@ class BarcodeParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BarcodeParams &&
+      other is HMA300LBarcodeParams &&
           runtimeType == other.runtimeType &&
           orientation == other.orientation &&
           type == other.type &&
@@ -283,14 +262,14 @@ class BarcodeParams {
 }
 
 @immutable
-class BarcodeDataTextParams {
-  const BarcodeDataTextParams({
+class HMA300LBarcodeDataTextParams {
+  const HMA300LBarcodeDataTextParams({
     required this.font,
     required this.size,
     required this.offset,
   });
 
-  final Font font;
+  final HMA300LFont font;
   final int size;
   final int offset;
 
@@ -301,7 +280,7 @@ class BarcodeDataTextParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BarcodeDataTextParams &&
+      other is HMA300LBarcodeDataTextParams &&
           runtimeType == other.runtimeType &&
           font == other.font &&
           size == other.size &&
@@ -312,8 +291,8 @@ class BarcodeDataTextParams {
 }
 
 @immutable
-class QRCodeParams {
-  const QRCodeParams({
+class HMA300LQRCodeParams {
+  const HMA300LQRCodeParams({
     required this.orientation,
     required this.xPosition,
     required this.yPosition,
@@ -322,10 +301,10 @@ class QRCodeParams {
     required this.data,
   });
 
-  final PrintOrientation orientation;
+  final HMA300LPrintOrientation orientation;
   final int xPosition;
   final int yPosition;
-  final QRCodeModel model;
+  final HMA300LQRCodeModel model;
   final int unitSize;
   final String data;
 
@@ -336,7 +315,7 @@ class QRCodeParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is QRCodeParams &&
+      other is HMA300LQRCodeParams &&
           runtimeType == other.runtimeType &&
           orientation == other.orientation &&
           xPosition == other.xPosition &&
@@ -356,12 +335,12 @@ class QRCodeParams {
 }
 
 @immutable
-class PrintImageParams {
-  const PrintImageParams({
+class HMA300LPrintImageParams {
+  const HMA300LPrintImageParams({
     required this.imagePath,
     required this.xPosition,
     required this.yPosition,
-    this.mode = PrintImageMode.binary,
+    this.mode = HMA300LPrintImageMode.binary,
     this.compress = true,
     this.package = false,
   });
@@ -371,15 +350,15 @@ class PrintImageParams {
   final String imagePath;
   final int xPosition;
   final int yPosition;
-  final PrintImageMode mode;
+  final HMA300LPrintImageMode mode;
   final bool compress;
   final bool package;
 }
 
 /// Printer status.
 @immutable
-class PrinterStatus {
-  const PrinterStatus(this.code);
+class HMA300LPrinterStatus {
+  const HMA300LPrinterStatus(this.code);
 
   final int code;
 
@@ -402,7 +381,7 @@ class PrinterStatus {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PrinterStatus &&
+      other is HMA300LPrinterStatus &&
           runtimeType == other.runtimeType &&
           code == other.code;
 

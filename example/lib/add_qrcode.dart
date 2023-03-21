@@ -10,8 +10,8 @@ class AddQRCode extends StatefulWidget {
 }
 
 class _AddQRCodeState extends State<AddQRCode> {
-  var _orientation = PrintOrientation.horizontal;
-  var _qrModel = QRCodeModel.normal;
+  var _orientation = HMA300LPrintOrientation.horizontal;
+  var _qrModel = HMA300LQRCodeModel.normal;
   final _xController = TextEditingController();
   final _yController = TextEditingController();
   final _unitSizeController = TextEditingController();
@@ -20,7 +20,7 @@ class _AddQRCodeState extends State<AddQRCode> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addQRCode(QRCodeParams(
+      await MyApp.printer?.addQRCodeParams(HMA300LQRCodeParams(
           orientation: _orientation,
         xPosition: int.parse(_xController.text),
         yPosition: int.parse(_yController.text),
@@ -49,13 +49,13 @@ class _AddQRCodeState extends State<AddQRCode> {
                   ),
                   child: Column(children: [
                     const Text('Orientation'),
-                    DropdownButton<PrintOrientation>(
+                    DropdownButton<HMA300LPrintOrientation>(
                       items: const [
                         DropdownMenuItem(
-                            value: PrintOrientation.horizontal,
+                            value: HMA300LPrintOrientation.horizontal,
                             child: Text('Horizontal')),
                         DropdownMenuItem(
-                            value: PrintOrientation.vertical,
+                            value: HMA300LPrintOrientation.vertical,
                             child: Text('Vertical')),
                       ],
                       onChanged: (item) {
@@ -79,13 +79,13 @@ class _AddQRCodeState extends State<AddQRCode> {
                       controller: _yController,
                     ),
                     const Text('Model'),
-                    DropdownButton<QRCodeModel>(
+                    DropdownButton<HMA300LQRCodeModel>(
                       items: const [
                         DropdownMenuItem(
-                            value: QRCodeModel.normal,
+                            value: HMA300LQRCodeModel.normal,
                             child: Text('普通类型')),
                         DropdownMenuItem(
-                            value: QRCodeModel.extraSymbols,
+                            value: HMA300LQRCodeModel.extraSymbols,
                             child: Text('在类型1的基础上增加了个别的符号')),
                       ],
                       onChanged: (item) {

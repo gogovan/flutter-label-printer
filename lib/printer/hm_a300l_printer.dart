@@ -72,7 +72,9 @@ class HMA300LPrinter extends PrinterInterface {
   Future<void> setLogLevel(int level) async =>
       FlutterLabelPrinterPlatform.instance.setLogLevel(level);
 
-  Future<bool> setPrintAreaSize(PrintAreaSizeParams params) async {
+  Future<bool> setPrintAreaSizeParams(
+    HMA300LPrintAreaSizeParams printAreaSizeParams,
+  ) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -82,7 +84,7 @@ class HMA300LPrinter extends PrinterInterface {
 
     try {
       return FlutterLabelPrinterPlatform.instance
-          .setPrintAreaSizeHMA300L(params);
+          .setPrintAreaSizeHMA300L(printAreaSizeParams);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -91,7 +93,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addText(TextParams params) async {
+  Future<bool> addTextParams(HMA300LTextParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -128,7 +130,7 @@ class HMA300LPrinter extends PrinterInterface {
   }
 
   /// Command to set paper type currently used on the printer.
-  Future<bool> setPaperType(PaperType type) async {
+  Future<bool> setPaperType(HMA300LPaperType type) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -187,7 +189,7 @@ class HMA300LPrinter extends PrinterInterface {
 
   /// Get status of the printer. It may be unable to return a status while the printer is printing.
   /// Use when there are issues printing after print commands are sent.
-  Future<PrinterStatus> getStatus() async {
+  Future<HMA300LPrinterStatus> getStatus() async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -199,7 +201,7 @@ class HMA300LPrinter extends PrinterInterface {
       final code =
           await FlutterLabelPrinterPlatform.instance.getStatusHMA300L();
 
-      return PrinterStatus(code);
+      return HMA300LPrinterStatus(code);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -244,7 +246,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> setAlign(PrinterTextAlign align) async {
+  Future<bool> setAlign(HMA300LPrinterTextAlign align) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -262,7 +264,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addBarcode(BarcodeParams params) async {
+  Future<bool> addBarcodeParams(HMA300LBarcodeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -280,7 +282,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addQRCode(QRCodeParams params) async {
+  Future<bool> addQRCodeParams(HMA300LQRCodeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -298,7 +300,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addRectangle(Rect rect, int strokeWidth) async {
+  Future<bool> addRectangleParam(Rect rect, int strokeWidth) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -317,7 +319,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addLine(Rect rect, int strokeWidth) async {
+  Future<bool> addLineParam(Rect rect, int strokeWidth) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -335,7 +337,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addImage(PrintImageParams params) {
+  Future<bool> addImageParams(HMA300LPrintImageParams params) {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

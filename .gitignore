@@ -88,3 +88,5 @@ app.*.map.json
 metrics-results/
 coverage/
 analyzer-output.txt
+
+/local.properties

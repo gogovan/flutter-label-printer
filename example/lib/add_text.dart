@@ -10,8 +10,8 @@ class AddText extends StatefulWidget {
 }
 
 class _AddTextState extends State<AddText> {
-  var rotation = Rotation90.text;
-  var font = Font.font0;
+  var rotation = HMA300LRotation90.text;
+  var font = HMA300LFont.font0;
   final xController = TextEditingController();
   final yController = TextEditingController();
   final textController = TextEditingController();
@@ -19,7 +19,7 @@ class _AddTextState extends State<AddText> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addText(TextParams(
+      await MyApp.printer?.addTextParams(HMA300LTextParams(
         rotate: rotation,
         font: font,
         xPosition: int.parse(xController.text),
@@ -47,19 +47,19 @@ class _AddTextState extends State<AddText> {
             ),
             child: Column(children: [
               const Text('Rotation'),
-              DropdownButton<Rotation90>(
+              DropdownButton<HMA300LRotation90>(
                 items: const [
                   DropdownMenuItem(
-                      value: Rotation90.text,
+                      value: HMA300LRotation90.text,
                       child: Text('0 counterclockwise')),
                   DropdownMenuItem(
-                      value: Rotation90.text90,
+                      value: HMA300LRotation90.text90,
                       child: Text('90 counterclockwise')),
                   DropdownMenuItem(
-                      value: Rotation90.text180,
+                      value: HMA300LRotation90.text180,
                       child: Text('180 counterclockwise')),
                   DropdownMenuItem(
-                      value: Rotation90.text270,
+                      value: HMA300LRotation90.text270,
                       child: Text('270 counterclockwise')),
                 ],
                 onChanged: (item) {
@@ -69,34 +69,34 @@ class _AddTextState extends State<AddText> {
                 value: rotation,
               ),
               const Text('Font'),
-              DropdownButton<Font>(
+              DropdownButton<HMA300LFont>(
                 items: const [
                   DropdownMenuItem(
-                      value: Font.font0, child: Text('Font 0:12x24。')),
+                      value: HMA300LFont.font0, child: Text('Font 0:12x24。')),
                   DropdownMenuItem(
-                      value: Font.font1,
+                      value: HMA300LFont.font1,
                       child: Text('Font 1:12x24(中文模式下打印繁体)，英文模式下字体变成(9x17)大小')),
                   DropdownMenuItem(
-                      value: Font.font2, child: Text('Font 2:8x16。')),
+                      value: HMA300LFont.font2, child: Text('Font 2:8x16。')),
                   DropdownMenuItem(
-                      value: Font.font3, child: Text('Font 3:20x20。')),
+                      value: HMA300LFont.font3, child: Text('Font 3:20x20。')),
                   DropdownMenuItem(
-                      value: Font.font4,
+                      value: HMA300LFont.font4,
                       child: Text('Font 4:32x32或者16x32，由ID3字体宽高各放大两倍。')),
                   DropdownMenuItem(
-                      value: Font.font7,
+                      value: HMA300LFont.font7,
                       child: Text('Font 7:24x24或者12x24，视中英文而定。')),
                   DropdownMenuItem(
-                      value: Font.font8,
+                      value: HMA300LFont.font8,
                       child: Text('Font 8:24x24或者12x24，视中英文而定。')),
                   DropdownMenuItem(
-                      value: Font.font20,
+                      value: HMA300LFont.font20,
                       child: Text('Font 20:16x16或者8x16，视中英文而定。')),
                   DropdownMenuItem(
-                      value: Font.font28,
+                      value: HMA300LFont.font28,
                       child: Text('Font 24:24x24或者12x24，视中英文而定。')),
                   DropdownMenuItem(
-                      value: Font.font55,
+                      value: HMA300LFont.font55,
                       child: Text('Font 55:16x16或者8x16，视中英文而定。')),
                 ],
                 onChanged: (item) {
