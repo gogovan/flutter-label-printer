@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-
+import 'package:flutter_device_searcher/search_result/device_search_result.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
-import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/templating/printer_template/hm_a300l_printer_template.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 import 'package:flutter_label_printer/templating/template_printer.dart';
@@ -36,7 +35,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final HMA300LSearcher _searcher = HMA300LSearcher();
 
-  List<PrinterSearchResult> _searchResults = [];
+  List<DeviceSearchResult> _searchResults = [];
   bool _searching = false;
   bool _connected = false;
 
@@ -77,7 +76,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _connect() async {
     try {
-      PrinterSearchResult? result =
+      DeviceSearchResult? result =
           _searchResults[int.parse(connectIndexController.text)];
       MyApp.printer = HMA300LPrinterInterface(result);
       await MyApp.printer?.connect();

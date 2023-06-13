@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_device_searcher/device/device_interface.dart';
+import 'package:flutter_device_searcher/search_result/bluetooth_result.dart';
+import 'package:flutter_device_searcher/search_result/device_search_result.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer/printer_interface.dart';
-import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
-import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
 /// Interface a Hanyin (HPRT) HM-A300L printer.
@@ -20,11 +20,11 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 ///
 /// You should call `connect` first to connect the printer.
 /// All commands throw InvalidConnectionStateException if the printer is not connected.
-class HMA300LPrinter extends PrinterInterface {
+class HMA300LPrinter extends DeviceInterface {
   HMA300LPrinter(super.device);
 
   @override
-  Future<bool> connectImpl(PrinterSearchResult device) {
+  Future<bool> connectImpl(DeviceSearchResult device) {
     try {
       return FlutterLabelPrinterPlatform.instance
           .connectHMA300L((device as BluetoothResult).address);
@@ -48,7 +48,6 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  @override
   Future<bool> printTestPage() async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
