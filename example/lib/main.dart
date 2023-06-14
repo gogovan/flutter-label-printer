@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_device_searcher/device_searcher/bluetooth_searcher.dart';
 import 'dart:async';
 import 'package:flutter_device_searcher/search_result/device_search_result.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
 import 'package:flutter_label_printer/templating/printer_template/hm_a300l_printer_template.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 import 'package:flutter_label_printer/templating/template_printer.dart';
@@ -33,7 +32,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final HMA300LSearcher _searcher = HMA300LSearcher();
+  final BluetoothSearcher _searcher = BluetoothSearcher();
 
   List<DeviceSearchResult> _searchResults = [];
   bool _searching = false;

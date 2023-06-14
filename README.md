@@ -30,7 +30,18 @@ android {
 }
 ```
 
-2. Depending on the connection technology your printer device requires, do the following steps:
+2. Include [flutter_device_searcher]() as a dependency.
+
+```yaml
+dependencies:
+    flutter_label_printer:
+        path: ../
+    flutter_device_searcher:
+        path: ../../flutter_device_searcher/flutter_device_searcher
+    # ...
+```
+
+3. Depending on the connection technology your printer device requires, do the following steps:
 
 ## Bluetooth
 
@@ -47,6 +58,7 @@ OS.
 ```xml
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.flutter_label_printer_example">
 
     <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
