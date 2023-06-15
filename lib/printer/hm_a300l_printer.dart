@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_device_searcher/device/device_interface.dart';
+import 'package:flutter_device_searcher/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_device_searcher/exception_codes.dart';
 import 'package:flutter_device_searcher/search_result/bluetooth_result.dart';
 import 'package:flutter_device_searcher/search_result/device_search_result.dart';
-import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 

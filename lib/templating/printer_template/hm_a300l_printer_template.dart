@@ -1,5 +1,5 @@
-import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
-import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
+import 'package:flutter_device_searcher/exception/invalid_argument_exception.dart';
+import 'package:flutter_device_searcher/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
