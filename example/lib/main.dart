@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_device_searcher/device_searcher/bluetooth_searcher.dart';
+import 'package:flutter_device_searcher/search_result/bluetooth_result.dart';
 import 'dart:async';
 import 'package:flutter_device_searcher/search_result/device_search_result.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
@@ -267,7 +268,12 @@ class _MyAppState extends State<MyApp> {
                           onPressed: _startSearch,
                           child: const Text('Start search')),
                       Text('Searching = $_searching'),
-                      Text('Search Result = ${_searchResults.toString()}\n'),
+                      ..._searchResults
+                          .where((e) => (e as BluetoothResult).name?.startsWith('HM-A300') == true)
+                          .toList().asMap()
+                          .map((key, value) => MapEntry(key, "$key. $value}"))
+                          .values
+                          .map((e) => Text(e)),
                       ElevatedButton(
                           onPressed: _stopSearch,
                           child: const Text('Stop search')),
