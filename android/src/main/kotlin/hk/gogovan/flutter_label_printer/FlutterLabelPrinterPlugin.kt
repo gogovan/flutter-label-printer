@@ -1,6 +1,5 @@
 package hk.gogovan.flutter_label_printer
 
-import android.app.Activity
 import androidx.annotation.NonNull
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.embedding.engine.plugins.FlutterPlugin
