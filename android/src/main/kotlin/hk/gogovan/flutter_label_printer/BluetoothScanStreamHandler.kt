@@ -28,6 +28,7 @@ class BluetoothScanStreamHandler(
                         if (valueOrError.value != null) {
                             events?.success(valueOrError.value)
                         } else {
+                            println("events a")
                             if (valueOrError.error is PluginException) {
                                 events?.error(
                                     valueOrError.error.code.toString(),
@@ -35,6 +36,7 @@ class BluetoothScanStreamHandler(
                                     valueOrError.error.stackTraceToString()
                                 )
                             } else {
+                                println("events b")
                                 events?.error(
                                     "1004",
                                     valueOrError.error?.message,
