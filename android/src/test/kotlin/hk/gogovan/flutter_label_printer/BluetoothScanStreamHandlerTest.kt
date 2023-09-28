@@ -17,6 +17,7 @@ import io.mockk.verify
 import kotlinx.coroutines.flow.flow
 import org.junit.Rule
 import org.junit.Test
+import java.io.IOException
 
 class BluetoothScanStreamHandlerTest {
     @get:Rule
@@ -72,4 +73,21 @@ class BluetoothScanStreamHandlerTest {
             eventSink.error("1010", "Cannot load image", any())
         }
     }
+
+    @Test
+    fun `handle other errors`() {
+        val (eventSink, streamHandler) = setupHandler()
+
+        coEvery { bluetoothSearcher.scan(any()) } returns flow {
+            emit(ResultOr(IOException("Cannot read image")));
+        }
+
+        streamHandler.onListen(null, eventSink)
+
+        verify {
+            eventSink.error("1004", any(), any())
+        }
+    }
+
+
 }

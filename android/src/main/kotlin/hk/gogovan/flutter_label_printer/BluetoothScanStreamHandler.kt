@@ -8,14 +8,12 @@ import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class BluetoothScanStreamHandler(
     private val bluetoothSearcher: BluetoothSearcher?,
 ) : EventChannel.StreamHandler {
-    private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     private var currentActivity: Activity? = null
@@ -28,7 +26,6 @@ class BluetoothScanStreamHandler(
                         if (valueOrError.value != null) {
                             events?.success(valueOrError.value)
                         } else {
-                            println("events a")
                             if (valueOrError.error is PluginException) {
                                 events?.error(
                                     valueOrError.error.code.toString(),
@@ -36,7 +33,6 @@ class BluetoothScanStreamHandler(
                                     valueOrError.error.stackTraceToString()
                                 )
                             } else {
-                                println("events b")
                                 events?.error(
                                     "1004",
                                     valueOrError.error?.message,
@@ -47,14 +43,6 @@ class BluetoothScanStreamHandler(
                     }
                 }
             } catch (ex: PluginException) {
-                Handler(Looper.getMainLooper()).post {
-                    events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
-                }
-            }
-        }
-
-        coroutineScope.launch {
-            pluginExceptionFlow.collect { ex ->
                 Handler(Looper.getMainLooper()).post {
                     events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
                 }
