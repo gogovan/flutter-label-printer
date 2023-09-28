@@ -475,7 +475,7 @@ class FlutterLabelPrinterMethodHandler(
                                 else -> throw ClassCastException("Invalid orientation value $orientation")
                             }
                             if (unitSize !in 1..32) {
-                                throw ClassCastException("Invalid Unit size value $orientation")
+                                throw ClassCastException("Invalid Unit size value $unitSize")
                             }
 
                             val returnCode = PrinterHelper.PrintQR(
