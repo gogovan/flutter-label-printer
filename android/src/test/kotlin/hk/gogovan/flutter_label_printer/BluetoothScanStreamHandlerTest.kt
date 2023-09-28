@@ -14,11 +14,9 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.junit.Rule
 import org.junit.Test
-import java.io.IOException
 
 class BluetoothScanStreamHandlerTest {
     @get:Rule
@@ -27,8 +25,8 @@ class BluetoothScanStreamHandlerTest {
     @MockK
     lateinit var bluetoothSearcher: BluetoothSearcher
 
-    @Test
-    fun `handle received values`() {
+    data class HandlerResult(val eventSink: EventChannel.EventSink, val streamHandler: BluetoothScanStreamHandler)
+    private fun setupHandler(): HandlerResult {
         val eventSink = mockk<EventChannel.EventSink>(relaxed = true)
         val streamHandler = BluetoothScanStreamHandler(bluetoothSearcher)
 
@@ -41,6 +39,13 @@ class BluetoothScanStreamHandlerTest {
             runnable.captured.run();
             true
         }
+
+        return HandlerResult(eventSink, streamHandler)
+    }
+
+    @Test
+    fun `handle received values`() {
+        val (eventSink, streamHandler) = setupHandler()
 
         coEvery { bluetoothSearcher.scan(any()) } returns flow {
             emit(ResultOr(listOf("123A")))
@@ -55,18 +60,7 @@ class BluetoothScanStreamHandlerTest {
 
     @Test
     fun `handle plugin errors`() {
-        val eventSink = mockk<EventChannel.EventSink>(relaxed = true)
-        val streamHandler = BluetoothScanStreamHandler(bluetoothSearcher)
-
-        mockkStatic(Looper::class)
-        every { Looper.getMainLooper() } returns mockk()
-
-        mockkConstructor(Handler::class)
-        val runnable = slot<Runnable>()
-        every { anyConstructed<Handler>().post(capture(runnable)) } answers {
-            runnable.captured.run();
-            true
-        }
+        val (eventSink, streamHandler) = setupHandler()
 
         coEvery { bluetoothSearcher.scan(any()) } returns flow {
             emit(ResultOr(PluginException(1010, "Cannot load image")));

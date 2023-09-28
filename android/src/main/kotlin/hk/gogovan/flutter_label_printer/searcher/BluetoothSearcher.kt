@@ -14,6 +14,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.VisibleForTesting
 import androidx.core.app.ActivityCompat
 import hk.gogovan.flutter_label_printer.PluginException
 import hk.gogovan.flutter_label_printer.util.ResultOr
@@ -38,7 +39,8 @@ class BluetoothSearcher(private val context: Context) : Closeable {
         const val REQUEST_ENABLE_CODE = 4972
     }
 
-    private val btManager: BluetoothManager =
+    @VisibleForTesting
+    val btManager: BluetoothManager =
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val onBluetoothFound = OnBluetoothFound()
 
