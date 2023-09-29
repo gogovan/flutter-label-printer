@@ -47,7 +47,8 @@ class BluetoothSearcher(private val context: Context) : Closeable {
     private val bluetoothPermissionGranted = MutableSharedFlow<Boolean>()
     private val bluetoothEnabled = MutableSharedFlow<Boolean>()
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+    @VisibleForTesting
+    var coroutineScope = CoroutineScope(Dispatchers.Default)
 
     private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
     private val foundDevice = MutableSharedFlow<BluetoothDevice>()
