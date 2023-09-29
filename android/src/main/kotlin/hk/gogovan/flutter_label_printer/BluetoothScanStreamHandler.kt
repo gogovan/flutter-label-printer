@@ -3,6 +3,7 @@ package hk.gogovan.flutter_label_printer
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.VisibleForTesting
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 class BluetoothScanStreamHandler(
     private val bluetoothSearcher: BluetoothSearcher?,
 ) : EventChannel.StreamHandler {
-    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    @VisibleForTesting
+    var coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     private var currentActivity: Activity? = null
 
