@@ -34,22 +34,26 @@ import java.io.Closeable
 // reporting MissingPermission. We are ignoring it and we should ensure that all permissions are
 // requested correctly.
 @SuppressLint("MissingPermission")
-class BluetoothSearcher(private val context: Context) : Closeable {
+class BluetoothSearcher @VisibleForTesting constructor(
+    private val context: Context,
+    private val btManager: BluetoothManager,
+    private val coroutineScope: CoroutineScope,
+) : Closeable {
+    constructor(context: Context) : this(
+        context,
+        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager,
+        CoroutineScope(Dispatchers.Default),
+    )
+
     companion object {
         const val REQUEST_PERMISSION_CODE = 9031
         const val REQUEST_ENABLE_CODE = 4972
     }
 
-    @VisibleForTesting
-    val btManager: BluetoothManager =
-        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val onBluetoothFound = OnBluetoothFound()
 
     private val bluetoothPermissionGranted = MutableSharedFlow<Boolean>()
     private val bluetoothEnabled = MutableSharedFlow<Boolean>()
-
-    @VisibleForTesting
-    var coroutineScope = CoroutineScope(Dispatchers.Default)
 
     private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
     private val foundDevice = MutableSharedFlow<BluetoothDevice>()
@@ -66,7 +70,10 @@ class BluetoothSearcher(private val context: Context) : Closeable {
             }
 
             val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
+                intent?.getParcelableExtra(
+                    BluetoothDevice.EXTRA_DEVICE,
+                    BluetoothDevice::class.java
+                )
             } else {
                 @Suppress("DEPRECATION")
                 intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
