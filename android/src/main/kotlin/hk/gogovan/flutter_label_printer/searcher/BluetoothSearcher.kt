@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.VisibleForTesting
@@ -64,7 +65,12 @@ class BluetoothSearcher(private val context: Context) : Closeable {
                 return
             }
 
-            val device = intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+            val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+            }
             if (context.checkSelfPermissions(getScanningPermissions()) != PackageManager.PERMISSION_GRANTED) {
                 coroutineScope.launch {
                     pluginExceptionFlow.emit(PluginException(1002, "Bluetooth permission denied"))
@@ -81,7 +87,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
     }
 
     private fun getScanningPermissions(): Array<String> {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT
