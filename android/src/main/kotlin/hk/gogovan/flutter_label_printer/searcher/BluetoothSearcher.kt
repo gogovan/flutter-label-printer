@@ -13,8 +13,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.VisibleForTesting
 import androidx.core.app.ActivityCompat
 import hk.gogovan.flutter_label_printer.PluginException
@@ -38,11 +36,13 @@ class BluetoothSearcher @VisibleForTesting constructor(
     private val context: Context,
     private val btManager: BluetoothManager,
     private val coroutineScope: CoroutineScope,
+    private val mainCoroutineScope: CoroutineScope,
 ) : Closeable {
     constructor(context: Context) : this(
         context,
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager,
         CoroutineScope(Dispatchers.Default),
+        CoroutineScope(Dispatchers.Main),
     )
 
     companion object {
@@ -183,7 +183,7 @@ class BluetoothSearcher @VisibleForTesting constructor(
     private fun requestBluetooth(activity: Activity) {
         val permissions = getScanningPermissions()
 
-        Handler(Looper.getMainLooper()).post {
+        mainCoroutineScope.launch {
             if (context.checkSelfPermissions(permissions) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
                     activity, permissions,
@@ -191,29 +191,24 @@ class BluetoothSearcher @VisibleForTesting constructor(
                 )
                 coroutineScope.launch {
                     bluetoothPermissionGranted.collect {
-                        if (btManager.adapter.state != BluetoothAdapter.STATE_ON) {
-                            activity.startActivityForResult(
-                                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                                REQUEST_ENABLE_CODE
-                            )
-                        } else {
-                            coroutineScope.launch {
-                                bluetoothEnabled.emit(true)
-                            }
-                        }
+                        requestEnableBluetooth(activity)
                     }
                 }
             } else {
-                if (btManager.adapter.state != BluetoothAdapter.STATE_ON) {
-                    activity.startActivityForResult(
-                        Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                        REQUEST_ENABLE_CODE
-                    )
-                } else {
-                    coroutineScope.launch {
-                        bluetoothEnabled.emit(true)
-                    }
-                }
+                requestEnableBluetooth(activity)
+            }
+        }
+    }
+
+    private fun requestEnableBluetooth(activity: Activity) {
+        if (btManager.adapter.state != BluetoothAdapter.STATE_ON) {
+            activity.startActivityForResult(
+                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                REQUEST_ENABLE_CODE
+            )
+        } else {
+            coroutineScope.launch {
+                bluetoothEnabled.emit(true)
             }
         }
     }
