@@ -7,7 +7,7 @@ JIRA_API_CREDENTIAL = "JIRA_API_CREDENTIAL"
 JIRA_ENDPOINT_ISSUE = "https://gogotech.atlassian.net/rest/api/2/issue/{id}"
 PR_TITLE_TEMPLATE = "{branch_type}: {ticket_id}: {title}"
 PR_TEMPLATE_PATH = ".github/pull_request_template.md"
-TRUNK = "trunk"
+TRUNK = "main"
 
 class bcolors:
     HEADER = '\033[95m'
