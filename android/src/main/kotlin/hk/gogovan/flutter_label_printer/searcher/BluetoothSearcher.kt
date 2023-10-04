@@ -50,7 +50,8 @@ class BluetoothSearcher @VisibleForTesting constructor(
         const val REQUEST_ENABLE_CODE = 4972
     }
 
-    private val onBluetoothFound = OnBluetoothFound()
+    @VisibleForTesting
+    val onBluetoothFound = OnBluetoothFound()
 
     private val bluetoothPermissionGranted = MutableSharedFlow<Boolean>()
     private val bluetoothEnabled = MutableSharedFlow<Boolean>()

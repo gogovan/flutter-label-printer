@@ -3,9 +3,13 @@ package hk.gogovan.flutter_label_printer.searcher
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothClass
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.text.TextUtils
 import hk.gogovan.flutter_label_printer.PluginException
@@ -19,6 +23,7 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkStatic
@@ -38,13 +43,10 @@ class BluetoothSearcherTest : DescribeSpec({
     val coroutineScope = CoroutineScope(StandardTestDispatcher(testScheduler))
 
     suspend fun verifyPluginException(
-        context: Context,
-        btManager: BluetoothManager,
+        searcher: BluetoothSearcher,
         activity: Activity?,
         code: Int
     ) {
-        val searcher = BluetoothSearcher(context, btManager, coroutineScope, coroutineScope)
-
         val resultFlow = searcher.scan(activity)
         var result: ResultOr<List<String>>? = null
         CoroutineScope(Dispatchers.Unconfined).launch {
@@ -61,13 +63,19 @@ class BluetoothSearcherTest : DescribeSpec({
 
     beforeEach {
         mockkStatic(TextUtils::class)
-
         val s = slot<CharSequence>()
         every { TextUtils.isEmpty(capture(s)) } answers { s.captured.isEmpty() }
+
+        mockkConstructor(Intent::class)
+        mockkConstructor(IntentFilter::class)
+        every { anyConstructed<IntentFilter>().addAction(any()) } just Runs
     }
 
     afterEach {
         unmockkStatic(TextUtils::class)
+
+        unmockkStatic(Intent::class)
+        unmockkStatic(IntentFilter::class)
     }
 
     describe("scan") {
@@ -79,8 +87,9 @@ class BluetoothSearcherTest : DescribeSpec({
             val btManager = mockk<BluetoothManager>()
             val activity = mockk<Activity>()
 
+            val searcher = BluetoothSearcher(context, btManager, coroutineScope, coroutineScope)
             it("return plugin exception") {
-                verifyPluginException(context, btManager, activity, 1001)
+                verifyPluginException(searcher, activity, 1001)
             }
         }
 
@@ -94,8 +103,9 @@ class BluetoothSearcherTest : DescribeSpec({
                 every { adapter } returns null
             }
 
+            val searcher = BluetoothSearcher(context, btManager, coroutineScope, coroutineScope)
             it("returns plugin exception") {
-                verifyPluginException(context, btManager, activity, 1001)
+                verifyPluginException(searcher, activity, 1001)
             }
         }
 
@@ -109,8 +119,9 @@ class BluetoothSearcherTest : DescribeSpec({
                 every { adapter } returns mockk()
             }
 
+            val searcher = BluetoothSearcher(context, btManager, coroutineScope, coroutineScope)
             it("returns plugin exception") {
-                verifyPluginException(context, btManager, activity, 1003)
+                verifyPluginException(searcher, activity, 1003)
             }
         }
 
@@ -123,10 +134,12 @@ class BluetoothSearcherTest : DescribeSpec({
             }
 
             val activity = mockk<Activity> {
-                every { startActivityForResult(
-                    any(),
-                    BluetoothSearcher.REQUEST_ENABLE_CODE
-                )} just Runs
+                every {
+                    startActivityForResult(
+                        any(),
+                        BluetoothSearcher.REQUEST_ENABLE_CODE
+                    )
+                } just Runs
             }
             val btManager = mockk<BluetoothManager> {
                 every { adapter } returns mockk {
@@ -148,18 +161,7 @@ class BluetoothSearcherTest : DescribeSpec({
                     intArrayOf(PackageManager.PERMISSION_DENIED, PackageManager.PERMISSION_DENIED)
                 )
 
-                val resultFlow = searcher.scan(activity)
-                var result: ResultOr<List<String>>? = null
-                CoroutineScope(Dispatchers.Unconfined).launch {
-                    result = resultFlow.first()
-                }
-
-                testScheduler.runCurrent()
-
-                eventually(1.seconds) {
-                    result!!.error should beOfType<PluginException>()
-                    (result!!.error as PluginException).code shouldBe 1002
-                }
+                verifyPluginException(searcher, activity, 1002)
             }
 
             it("requests permissions granted and requests for enable bluetooth fail") {
@@ -185,21 +187,97 @@ class BluetoothSearcherTest : DescribeSpec({
                     Activity.RESULT_CANCELED
                 )
 
+                verifyPluginException(searcher, activity, 1004)
+            }
+        }
+
+        describe("bluetooth ready, permission granted, cannot start discovery") {
+            val context = mockk<Context> {
+                every { packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH) } returns true
+                every { getSystemService("bluetooth") } returns mockk<BluetoothManager>()
+
+                every { checkSelfPermission(any()) } returns PackageManager.PERMISSION_GRANTED
+            }
+
+            val activity = mockk<Activity> {
+                every {
+                    startActivityForResult(
+                        any(),
+                        BluetoothSearcher.REQUEST_ENABLE_CODE
+                    )
+                } just Runs
+
+                every { registerReceiver(any(), any()) } returns mockk()
+            }
+            val btManager = mockk<BluetoothManager> {
+                every { adapter } returns mockk {
+                    every { state } returns BluetoothAdapter.STATE_ON
+                    every { cancelDiscovery() } returns false
+                    every { startDiscovery() } returns false
+                }
+            }
+
+            it("gets exception") {
+                val searcher = BluetoothSearcher(context, btManager, coroutineScope, coroutineScope)
+
+                searcher.scan(activity)
+                testScheduler.runCurrent()
+
+                verifyPluginException(searcher, activity, 1004)
+            }
+        }
+
+        describe("bluetooth ready, permission granted") {
+            val context = mockk<Context> {
+                every { packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH) } returns true
+                every { getSystemService("bluetooth") } returns mockk<BluetoothManager>()
+
+                every { checkSelfPermission(any()) } returns PackageManager.PERMISSION_GRANTED
+            }
+
+            val activity = mockk<Activity> {
+                every {
+                    startActivityForResult(
+                        any(),
+                        BluetoothSearcher.REQUEST_ENABLE_CODE
+                    )
+                } just Runs
+
+                every { registerReceiver(any(), any()) } returns mockk()
+            }
+            val btManager = mockk<BluetoothManager> {
+                every { adapter } returns mockk {
+                    every { state } returns BluetoothAdapter.STATE_ON
+                    every { cancelDiscovery() } returns true
+                    every { startDiscovery() } returns true
+                }
+            }
+            val btDevice = mockk<BluetoothDevice> {
+                every { bluetoothClass.majorDeviceClass } returns BluetoothClass.Device.Major.IMAGING
+                every { address } returns "12:34:56:AB:CD:EF"
+            }
+            val receiveIntent = mockk<Intent> {
+                every { getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE) } returns btDevice
+            }
+
+            it("starts scan") {
+                val searcher = BluetoothSearcher(context, btManager, coroutineScope, coroutineScope)
+
+                searcher.scan(activity)
+                testScheduler.runCurrent()
+
+                searcher.onBluetoothFound.onReceive(context, receiveIntent)
+
                 val resultFlow = searcher.scan(activity)
                 var result: ResultOr<List<String>>? = null
                 CoroutineScope(Dispatchers.Unconfined).launch {
                     result = resultFlow.first()
                 }
+
                 testScheduler.runCurrent()
 
                 eventually(1.seconds) {
-                    verify { activity.startActivityForResult(
-                        any(),
-                        BluetoothSearcher.REQUEST_ENABLE_CODE
-                    )}
-
-                    result!!.error should beOfType<PluginException>()
-                    (result!!.error as PluginException).code shouldBe 1004
+                    result!!.value shouldBe listOf("12:34:56:AB:CD:EF")
                 }
             }
         }
