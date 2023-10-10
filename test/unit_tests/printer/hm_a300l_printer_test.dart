@@ -117,214 +117,234 @@ void main() {
     verify(printerPlatform.setLogLevel(3)).called(1);
   });
 
-  test('printTestPage', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+  group('successes', () {
+    test('printTestPage', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.printTestPageHMA300L())
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.printTestPageHMA300L())
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.printTestPage(), true);
-    verify(printerPlatform.printTestPageHMA300L()).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.printTestPage(), true);
+      verify(printerPlatform.printTestPageHMA300L()).called(1);
+    });
 
-  test('setPrintAreaSizeParams', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('setPrintAreaSizeParams', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.setPrintAreaSizeHMA300L(printAreaSizeParams))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.setPrintAreaSizeHMA300L(printAreaSizeParams))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.setPrintAreaSizeParams(printAreaSizeParams), true);
-    verify(printerPlatform.setPrintAreaSizeHMA300L(printAreaSizeParams)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.setPrintAreaSizeParams(printAreaSizeParams), true);
+      verify(printerPlatform.setPrintAreaSizeHMA300L(printAreaSizeParams))
+          .called(1);
+    });
 
-  test('addTextParams', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('addTextParams', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.addTextHMA300L(textParams))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.addTextHMA300L(textParams))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.addTextParams(textParams), true);
-    verify(printerPlatform.addTextHMA300L(textParams)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.addTextParams(textParams), true);
+      verify(printerPlatform.addTextHMA300L(textParams)).called(1);
+    });
 
-  test('print', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('print', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.printHMA300L())
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.printHMA300L())
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.print(), true);
-    verify(printerPlatform.printHMA300L()).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.print(), true);
+      verify(printerPlatform.printHMA300L()).called(1);
+    });
 
-  test('setPaperType', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('setPaperType', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.setPaperTypeHMA300L(HMA300LPaperType.label))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.setPaperTypeHMA300L(HMA300LPaperType.label))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.setPaperType(HMA300LPaperType.label), true);
-    verify(printerPlatform.setPaperTypeHMA300L(HMA300LPaperType.label)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.setPaperType(HMA300LPaperType.label), true);
+      verify(printerPlatform.setPaperTypeHMA300L(HMA300LPaperType.label))
+          .called(1);
+    });
 
-  test('setBold', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('setBold', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.setBoldHMA300L(2))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.setBoldHMA300L(2))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.setBold(2), true);
-    verify(printerPlatform.setBoldHMA300L(2)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.setBold(2), true);
+      verify(printerPlatform.setBoldHMA300L(2)).called(1);
+    });
 
-  test('setTextSize', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('setTextSize', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.setTextSizeHMA300L(2, 4))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.setTextSizeHMA300L(2, 4))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.setTextSize(2, 4), true);
-    verify(printerPlatform.setTextSizeHMA300L(2, 4)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.setTextSize(2, 4), true);
+      verify(printerPlatform.setTextSizeHMA300L(2, 4)).called(1);
+    });
 
-  test('getStatus', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('getStatus', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.getStatusHMA300L())
-        .thenAnswer((realInvocation) async => 6);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.getStatusHMA300L())
+          .thenAnswer((realInvocation) async => 6);
 
-    expect(await printer.connect(), true);
-    expect(await printer.getStatus(), const HMA300LPrinterStatus(6));
-    verify(printerPlatform.getStatusHMA300L()).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.getStatus(), const HMA300LPrinterStatus(6));
+      verify(printerPlatform.getStatusHMA300L()).called(1);
+    });
 
-  test('prefeed', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('prefeed', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.prefeedHMA300L(16))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.prefeedHMA300L(16))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.prefeed(16), true);
-    verify(printerPlatform.prefeedHMA300L(16)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.prefeed(16), true);
+      verify(printerPlatform.prefeedHMA300L(16)).called(1);
+    });
 
-  test('setPageWidth', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('setPageWidth', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.setPageWidthHMA300L(80))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.setPageWidthHMA300L(80))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.setPageWidth(80), true);
-    verify(printerPlatform.setPageWidthHMA300L(80)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.setPageWidth(80), true);
+      verify(printerPlatform.setPageWidthHMA300L(80)).called(1);
+    });
 
-  test('setAlign', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('setAlign', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.setAlignHMA300L(1))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.setAlignHMA300L(1))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.setAlign(HMA300LPrinterTextAlign.center), true);
-    verify(printerPlatform.setAlignHMA300L(1)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.setAlign(HMA300LPrinterTextAlign.center), true);
+      verify(printerPlatform.setAlignHMA300L(1)).called(1);
+    });
 
-  test('addBarcodeParams', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('addBarcodeParams', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.addBarcode(barcodeParams))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.addBarcode(barcodeParams))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.addBarcodeParams(barcodeParams), true);
-    verify(printerPlatform.addBarcode(barcodeParams)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.addBarcodeParams(barcodeParams), true);
+      verify(printerPlatform.addBarcode(barcodeParams)).called(1);
+    });
 
-  test('addQRCodeParams', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('addQRCodeParams', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.addQRCode(qrcodeParams))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.addQRCode(qrcodeParams))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.addQRCodeParams(qrcodeParams), true);
-    verify(printerPlatform.addQRCode(qrcodeParams)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.addQRCodeParams(qrcodeParams), true);
+      verify(printerPlatform.addQRCode(qrcodeParams)).called(1);
+    });
 
-  test('addRectangleParam', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
-    const rect = Rect.fromLTRB(10, 20, 30, 40);
+    test('addRectangleParam', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
+      const rect = Rect.fromLTRB(10, 20, 30, 40);
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.addRectangle(rect, 3))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.addRectangle(rect, 3))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.addRectangleParam(rect, 3), true);
-    verify(printerPlatform.addRectangle(rect, 3)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.addRectangleParam(rect, 3), true);
+      verify(printerPlatform.addRectangle(rect, 3)).called(1);
+    });
 
-  test('addLineParam', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
-    const rect = Rect.fromLTRB(10, 20, 30, 40);
+    test('addLineParam', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
+      const rect = Rect.fromLTRB(10, 20, 30, 40);
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.addLine(rect, 3))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.addLine(rect, 3))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.addLineParam(rect, 3), true);
-    verify(printerPlatform.addLine(rect, 3)).called(1);
-  });
+      expect(await printer.connect(), true);
+      expect(await printer.addLineParam(rect, 3), true);
+      verify(printerPlatform.addLine(rect, 3)).called(1);
+    });
 
-  test('addImageParams', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    test('addImageParams', () async {
+      final printer = HMA300LPrinter(device)
+        ..platformInstance = printerPlatform;
 
-    when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
-        .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.addImage(imageParams))
-        .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+          .thenAnswer((realInvocation) async => true);
+      when(printerPlatform.addImage(imageParams))
+          .thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connect(), true);
-    expect(await printer.addImageParams(imageParams), true);
-    verify(printerPlatform.addImage(imageParams)).called(1);
+      expect(await printer.connect(), true);
+      expect(await printer.addImageParams(imageParams), true);
+      verify(printerPlatform.addImage(imageParams)).called(1);
+    });
   });
 
   group('not connected failures', () {
