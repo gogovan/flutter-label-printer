@@ -1,15 +1,16 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   /// Constructs a FlutterLabelPrinterPlatform.
-  FlutterLabelPrinterPlatform() : super(token: _token);
-
+  FlutterLabelPrinterPlatform() : super(token: token);
+  
   // ignore: no-object-declaration, needed, directly from Flutter template code.
-  static final Object _token = Object();
+  @visibleForTesting static final Object token = Object();
 
   static FlutterLabelPrinterPlatform _instance =
       MethodChannelFlutterLabelPrinter();
@@ -23,7 +24,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   /// platform-specific class that extends [FlutterLabelPrinterPlatform] when
   /// they register themselves.
   static set instance(FlutterLabelPrinterPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    PlatformInterface.verifyToken(instance, token);
     _instance = instance;
   }
 
