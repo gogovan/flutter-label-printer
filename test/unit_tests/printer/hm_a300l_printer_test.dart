@@ -349,112 +349,52 @@ void main() {
 
   group('not connected failures', () {
     final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
-    final paramlessFuncs = [
-      printer.printTestPage,
-      printer.print,
-      printer.getStatus,
-    ];
+    final funcs = {
+      printer.printTestPage: [],
+      printer.print: [],
+      printer.getStatus: [],
+      printer.setPrintAreaSizeParams: [printAreaSizeParams],
+      printer.addTextParams: [textParams],
+      printer.setPaperType: [HMA300LPaperType.label],
+      printer.setBold: [5],
+      printer.setTextSize: [3, 4],
+      printer.prefeed: [24],
+      printer.setPageWidth: [8],
+      printer.setAlign: [HMA300LPrinterTextAlign.center],
+      printer.addBarcodeParams: [barcodeParams],
+      printer.addQRCodeParams: [qrcodeParams],
+      printer.addRectangleParam: [const Rect.fromLTRB(10, 20, 30, 40), 2],
+      printer.addLineParam: [const Rect.fromLTRB(10, 20, 30, 40), 2],
+      printer.addImageParams: [imageParams],
+    };
 
-    for (final func in paramlessFuncs) {
-      test('not connected $func', () {
-        expect(
-          () async => func(),
-          throwsA(isA<InvalidConnectionStateException>()),
-        );
-      });
+    for (final func in funcs.entries) {
+      if (func.value.isEmpty) {
+        test('not connected ${func.key}', () {
+          expect(
+                () async => func.key(),
+            throwsA(isA<InvalidConnectionStateException>()),
+          );
+        });
+      } else if (func.value.length == 1) {
+        test('not connected ${func.key}', () {
+          expect(
+                () async => func.key(func.value.first),
+            throwsA(isA<InvalidConnectionStateException>()),
+          );
+        });
+      } else if (func.value.length == 2) {
+        test('not connected ${func.key}', () {
+          expect(
+                () async => func.key(func.value.first, func.value[1]),
+            throwsA(isA<InvalidConnectionStateException>()),
+          );
+        });
+      }
     }
+  });
 
-    test('not connected setPrintAreaSizeParams', () {
-      expect(
-        () async => printer.setPrintAreaSizeParams(printAreaSizeParams),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
+  group('printer platform failures', () {
 
-    test('not connected addTextParams', () {
-      expect(
-        () async => printer.addTextParams(textParams),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected setPaperType', () {
-      expect(
-        () async => printer.setPaperType(HMA300LPaperType.label),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected setBold', () {
-      expect(
-        () async => printer.setBold(5),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected setTextSize', () {
-      expect(
-        () async => printer.setTextSize(3, 4),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected prefeed', () {
-      expect(
-        () async => printer.prefeed(24),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected setPageWidth', () {
-      expect(
-        () async => printer.setPageWidth(8),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected setAlign', () {
-      expect(
-        () async => printer.setAlign(HMA300LPrinterTextAlign.center),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected addBarcodeParams', () {
-      expect(
-        () async => printer.addBarcodeParams(barcodeParams),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected addQRCodeParams', () {
-      expect(
-        () async => printer.addQRCodeParams(qrcodeParams),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected addRectangleParam', () {
-      expect(
-        () async =>
-            printer.addRectangleParam(const Rect.fromLTRB(10, 20, 30, 40), 2),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected addLineParam', () {
-      expect(
-        () async =>
-            printer.addLineParam(const Rect.fromLTRB(10, 20, 30, 40), 2),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
-
-    test('not connected addImageParams', () {
-      expect(
-        () async => printer.addImageParams(imageParams),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
-    });
   });
 }
