@@ -8,9 +8,10 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   /// Constructs a FlutterLabelPrinterPlatform.
   FlutterLabelPrinterPlatform() : super(token: token);
-  
+
   // ignore: no-object-declaration, needed, directly from Flutter template code.
-  @visibleForTesting static final Object token = Object();
+  @visibleForTesting
+  static final Object token = Object();
 
   static FlutterLabelPrinterPlatform _instance =
       MethodChannelFlutterLabelPrinter();
