@@ -6,6 +6,4 @@ import 'package:mockito/annotations.dart';
 @GenerateNiceMocks([
   MockSpec<TemplatablePrinterInterface>(),
 ])
-void main() {
-  
-}
+void main() {}
