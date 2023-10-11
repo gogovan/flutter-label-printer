@@ -28,7 +28,7 @@ jobs:
         run: flutter pub run dart_code_metrics:metrics analyze lib --fatal-style --fatal-warnings --fatal-performance --set-exit-on-violation-level=warning
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
