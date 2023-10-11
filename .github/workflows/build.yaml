@@ -25,6 +25,5 @@ jobs:
           flutter build apk
 #          flutter build ipa
 
-#      - name: Run tests
-#        run: flutter test
-
+      - name: Run tests
+        run: flutter test
