@@ -15,6 +15,22 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'hm_a300l_printer_test.mocks.dart';
 
+class PrinterPlatformFailureData {
+  PrinterPlatformFailureData(
+    this.functionToTest,
+    this.platformFunction,
+    this.args, [
+    this._platformArgs,
+  ]);
+
+  final Function functionToTest;
+  final Function platformFunction;
+  final List<dynamic> args;
+  final List<dynamic>? _platformArgs;
+
+  List<dynamic> get platformArgs => _platformArgs ?? args;
+}
+
 @GenerateNiceMocks([
   MockSpec<FlutterLabelPrinterPlatform>(mixingIn: [MockPlatformInterfaceMixin]),
 ])
@@ -372,21 +388,21 @@ void main() {
       if (func.value.isEmpty) {
         test('not connected ${func.key}', () {
           expect(
-                () async => func.key(),
+            () async => func.key(),
             throwsA(isA<InvalidConnectionStateException>()),
           );
         });
       } else if (func.value.length == 1) {
         test('not connected ${func.key}', () {
           expect(
-                () async => func.key(func.value.first),
+            () async => func.key(func.value.first),
             throwsA(isA<InvalidConnectionStateException>()),
           );
         });
       } else if (func.value.length == 2) {
         test('not connected ${func.key}', () {
           expect(
-                () async => func.key(func.value.first, func.value[1]),
+            () async => func.key(func.value.first, func.value[1]),
             throwsA(isA<InvalidConnectionStateException>()),
           );
         });
@@ -395,6 +411,136 @@ void main() {
   });
 
   group('printer platform failures', () {
+    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final testData = [
+      PrinterPlatformFailureData(
+        printer.printTestPage,
+        printerPlatform.printTestPageHMA300L,
+        [],
+      ),
+      PrinterPlatformFailureData(
+        printer.print,
+        printerPlatform.printHMA300L,
+        [],
+      ),
+      PrinterPlatformFailureData(
+        printer.getStatus,
+        printerPlatform.getStatusHMA300L,
+        [],
+      ),
+      PrinterPlatformFailureData(
+        printer.setPrintAreaSizeParams,
+        printerPlatform.setPrintAreaSizeHMA300L,
+        [printAreaSizeParams],
+      ),
+      PrinterPlatformFailureData(
+        printer.addTextParams,
+        printerPlatform.addTextHMA300L,
+        [textParams],
+      ),
+      PrinterPlatformFailureData(
+        printer.setPaperType,
+        printerPlatform.setPaperTypeHMA300L,
+        [HMA300LPaperType.label],
+      ),
+      PrinterPlatformFailureData(
+        printer.setBold,
+        printerPlatform.setBoldHMA300L,
+        [5],
+      ),
+      PrinterPlatformFailureData(
+        printer.setTextSize,
+        printerPlatform.setTextSizeHMA300L,
+        [3, 4],
+      ),
+      PrinterPlatformFailureData(
+        printer.prefeed,
+        printerPlatform.prefeedHMA300L,
+        [24],
+      ),
+      PrinterPlatformFailureData(
+        printer.setAlign,
+        printerPlatform.setAlignHMA300L,
+        [HMA300LPrinterTextAlign.center],
+        [1],
+      ),
+      PrinterPlatformFailureData(
+        printer.addBarcodeParams,
+        printerPlatform.addBarcode,
+        [barcodeParams],
+      ),
+      PrinterPlatformFailureData(
+        printer.addQRCodeParams,
+        printerPlatform.addQRCode,
+        [qrcodeParams],
+      ),
+      PrinterPlatformFailureData(
+        printer.addRectangleParam,
+        printerPlatform.addRectangle,
+        [const Rect.fromLTRB(10, 20, 30, 40), 2],
+      ),
+      PrinterPlatformFailureData(
+        printer.addLineParam,
+        printerPlatform.addLine,
+        [const Rect.fromLTRB(10, 20, 30, 40), 2],
+      ),
+      PrinterPlatformFailureData(
+        printer.addImageParams,
+        printerPlatform.addImage,
+        [imageParams],
+      ),
+    ];
 
+    for (final data in testData) {
+      test('platform failure ${data.functionToTest}', () async {
+        when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
+            .thenAnswer((realInvocation) async => true);
+        if (data.args.isEmpty) {
+          when(data.platformFunction()).thenThrow(
+            PlatformException(code: '1006', details: 'Disconnected'),
+          );
+        } else if (data.args.length == 1) {
+          when(data.platformFunction(data.platformArgs.first)).thenThrow(
+            PlatformException(code: '1006', details: 'Disconnected'),
+          );
+        } else if (data.args.length == 2) {
+          when(data.platformFunction(
+            data.platformArgs.first,
+            data.platformArgs[1],
+          )).thenThrow(
+            PlatformException(code: '1006', details: 'Disconnected'),
+          );
+        }
+
+        expect(await printer.connect(), true);
+
+        if (data.args.isEmpty) {
+          expect(
+            () async => data.functionToTest(),
+            throwsA(
+              isA<ConnectionException>(),
+            ),
+          );
+          verify(data.platformFunction()).called(1);
+        } else if (data.args.length == 1) {
+          expect(
+            () async => data.functionToTest(data.args.first),
+            throwsA(
+              isA<ConnectionException>(),
+            ),
+          );
+          verify(data.platformFunction(data.platformArgs.first)).called(1);
+        } else if (data.args.length == 2) {
+          expect(
+            () async => data.functionToTest(data.args.first, data.args[1]),
+            throwsA(
+              isA<ConnectionException>(),
+            ),
+          );
+          verify(data.platformFunction(data.platformArgs.first, data.args[1]))
+              .called(1);
+        }
+      });
+    }
   });
 }
