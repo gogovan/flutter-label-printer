@@ -32,6 +32,7 @@ class PrinterPlatformFailureData {
 }
 
 @GenerateNiceMocks([
+  // ignore: deprecated_member_use, no alternative found for now
   MockSpec<FlutterLabelPrinterPlatform>(mixingIn: [MockPlatformInterfaceMixin]),
 ])
 void main() {
@@ -504,10 +505,12 @@ void main() {
             PlatformException(code: '1006', details: 'Disconnected'),
           );
         } else if (data.args.length == 2) {
-          when(data.platformFunction(
-            data.platformArgs.first,
-            data.platformArgs[1],
-          )).thenThrow(
+          when(
+            data.platformFunction(
+              data.platformArgs.first,
+              data.platformArgs[1],
+            ),
+          ).thenThrow(
             PlatformException(code: '1006', details: 'Disconnected'),
           );
         }

@@ -14,6 +14,7 @@ jobs:
       - name: Install dependencies
         run: |
           flutter pub get
+          dart run build_runner build
 
       - name: Check code is formatted
         run: |

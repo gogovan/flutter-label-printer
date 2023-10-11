@@ -159,8 +159,10 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.setPaperTypeHMA300L(HMA300LPaperType.blackMark2Inch),
-        true);
+    expect(
+      await printer.setPaperTypeHMA300L(HMA300LPaperType.blackMark2Inch),
+      true,
+    );
   });
 
   test('setBoldHMA300L', () async {
