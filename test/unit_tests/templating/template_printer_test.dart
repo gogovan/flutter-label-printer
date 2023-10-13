@@ -27,6 +27,8 @@ void main() {
         CommandType.size,
         PrintAreaSize(
           paperType: PrintPaperType.continuous,
+          width: 300,
+          height: 500,
         ),
       ),
       Command(
@@ -101,6 +103,8 @@ void main() {
         printer.setPrintAreaSize(
           const PrintAreaSize(
             paperType: PrintPaperType.continuous,
+            width: 300,
+            height: 500,
           ),
         ),
       ).called(1);
