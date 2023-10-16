@@ -3,20 +3,20 @@ package hk.gogovan.flutter_label_printer
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.VisibleForTesting
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class BluetoothScanStreamHandler(
     private val bluetoothSearcher: BluetoothSearcher?,
 ) : EventChannel.StreamHandler {
-    private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
-    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    @VisibleForTesting
+    var coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
     private var currentActivity: Activity? = null
 
@@ -45,14 +45,6 @@ class BluetoothScanStreamHandler(
                     }
                 }
             } catch (ex: PluginException) {
-                Handler(Looper.getMainLooper()).post {
-                    events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
-                }
-            }
-        }
-
-        coroutineScope.launch {
-            pluginExceptionFlow.collect { ex ->
                 Handler(Looper.getMainLooper()).post {
                     events?.error(ex.code.toString(), ex.message, ex.stackTraceToString())
                 }

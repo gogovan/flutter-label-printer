@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
@@ -22,6 +23,13 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 /// All commands throw InvalidConnectionStateException if the printer is not connected.
 class HMA300LPrinter extends PrinterInterface {
   HMA300LPrinter(super.device);
+
+  FlutterLabelPrinterPlatform get platformInstance =>
+      FlutterLabelPrinterPlatform.instance;
+
+  @visibleForTesting
+  set platformInstance(FlutterLabelPrinterPlatform instance) =>
+      FlutterLabelPrinterPlatform.instance = instance;
 
   @override
   Future<bool> connectImpl(PrinterSearchResult device) {

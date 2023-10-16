@@ -1,6 +1,5 @@
 package hk.gogovan.flutter_label_printer
 
-import android.app.Activity
 import androidx.annotation.NonNull
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -22,7 +21,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
     private var bluetoothScanStreamHandler: BluetoothScanStreamHandler? = null
     private var methodHandler: FlutterLabelPrinterMethodHandler? = null
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         val context = flutterPluginBinding.applicationContext
 
         bluetoothSearcher = BluetoothSearcher(context)
@@ -38,7 +37,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
         bluetoothScanChannel.setStreamHandler(bluetoothScanStreamHandler)
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
 
         bluetoothSearcher?.close()

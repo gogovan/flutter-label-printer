@@ -6,17 +6,29 @@ import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 
 /// An implementation of [FlutterLabelPrinterPlatform] that uses method channels.
 class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
+  MethodChannelFlutterLabelPrinter()
+      : methodChannel = const MethodChannel(
+          'hk.gogovan.label_printer.flutter_label_printer',
+        ),
+        scanBluetoothEventChannel =
+            const EventChannel('hk.gogovan.label_printer.bluetoothScan');
+
+  @visibleForTesting
+  MethodChannelFlutterLabelPrinter.mocked(
+    this.methodChannel,
+    this.scanBluetoothEventChannel,
+  );
+
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel =
-      const MethodChannel('hk.gogovan.label_printer.flutter_label_printer');
+  final MethodChannel methodChannel;
 
-  final _scanBluetoothEventChannel =
-      const EventChannel('hk.gogovan.label_printer.bluetoothScan');
+  @visibleForTesting
+  final EventChannel scanBluetoothEventChannel;
 
   @override
   Stream<List<String>> searchHMA300L() =>
-      _scanBluetoothEventChannel.receiveBroadcastStream().map(
+      scanBluetoothEventChannel.receiveBroadcastStream().map(
             (event) =>
                 (event as List<dynamic>).map((e) => e.toString()).toList(),
           );

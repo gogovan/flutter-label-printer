@@ -12,8 +12,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.os.Handler
-import android.os.Looper
+import android.os.Build
+import androidx.annotation.VisibleForTesting
 import androidx.core.app.ActivityCompat
 import hk.gogovan.flutter_label_printer.PluginException
 import hk.gogovan.flutter_label_printer.util.ResultOr
@@ -32,20 +32,29 @@ import java.io.Closeable
 // reporting MissingPermission. We are ignoring it and we should ensure that all permissions are
 // requested correctly.
 @SuppressLint("MissingPermission")
-class BluetoothSearcher(private val context: Context) : Closeable {
+class BluetoothSearcher @VisibleForTesting constructor(
+    private val context: Context,
+    private val btManager: BluetoothManager,
+    private val coroutineScope: CoroutineScope,
+    private val mainCoroutineScope: CoroutineScope,
+) : Closeable {
+    constructor(context: Context) : this(
+        context,
+        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager,
+        CoroutineScope(Dispatchers.Default),
+        CoroutineScope(Dispatchers.Main),
+    )
+
     companion object {
         const val REQUEST_PERMISSION_CODE = 9031
         const val REQUEST_ENABLE_CODE = 4972
     }
 
-    private val btManager: BluetoothManager =
-        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val onBluetoothFound = OnBluetoothFound()
+    @VisibleForTesting
+    val onBluetoothFound = OnBluetoothFound()
 
     private val bluetoothPermissionGranted = MutableSharedFlow<Boolean>()
     private val bluetoothEnabled = MutableSharedFlow<Boolean>()
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     private val pluginExceptionFlow = MutableSharedFlow<PluginException>()
     private val foundDevice = MutableSharedFlow<BluetoothDevice>()
@@ -61,7 +70,15 @@ class BluetoothSearcher(private val context: Context) : Closeable {
                 return
             }
 
-            val device = intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+            val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent?.getParcelableExtra(
+                    BluetoothDevice.EXTRA_DEVICE,
+                    BluetoothDevice::class.java
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+            }
             if (context.checkSelfPermissions(getScanningPermissions()) != PackageManager.PERMISSION_GRANTED) {
                 coroutineScope.launch {
                     pluginExceptionFlow.emit(PluginException(1002, "Bluetooth permission denied"))
@@ -78,7 +95,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
     }
 
     private fun getScanningPermissions(): Array<String> {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT
@@ -167,7 +184,7 @@ class BluetoothSearcher(private val context: Context) : Closeable {
     private fun requestBluetooth(activity: Activity) {
         val permissions = getScanningPermissions()
 
-        Handler(Looper.getMainLooper()).post {
+        mainCoroutineScope.launch {
             if (context.checkSelfPermissions(permissions) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
                     activity, permissions,
@@ -175,29 +192,24 @@ class BluetoothSearcher(private val context: Context) : Closeable {
                 )
                 coroutineScope.launch {
                     bluetoothPermissionGranted.collect {
-                        if (btManager.adapter.state != BluetoothAdapter.STATE_ON) {
-                            activity.startActivityForResult(
-                                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                                REQUEST_ENABLE_CODE
-                            )
-                        } else {
-                            coroutineScope.launch {
-                                bluetoothEnabled.emit(true)
-                            }
-                        }
+                        requestEnableBluetooth(activity)
                     }
                 }
             } else {
-                if (btManager.adapter.state != BluetoothAdapter.STATE_ON) {
-                    activity.startActivityForResult(
-                        Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                        REQUEST_ENABLE_CODE
-                    )
-                } else {
-                    coroutineScope.launch {
-                        bluetoothEnabled.emit(true)
-                    }
-                }
+                requestEnableBluetooth(activity)
+            }
+        }
+    }
+
+    private fun requestEnableBluetooth(activity: Activity) {
+        if (btManager.adapter.state != BluetoothAdapter.STATE_ON) {
+            activity.startActivityForResult(
+                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                REQUEST_ENABLE_CODE
+            )
+        } else {
+            coroutineScope.launch {
+                bluetoothEnabled.emit(true)
             }
         }
     }

@@ -140,7 +140,7 @@ Command `size` set the printing area. _Note that this command is required, other
 - `originX` and `originY`: Where the printing area starts
 - `width` and `height`: Width and height of the printing area.
 - `horizontalResolution` and `verticalResolution`: Set resolutions in dpi. 
-    - HM-A300L ignore this parameter and alwyas use 200dpi.
+    - HM-A300L ignore this parameter and always use 200dpi.
 
 #### Text
 Command `text` adds text with styling. Support following parameters:
@@ -158,7 +158,7 @@ Command `text` adds text with styling. Support following parameters:
 Command `barcode` prints a barcode. Support following parameters:
 - `type`: The barcode symbology of the barcode.
     - One of the following values: `code11, code39, code93, code128, codabar, ean2, ean5, ean8, ean13, interleaved2of5, msi, patchCode, pharmacode, plessey, telepen, upca, upce`
-    - Note that not every printer support every barcode. Refer to manfacturer manual for details.
+    - Note that not every printer support every barcode symbology. Refer to manufacturer manual for details.
 - `xPosition` and `yPosition`: The position of the barcode.
 - `data`: The data encoded in the barcode.
 - `height:` The height of the barcode.
@@ -171,7 +171,7 @@ Command `qrcode` prints a QR Code. Support following parameters:
 
 #### Line
 Command `line` draws a line. Support following parameters:
-- `left`, `top`, `right`, `bottom`: The start and end points of a line.
+- `left`, `top`, `right`, `bottom`: The start and end points of the line.
 - `strokeWidth`: Stroke width of the line.
 
 #### Rectangle
@@ -181,7 +181,7 @@ Command `rectangle` draws a rectangle. Support following parameters:
 
 #### Image
 Command `image` prints an image. Support following parameters:
-- `path`: The file path to the image. **Warning: Due to different paths in different OSes, hardcoding a path is NOT recommended. Use String Replacement (see below) instead.**
+- `path`: The file path to the image. Due to different paths in different OSes, **avoid hardcoding a path**. Use String Replacement (see below) instead.
 - `xPosition` and `yPosition`: The position of the image.
 
 ### Template String Replacement
@@ -199,7 +199,7 @@ String replacement is supported on all fields that takes a String:
 - QR Code data
 - Image file path
 
-# Issues
+# Known Issues
 
 ## HM-A300L
 - Currently in iOS it can only print very small images, otherwise the printer will be stuck and unable to do anything, and can only be fixed by restarting the printer.

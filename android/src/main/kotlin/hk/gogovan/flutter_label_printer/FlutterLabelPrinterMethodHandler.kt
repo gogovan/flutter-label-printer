@@ -1,8 +1,8 @@
 package hk.gogovan.flutter_label_printer
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.annotation.VisibleForTesting
 import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import hk.gogovan.flutter_label_printer.util.Log
@@ -25,7 +25,8 @@ class FlutterLabelPrinterMethodHandler(
     private var paperTypeSet = false
     private var areaSizeSet = false
 
-    private val log = Log()
+    @VisibleForTesting
+    var log = Log()
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if (currentPaperType == null) {
@@ -474,7 +475,7 @@ class FlutterLabelPrinterMethodHandler(
                                 else -> throw ClassCastException("Invalid orientation value $orientation")
                             }
                             if (unitSize !in 1..32) {
-                                throw ClassCastException("Invalid Unit size value $orientation")
+                                throw ClassCastException("Invalid Unit size value $unitSize")
                             }
 
                             val returnCode = PrinterHelper.PrintQR(
