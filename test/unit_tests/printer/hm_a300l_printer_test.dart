@@ -36,7 +36,7 @@ class PrinterPlatformFailureData {
   MockSpec<FlutterLabelPrinterPlatform>(mixingIn: [MockPlatformInterfaceMixin]),
 ])
 void main() {
-  final device = BluetoothResult('12:34:56:AB:CD:EF');
+  final device = BluetoothResult('12:34:56:AB:CD:EF', 'PRT-H29-29501');
   final printerPlatform = MockFlutterLabelPrinterPlatform();
 
   const HMA300LPrintAreaSizeParams printAreaSizeParams =
@@ -386,28 +386,10 @@ void main() {
     };
 
     for (final func in funcs.entries) {
-      if (func.value.isEmpty) {
-        test('not connected ${func.key}', () {
-          expect(
-            () async => func.key(),
-            throwsA(isA<InvalidConnectionStateException>()),
-          );
-        });
-      } else if (func.value.length == 1) {
-        test('not connected ${func.key}', () {
-          expect(
-            () async => func.key(func.value.first),
-            throwsA(isA<InvalidConnectionStateException>()),
-          );
-        });
-      } else if (func.value.length == 2) {
-        test('not connected ${func.key}', () {
-          expect(
-            () async => func.key(func.value.first, func.value[1]),
-            throwsA(isA<InvalidConnectionStateException>()),
-          );
-        });
-      }
+      expect(
+        () async => Function.apply(func.key, func.value),
+        throwsA(isA<InvalidConnectionStateException>()),
+      );
     }
   });
 
@@ -496,24 +478,10 @@ void main() {
       test('platform failure ${data.functionToTest}', () async {
         when(printerPlatform.connectHMA300L('12:34:56:AB:CD:EF'))
             .thenAnswer((realInvocation) async => true);
-        if (data.args.isEmpty) {
-          when(data.platformFunction()).thenThrow(
-            PlatformException(code: '1006', details: 'Disconnected'),
-          );
-        } else if (data.args.length == 1) {
-          when(data.platformFunction(data.platformArgs.first)).thenThrow(
-            PlatformException(code: '1006', details: 'Disconnected'),
-          );
-        } else if (data.args.length == 2) {
-          when(
-            data.platformFunction(
-              data.platformArgs.first,
-              data.platformArgs[1],
-            ),
-          ).thenThrow(
-            PlatformException(code: '1006', details: 'Disconnected'),
-          );
-        }
+
+        when(Function.apply(data.platformFunction, data.args)).thenThrow(
+          PlatformException(code: '1006', details: 'Disconnected'),
+        );
 
         expect(await printer.connect(), true);
 
