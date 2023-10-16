@@ -42,10 +42,10 @@ OS.
 1. Add the following to your main `AndroidManifest.xml`.
    See [Android Developers](https://developer.android.com/guide/topics/connectivity/bluetooth/permissions))
    and [this StackOverflow answer](https://stackoverflow.com/a/70793272)
-   for more information about permission settings.
+   for more information about permission settings. 
+   If your app also requires Location permissions, remove `maxSdkVersion` attribute for those permissions.
 
 ```xml
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_label_printer_example">
 

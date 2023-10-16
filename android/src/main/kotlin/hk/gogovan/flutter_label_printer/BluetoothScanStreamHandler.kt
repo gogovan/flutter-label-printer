@@ -3,6 +3,7 @@ package hk.gogovan.flutter_label_printer
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import io.flutter.plugin.common.EventChannel

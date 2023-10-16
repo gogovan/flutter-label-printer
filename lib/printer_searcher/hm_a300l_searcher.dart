@@ -12,9 +12,13 @@ class HMA300LSearcher extends PrinterSearcherInterface {
   @override
   Stream<List<PrinterSearchResult>> search() {
     try {
-      return FlutterLabelPrinterPlatform.instance
-          .searchHMA300L()
-          .map((event) => event.map(BluetoothResult.new).toList());
+      return FlutterLabelPrinterPlatform.instance.searchHMA300L().map(
+            (event) => event.map((e) {
+              final spl = e.split(';');
+
+              return BluetoothResult(spl.first, spl[1]);
+            }).toList(),
+          );
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
