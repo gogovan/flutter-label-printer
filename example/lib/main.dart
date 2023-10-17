@@ -27,7 +27,7 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static HMA300LPrinterInterface? printer;
+  static HMA300LPrinterTemplate? printer;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result =
           _searchResults[int.parse(connectIndexController.text)];
-      MyApp.printer = HMA300LPrinterInterface(result);
+      MyApp.printer = HMA300LPrinterTemplate(result);
       await MyApp.printer?.connect();
       setState(() {
         _connected = true;
@@ -123,7 +123,8 @@ class _MyAppState extends State<MyApp> {
     try {
       final yml = await rootBundle.loadString('assets/template.yaml');
       final template = Template.fromYaml(yml);
-      final printer = TemplatePrinter(MyApp.printer!, template, replaceStrings: {'world': 'Earth'});
+      final printer = TemplatePrinter(MyApp.printer!, template,
+          replaceStrings: {'world': 'Earth'});
       await printer.printTemplate();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
@@ -153,19 +154,22 @@ class _MyAppState extends State<MyApp> {
                       SimpleDialogOption(
                         child: const Text('2 Inch Black Mark'),
                         onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.blackMark2Inch);
+                          Navigator.pop(
+                              context, HMA300LPaperType.blackMark2Inch);
                         },
                       ),
                       SimpleDialogOption(
                         child: const Text('3 Inch Black Mark'),
                         onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.blackMark3Inch);
+                          Navigator.pop(
+                              context, HMA300LPaperType.blackMark3Inch);
                         },
                       ),
                       SimpleDialogOption(
                         child: const Text('4 Inch Black Mark'),
                         onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.blackMark4Inch);
+                          Navigator.pop(
+                              context, HMA300LPaperType.blackMark4Inch);
                         },
                       ),
                     ]);
@@ -216,11 +220,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> _setAlign(BuildContext context) async {
     try {
       final answer = await showDialog<HMA300LPrinterTextAlign>(
-          context: context,
-          builder: (BuildContext context) {
-            return SimpleDialog(
-                title: const Text('Set Align'),
-                children: [
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(title: const Text('Set Align'), children: [
                   SimpleDialogOption(
                     child: const Text('Left'),
                     onPressed: () {
@@ -240,7 +242,7 @@ class _MyAppState extends State<MyApp> {
                     },
                   ),
                 ]);
-          }) ??
+              }) ??
           HMA300LPrinterTextAlign.left;
       await MyApp.printer?.setAlign(answer);
     } catch (ex, st) {
@@ -307,7 +309,8 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SetPageWidth()));
+                                    builder: (context) =>
+                                        const SetPageWidth()));
                           },
                           child: const Text('Set Page Width')),
                       ElevatedButton(
@@ -361,7 +364,8 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const AddRectangle()));
+                                    builder: (context) =>
+                                        const AddRectangle()));
                           },
                           child: const Text('Add Rectangle')),
                       ElevatedButton(
@@ -383,7 +387,8 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(
-                          onPressed: _printTemplate, child: const Text('Print Template')),
+                          onPressed: _printTemplate,
+                          child: const Text('Print Template')),
                       ElevatedButton(
                           onPressed: _disconnect,
                           child: const Text('Disconnect')),

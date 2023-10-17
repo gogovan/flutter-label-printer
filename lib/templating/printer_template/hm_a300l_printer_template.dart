@@ -13,9 +13,9 @@ import 'package:flutter_label_printer/templating/command_parameters/print_text_a
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
 /// Interface for Templating for the Hanin (HPRT) HM-A300L Printer.
-class HMA300LPrinterInterface extends HMA300LPrinter
+class HMA300LPrinterTemplate extends HMA300LPrinter
     implements TemplatablePrinterInterface {
-  HMA300LPrinterInterface(super.device);
+  HMA300LPrinterTemplate(super.device);
 
   @override
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {
