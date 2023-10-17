@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/n31_classes.dart';
 
 /// An implementation of [FlutterLabelPrinterPlatform] that uses method channels.
 class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
@@ -107,6 +108,19 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
+  Future<bool> setPrintAreaSizeN31(N31PrintAreaSizeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.setPrintAreaSizeN31',
+      <String, dynamic>{
+        'width': params.width,
+        'height': params.height,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
   Future<bool> setPrintAreaSizeHMA300L(
     HMA300LPrintAreaSizeParams params,
   ) async {
@@ -116,6 +130,25 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
         'offset': params.offset,
         'height': params.height,
         'quantity': params.quantity,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addTextN31(N31TextParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.addTextN31',
+      <String, dynamic>{
+        'rotate': params.rotate.rot,
+        'font': params.font.code,
+        'x': params.xPos,
+        'y': params.yPos,
+        'text': params.text,
+        'alignment': params.alignment,
+        'characterWidth': params.charWidth,
+        'characterHeight': params.charHeight,
       },
     );
 
@@ -134,6 +167,14 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
         'text': params.text,
       },
     );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> printN31() async {
+    final result = await methodChannel
+        .invokeMethod<bool>('hk.gogovan.label_printer.printN31');
 
     return result ?? false;
   }

@@ -1,20 +1,9 @@
 // ignore_for_file: no-magic-number, for enum codes and some default values.
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/printer/common_classes.dart';
 
-/// Rotation settings for Hanyin HM-A300L: values are angles in counterclockwise direction.
-enum HMA300LRotation90 {
-  text(0),
-  text90(90),
-  text180(180),
-  text270(270);
-
-  const HMA300LRotation90(this.rot);
-
-  final int rot;
-}
-
-/// Font settings for Hanyin HM-A300L.
+/// Font settings for Hanin HM-A300L.
 /// 字体点阵大小:(单位:dot).
 /// 注意:英文固件只支持(0和1).
 /// 0:12x24.
@@ -168,14 +157,14 @@ class HMA300LPrintAreaSizeParams {
 @immutable
 class HMA300LTextParams {
   const HMA300LTextParams({
-    this.rotate = HMA300LRotation90.text,
+    this.rotate = Rotation90.text,
     this.font = HMA300LFont.font0,
     required this.xPosition,
     required this.yPosition,
     required this.text,
   });
 
-  final HMA300LRotation90 rotate;
+  final Rotation90 rotate;
   final HMA300LFont font;
   final int xPosition;
   final int yPosition;

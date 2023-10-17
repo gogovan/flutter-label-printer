@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/n31_classes.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
@@ -67,15 +68,33 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
+  Future<bool> setPrintAreaSizeN31(N31PrintAreaSizeParams params) {
+    throw UnimplementedError(
+      'setPrintAreaSizeN31() has not been implemented.',
+    );
+  }
+
   Future<bool> setPrintAreaSizeHMA300L(HMA300LPrintAreaSizeParams params) {
     throw UnimplementedError(
       'setPrintAreaSizeHMA300L() has not been implemented.',
     );
   }
 
+  Future<bool> addTextN31(N31TextParams params) {
+    throw UnimplementedError(
+      'addTextN31() has not been implemented.',
+    );
+  }
+
   Future<bool> addTextHMA300L(HMA300LTextParams params) {
     throw UnimplementedError(
       'addTextHMA300L() has not been implemented.',
+    );
+  }
+
+  Future<bool> printN31() {
+    throw UnimplementedError(
+      'printN31() has not been implemented.',
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
+import 'package:flutter_label_printer/printer/common_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_text.d
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
-/// Interface for Templating for the Hanyin (HPRT) HM-A300L Printer.
+/// Interface for Templating for the Hanin (HPRT) HM-A300L Printer.
 class HMA300LPrinterInterface extends HMA300LPrinter
     implements TemplatablePrinterInterface {
   HMA300LPrinterInterface(super.device);
@@ -58,22 +59,22 @@ class HMA300LPrinterInterface extends HMA300LPrinter
     return typeResult && sizeResult;
   }
 
-  HMA300LRotation90 getHMA300LRotation(double angle) {
+  Rotation90 getHMA300LRotation(double angle) {
     final roundedRotation = (angle / 90).round() * 90 % 360;
     switch (roundedRotation) {
       case 0:
-        return HMA300LRotation90.text;
+        return Rotation90.text;
       // ignore: no-magic-number, well-formed angles.
       case 90:
-        return HMA300LRotation90.text90;
+        return Rotation90.text90;
       // ignore: no-magic-number, well-formed angles.
       case 180:
-        return HMA300LRotation90.text180;
+        return Rotation90.text180;
       // ignore: no-magic-number, well-formed angles.
       case 270:
-        return HMA300LRotation90.text270;
+        return Rotation90.text270;
       default:
-        return HMA300LRotation90.text;
+        return Rotation90.text;
     }
   }
 

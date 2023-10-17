@@ -5,7 +5,7 @@ import 'package:flutter_label_printer/printer_search_result/printer_search_resul
 import 'package:flutter_label_printer/printer_searcher/printer_searcher_interface.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
-/// Searcher for Hanyin (HPRT) HM-A300L printers.
+/// Searcher for Hanin (HPRT) HM-A300L printers.
 class BluetoothPrinterSearcher extends PrinterSearcherInterface {
   /// Scan for Bluetooth printers.
   /// Will request for Bluetooth permission if none was granted yet.

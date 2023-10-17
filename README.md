@@ -9,7 +9,7 @@ Integrate printers with Flutter apps.
 
 # Supported Printers
 
-- Hanyin (HPRT) HM-A300L
+- Hanin (HPRT) HM-A300L
     - HM-A400 and HM-A300S shares the same native SDK and hence should work in theory, but they are untested.
 
 # Setup

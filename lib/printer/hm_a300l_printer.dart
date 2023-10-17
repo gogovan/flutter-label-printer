@@ -8,9 +8,9 @@ import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dar
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
-/// Interface a Hanyin (HPRT) HM-A300L printer.
+/// Interface a Hanin (HPRT) HM-A300L printer.
 ///
-/// All printing commands (such as addText) are sent directly to the official Hanyin SDK. They are stored and managed by Hanyin SDK.
+/// All printing commands (such as addText) are sent directly to the official Hanin SDK. They are stored and managed by Hanin SDK.
 /// Only the function "print" would actually start printing.
 ///
 /// For all functions, unless otherwise specified, returns true on success.
