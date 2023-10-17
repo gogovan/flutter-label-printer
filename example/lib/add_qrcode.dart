@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class AddQRCode extends StatefulWidget {
@@ -20,7 +21,7 @@ class _AddQRCodeState extends State<AddQRCode> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addQRCodeParams(HMA300LQRCodeParams(
+      await (MyApp.printer as HMA300LPrinter).addQRCodeParams(HMA300LQRCodeParams(
           orientation: _orientation,
         xPosition: int.parse(_xController.text),
         yPosition: int.parse(_yController.text),

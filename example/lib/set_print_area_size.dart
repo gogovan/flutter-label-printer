@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
+import 'package:flutter_label_printer/printer/n31_classes.dart';
+import 'package:flutter_label_printer/printer/n31_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class SetPrintAreaSize extends StatefulWidget {
@@ -11,17 +14,26 @@ class SetPrintAreaSize extends StatefulWidget {
 
 class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
   final offsetController = TextEditingController();
+  final widthController = TextEditingController();
   final heightController = TextEditingController();
   final quantityController = TextEditingController();
 
   Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.setPrintAreaSizeParams(HMA300LPrintAreaSizeParams(
-        offset: int.parse(offsetController.text),
-        height: int.parse(heightController.text),
-        quantity: int.parse(quantityController.text),
-      ));
+      final printer = MyApp.printer;
+      if (printer is HMA300LPrinter) {
+        printer.setPrintAreaSizeParams(HMA300LPrintAreaSizeParams(
+          offset: int.parse(offsetController.text),
+          height: int.parse(heightController.text),
+          quantity: int.parse(quantityController.text),
+        ));
+      } else if (printer is N31Printer) {
+        printer.setPrintAreaSizeParams(N31PrintAreaSizeParams(
+          width: int.parse(widthController.text),
+          height: int.parse(heightController.text),
+        ));
+      }
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text("Print Area Size Parameters Set")));
     } catch (ex, st) {
@@ -50,6 +62,14 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
                       keyboardType: TextInputType.number,
                       controller: offsetController,
                     ),
+                    if (MyApp.printer is N31Printer)
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Width',
+                        ),
+                        keyboardType: TextInputType.number,
+                        controller: widthController,
+                      ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: 'Height',

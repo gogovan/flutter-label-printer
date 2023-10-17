@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class SetTextSize extends StatefulWidget {
@@ -15,7 +16,7 @@ class _SetTextSizeState extends State<SetTextSize> {
   Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.setTextSize(width, height);
+      await (MyApp.printer as HMA300LPrinter).setTextSize(width, height);
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text("Text Size Parameters Set")));
     } catch (ex, st) {

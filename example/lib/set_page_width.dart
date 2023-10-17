@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class SetPageWidth extends StatefulWidget {
@@ -14,7 +15,7 @@ class _SetPageWidthState extends State<SetPageWidth> {
   Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.setPageWidth(int.parse(pageWidthController.text));
+      await (MyApp.printer as HMA300LPrinter).setPageWidth(int.parse(pageWidthController.text));
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text("Page Width Set")));
     } catch (ex, st) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class AddBarcode extends StatefulWidget {
@@ -26,7 +27,7 @@ class _AddBarcodeState extends State<AddBarcode> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addBarcodeParams(HMA300LBarcodeParams(
+      await (MyApp.printer as HMA300LPrinter).addBarcodeParams(HMA300LBarcodeParams(
         orientation: _orientation,
         type: _type,
         ratio: _ratio,

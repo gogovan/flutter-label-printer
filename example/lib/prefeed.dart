@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class Prefeed extends StatefulWidget {
@@ -14,7 +15,7 @@ class _PrefeedState extends State<Prefeed> {
   Future<void> _onPrefeedPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.prefeed(int.parse(prefeedController.text));
+      await (MyApp.printer as HMA300LPrinter).prefeed(int.parse(prefeedController.text));
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text("Prefeed Set")));
     } catch (ex, st) {

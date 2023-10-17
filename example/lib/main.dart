@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/n31_printer.dart';
+import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_searcher/bluetooth_printer_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/templating/printer_template/hm_a300l_printer_template.dart';
@@ -24,10 +26,12 @@ void main() {
   runApp(const MyApp());
 }
 
+enum PrinterModel { HMA300, N31 }
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static HMA300LPrinterTemplate? printer;
+  static PrinterInterface? printer;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -39,6 +43,8 @@ class _MyAppState extends State<MyApp> {
   List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
   bool _connected = false;
+
+  PrinterModel _printerModel = PrinterModel.HMA300;
 
   final connectIndexController = TextEditingController();
 
@@ -79,7 +85,16 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result =
           _searchResults[int.parse(connectIndexController.text)];
-      MyApp.printer = HMA300LPrinterTemplate(result);
+
+      switch (_printerModel) {
+        case PrinterModel.HMA300:
+          MyApp.printer = HMA300LPrinterTemplate(result);
+          break;
+        case PrinterModel.N31:
+          MyApp.printer = N31Printer(result);
+          break;
+      }
+
       await MyApp.printer?.connect();
       setState(() {
         _connected = true;
@@ -113,7 +128,14 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _print() async {
     try {
-      await MyApp.printer?.print();
+      switch (_printerModel) {
+        case PrinterModel.HMA300:
+          await (MyApp.printer as HMA300LPrinter).print();
+          break;
+        case PrinterModel.N31:
+          await (MyApp.printer as N31Printer).print();
+          break;
+      }
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -123,9 +145,17 @@ class _MyAppState extends State<MyApp> {
     try {
       final yml = await rootBundle.loadString('assets/template.yaml');
       final template = Template.fromYaml(yml);
-      final printer = TemplatePrinter(MyApp.printer!, template,
-          replaceStrings: {'world': 'Earth'});
-      await printer.printTemplate();
+
+      switch (_printerModel) {
+        case PrinterModel.HMA300:
+          await TemplatePrinter(
+              MyApp.printer as HMA300LPrinterTemplate, template,
+              replaceStrings: {'world': 'Earth'}).printTemplate();
+          break;
+        case PrinterModel.N31:
+          throw UnsupportedError('TODO');
+          break;
+      }
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -175,7 +205,14 @@ class _MyAppState extends State<MyApp> {
                     ]);
               }) ??
           HMA300LPaperType.continuous;
-      await MyApp.printer?.setPaperType(answer);
+      switch (_printerModel) {
+        case PrinterModel.HMA300:
+          await (MyApp.printer as HMA300LPrinter).setPaperType(answer);
+          break;
+        case PrinterModel.N31:
+          throw UnsupportedError('TODO');
+          break;
+      }
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -198,7 +235,14 @@ class _MyAppState extends State<MyApp> {
                             )));
               }) ??
           0;
-      await MyApp.printer?.setBold(answer);
+      switch (_printerModel) {
+        case PrinterModel.HMA300:
+          await (MyApp.printer as HMA300LPrinter).setBold(answer);
+          break;
+        case PrinterModel.N31:
+          throw UnsupportedError('TODO');
+          break;
+      }
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -206,7 +250,16 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _getStatus(BuildContext context) async {
     try {
-      final result = await MyApp.printer?.getStatus();
+      final HMA300LPrinterStatus result;
+      switch (_printerModel) {
+        case PrinterModel.HMA300:
+          result = await (MyApp.printer as HMA300LPrinter).getStatus();
+          break;
+        case PrinterModel.N31:
+          throw UnsupportedError('TODO');
+          break;
+      }
+
       await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -244,7 +297,14 @@ class _MyAppState extends State<MyApp> {
                 ]);
               }) ??
           HMA300LPrinterTextAlign.left;
-      await MyApp.printer?.setAlign(answer);
+      switch (_printerModel) {
+        case PrinterModel.HMA300:
+          await (MyApp.printer as HMA300LPrinter).setAlign(answer);
+          break;
+        case PrinterModel.N31:
+          throw UnsupportedError('TODO');
+          break;
+      }
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -283,18 +343,37 @@ class _MyAppState extends State<MyApp> {
                         keyboardType: TextInputType.number,
                         controller: connectIndexController,
                       ),
+                      DropdownButton<PrinterModel>(
+                          items: const [
+                            DropdownMenuItem(
+                              value: PrinterModel.HMA300,
+                              child: Text('HM-A300L'),
+                            ),
+                            DropdownMenuItem(
+                              value: PrinterModel.N31,
+                              child: Text('N31'),
+                            ),
+                          ],
+                          value: _printerModel,
+                          onChanged: (value) {
+                            setState(() {
+                              _printerModel = value ?? PrinterModel.HMA300;
+                            });
+                          }),
                       ElevatedButton(
                           onPressed: _connect, child: const Text('Connect')),
                       Text('Connected = $_connected\n'),
-                      ElevatedButton(
-                          onPressed: () => _getStatus(context),
-                          child: const Text('Get Status')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () => _getStatus(context),
+                            child: const Text('Get Status')),
                       ElevatedButton(
                           onPressed: () => _printTestPage(context),
                           child: const Text('Print Test Page')),
-                      ElevatedButton(
-                          onPressed: () => _setPaperType(context),
-                          child: const Text('Set Paper Type')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () => _setPaperType(context),
+                            child: const Text('Set Paper Type')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -304,37 +383,43 @@ class _MyAppState extends State<MyApp> {
                                         const SetPrintAreaSize()));
                           },
                           child: const Text('Set Print Area Size')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SetPageWidth()));
-                          },
-                          child: const Text('Set Page Width')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Prefeed()));
-                          },
-                          child: const Text('Prefeed')),
-                      ElevatedButton(
-                          onPressed: () => _setBold(context),
-                          child: const Text('Set Bold')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SetTextSize()));
-                          },
-                          child: const Text('Set Text Size')),
-                      ElevatedButton(
-                          onPressed: () => _setAlign(context),
-                          child: const Text('Set Align')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SetPageWidth()));
+                            },
+                            child: const Text('Set Page Width')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Prefeed()));
+                            },
+                            child: const Text('Prefeed')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () => _setBold(context),
+                            child: const Text('Set Bold')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SetTextSize()));
+                            },
+                            child: const Text('Set Text Size')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () => _setAlign(context),
+                            child: const Text('Set Align')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -343,52 +428,59 @@ class _MyAppState extends State<MyApp> {
                                     builder: (context) => const AddText()));
                           },
                           child: const Text('Add Text')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AddBarcode()));
-                          },
-                          child: const Text('Add Barcode')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AddQRCode()));
-                          },
-                          child: const Text('Add QRCode')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddRectangle()));
-                          },
-                          child: const Text('Add Rectangle')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AddLine()));
-                          },
-                          child: const Text('Add Line')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const AddImage()));
-                          },
-                          child: const Text('Add Image')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AddBarcode()));
+                            },
+                            child: const Text('Add Barcode')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const AddQRCode()));
+                            },
+                            child: const Text('Add QRCode')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AddRectangle()));
+                            },
+                            child: const Text('Add Rectangle')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const AddLine()));
+                            },
+                            child: const Text('Add Line')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const AddImage()));
+                            },
+                            child: const Text('Add Image')),
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
-                      ElevatedButton(
-                          onPressed: _printTemplate,
-                          child: const Text('Print Template')),
+                      if (_printerModel == PrinterModel.HMA300)
+                        ElevatedButton(
+                            onPressed: _printTemplate,
+                            child: const Text('Print Template')),
                       ElevatedButton(
                           onPressed: _disconnect,
                           child: const Text('Disconnect')),

@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
+import 'package:flutter_label_printer/printer/n31_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
@@ -45,6 +46,63 @@ class N31Printer extends PrinterInterface {
 
     try {
       return FlutterLabelPrinterPlatform.instance.printTestPageN31();
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> setPrintAreaSizeParams(
+      N31PrintAreaSizeParams printAreaSizeParams,
+      ) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance
+          .setPrintAreaSizeN31(printAreaSizeParams);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addTextParams(N31TextParams params) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addTextN31(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> print() async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.printN31();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

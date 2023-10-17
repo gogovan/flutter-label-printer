@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
@@ -23,7 +24,7 @@ class _AddImageState extends State<AddImage> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addImageParams(HMA300LPrintImageParams(
+      await (MyApp.printer as HMA300LPrinter).addImageParams(HMA300LPrintImageParams(
         imagePath: imagePath!,
         xPosition: int.parse(xController.text),
         yPosition: int.parse(yController.text),
