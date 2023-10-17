@@ -34,9 +34,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
           );
 
   @override
-  Future<bool> stopSearchHMA300L() async {
+  Future<bool> stopSearchBluetooth() async {
     final result = await methodChannel
-        .invokeMethod<bool>('hk.gogovan.label_printer.stopSearchHMA300L');
+        .invokeMethod<bool>('hk.gogovan.label_printer.stopSearchBluetooth');
 
     return result ?? false;
   }
@@ -54,6 +54,18 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
+  Future<bool> connectN31(String address) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.connectN31',
+      <String, dynamic>{
+        'address': address,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
   Future<bool> disconnectHMA300L() async {
     final result = await methodChannel
         .invokeMethod<bool>('hk.gogovan.label_printer.disconnectHMA300L');
@@ -62,9 +74,26 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
+  Future<bool> disconnectN31() async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.disconnectN31',
+    );
+
+    return result ?? false;
+  }
+
+  @override
   Future<bool> printTestPageHMA300L() async {
     final result = await methodChannel
         .invokeMethod<bool>('hk.gogovan.label_printer.printTestPageHMA300L');
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> printTestPageN31() async {
+    final result = await methodChannel
+        .invokeMethod<bool>('hk.gogovan.label_printer.printTestPageN31');
 
     return result ?? false;
   }

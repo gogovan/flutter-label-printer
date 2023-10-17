@@ -34,7 +34,7 @@ void main() {
           .invokeMethod<bool>('hk.gogovan.label_printer.stopSearchHMA300L'),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.stopSearchHMA300L(), true);
+    expect(await printer.stopSearchBluetooth(), true);
   });
 
   test('connectHMA300L', () async {

@@ -8,6 +8,7 @@ import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
 import hk.gogovan.flutter_label_printer.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import tspl.HPRTPrinterHelper
 import java.lang.Integer.max
 import java.lang.Integer.min
 
@@ -48,9 +49,37 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     }
                 }
-                "hk.gogovan.label_printer.stopSearchHMA300L" -> {
+                "hk.gogovan.label_printer.stopSearchBluetooth" -> {
                     val response = bluetoothSearcher?.stopScan()
                     result.success(response)
+                }
+                "hk.gogovan.label_printer.connectN31" -> {
+                    if (HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer already connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        val address = call.argument<String>("address")
+                        if (address == null) {
+                            result.error(
+                                "1000",
+                                "Unable to extract arguments.",
+                                Throwable().stackTraceToString()
+                            )
+                        } else {
+                            if (HPRTPrinterHelper.PortOpen(address) == 0) {
+                                result.success(true)
+                            } else {
+                                result.error(
+                                    "1006",
+                                    "Connection error.",
+                                    Throwable().stackTraceToString()
+                                )
+                            }
+                        }
+                    }
                 }
                 "hk.gogovan.label_printer.connectHMA300L" -> {
                     if (PrinterHelper.IsOpened()) {
@@ -97,6 +126,17 @@ class FlutterLabelPrinterMethodHandler(
                         }
                     }
                 }
+                "hk.gogovan.label_printer.disconnectN31" -> {
+                    if (HPRTPrinterHelper.PortClose()) {
+                        result.success(PrinterHelper.portClose())
+                    } else {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    }
+                }
                 "hk.gogovan.label_printer.disconnectHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
                         result.error(
@@ -108,6 +148,18 @@ class FlutterLabelPrinterMethodHandler(
                         result.success(PrinterHelper.portClose())
                     }
                 }
+                "hk.gogovan.label_printer.printTestPageN31" -> {
+                    if (!HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        printTestPageN31()
+                        result.success(true)
+                    }
+                }
                 "hk.gogovan.label_printer.printTestPageHMA300L" -> {
                     if (!PrinterHelper.IsOpened()) {
                         result.error(
@@ -116,7 +168,7 @@ class FlutterLabelPrinterMethodHandler(
                             Throwable().stackTraceToString()
                         )
                     } else {
-                        printTestPage()
+                        printTestPageHMA300L()
                         result.success(true)
                     }
                 }
@@ -619,7 +671,7 @@ class FlutterLabelPrinterMethodHandler(
         }
     }
 
-    private fun printTestPage() {
+    private fun printTestPageHMA300L() {
         PrinterHelper.printAreaSize("0", "200", "200", "1400", "1")
         PrinterHelper.Align(PrinterHelper.CENTER)
         PrinterHelper.Text(
@@ -754,5 +806,9 @@ class FlutterLabelPrinterMethodHandler(
         }
         PrinterHelper.Form()
         PrinterHelper.Print()
+    }
+
+    private fun printTestPageN31() {
+       HPRTPrinterHelper.SelfTest()
     }
 }

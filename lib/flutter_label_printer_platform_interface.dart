@@ -31,7 +31,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('searchHMA300L() has not been implemented.');
   }
 
-  Future<bool> stopSearchHMA300L() {
+  Future<bool> stopSearchBluetooth() {
     throw UnimplementedError('stopSearchHMA300L() has not been implemented.');
   }
 
@@ -39,14 +39,26 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('connectHMA300L() has not been implemented.');
   }
 
+  Future<bool> connectN31(String address) {
+    throw UnimplementedError('connectN31() has not been implemented.');
+  }
+
   Future<bool> disconnectHMA300L() {
     throw UnimplementedError('disconnectHMA300L() has not been implemented.');
+  }
+
+  Future<bool> disconnectN31() {
+    throw UnimplementedError('disconnectN31() has not been implemented.');
   }
 
   Future<bool> printTestPageHMA300L() {
     throw UnimplementedError(
       'printTestPageHMA300L() has not been implemented.',
     );
+  }
+
+  Future<bool> printTestPageN31() {
+    throw UnimplementedError('printTestPageN31() has not been implemented.');
   }
 
   Future<void> setLogLevel(int level) {

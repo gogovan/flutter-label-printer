@@ -34,7 +34,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             currentPaperType = PTCPCLNewPaperType(rawValue: UInt(value))
         }
         
-        if (call.method == "hk.gogovan.label_printer.stopSearchHMA300L") {
+        if (call.method == "hk.gogovan.label_printer.stopSearchBluetooth") {
             PTDispatcher.share().stopScanBluetooth()
             result(true)
         } else if (call.method == "hk.gogovan.label_printer.connectHMA300L") {
