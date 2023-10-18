@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -27,7 +26,6 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkStatic
-import io.mockk.verify
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -255,6 +253,7 @@ class BluetoothSearcherTest : DescribeSpec({
             val btDevice = mockk<BluetoothDevice> {
                 every { bluetoothClass.majorDeviceClass } returns BluetoothClass.Device.Major.IMAGING
                 every { address } returns "12:34:56:AB:CD:EF"
+                every { name } returns "N31BT-1042"
             }
             val receiveIntent = mockk<Intent> {
                 every { getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE) } returns btDevice
@@ -263,21 +262,18 @@ class BluetoothSearcherTest : DescribeSpec({
             it("starts scan") {
                 val searcher = BluetoothSearcher(context, btManager, coroutineScope, coroutineScope)
 
-                searcher.scan(activity)
-                testScheduler.runCurrent()
-
-                searcher.onBluetoothFound.onReceive(context, receiveIntent)
-
                 val resultFlow = searcher.scan(activity)
                 var result: ResultOr<List<String>>? = null
                 CoroutineScope(Dispatchers.Unconfined).launch {
                     result = resultFlow.first()
                 }
 
+                searcher.onBluetoothFound.onReceive(context, receiveIntent)
+
                 testScheduler.runCurrent()
 
                 eventually(1.seconds) {
-                    result!!.value shouldBe listOf("12:34:56:AB:CD:EF")
+                    result!!.value shouldBe listOf("12:34:56:AB:CD:EF;N31BT-1042")
                 }
             }
         }
