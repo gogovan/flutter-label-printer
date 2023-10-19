@@ -166,8 +166,8 @@ class FlutterLabelPrinterMethodHandler(
                             Throwable().stackTraceToString()
                         )
                     } else {
-                        HPRTPrinterHelper.CLS()
-                        result.success(true)
+                        val returnCode = HPRTPrinterHelper.CLS()
+                        result.success(returnCode > 0)
                     }
                 }
 
@@ -273,14 +273,18 @@ class FlutterLabelPrinterMethodHandler(
                             // TODO API for setting language and country
                             HPRTPrinterHelper.LanguageEncode = "gb2312"
 
-                            val rotate = call.argument<Int>("rotate").toString()
+                            val rotateN = call.argument<Int>("rotate") ?: 0;
+                            if (rotateN !in listOf(0, 90, 180, 270)) {
+                                throw ClassCastException("Invalid rotate value $rotateN")
+                            }
+                            val rotate = rotateN.toString()
                             val font = call.argument<Int>("font").toString()
                             val x = call.argument<Int>("x").toString()
                             val y = call.argument<Int>("y").toString()
                             val text = call.argument<String>("text")
                             val alignment = call.argument<Int>("alignment") ?: 1
-                            val charWidth = call.argument<Int>("characterWidth").toString()
-                            val charHeight = call.argument<Int>("characterHeight").toString()
+                            val charWidth = (call.argument<Int>("characterWidth") ?: 0).toString()
+                            val charHeight = (call.argument<Int>("characterHeight") ?: 0).toString()
 
                             val returnCode = HPRTPrinterHelper.printText(
                                 x,
@@ -328,7 +332,7 @@ class FlutterLabelPrinterMethodHandler(
                                 90 -> PrinterHelper.TEXT90
                                 180 -> PrinterHelper.TEXT180
                                 270 -> PrinterHelper.TEXT270
-                                else -> throw ClassCastException()
+                                else -> throw ClassCastException("Invalid rotate value $rotate")
                             }
 
                             val returnCode = PrinterHelper.Text(
@@ -360,7 +364,7 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
-                            val count = call.argument<Int>("count").toString()
+                            val count = (call.argument<Int>("count") ?: 1).toString()
 
                             val returnCode = HPRTPrinterHelper.Print(count, "1")
 
@@ -611,16 +615,36 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
+                            val rotateN = call.argument<Int>("rotate") ?: 0
+                            if (rotateN !in listOf(0, 90, 180, 270)) {
+                                throw ClassCastException("Invalid rotate value $rotateN")
+                            }
+
                             val x = (call.argument<Int>("x") ?: 0).toString()
                             val y = (call.argument<Int>("y") ?: 0).toString()
-                            val type = call.argument<String>("type") ?: ""
+                            val type = call.argument<String>("type")
                             val height = (call.argument<Int>("height") ?: 0).toString()
                             val showData =
                                 if (call.argument<Boolean>("showData") == true) "1" else "0"
-                            val rotate = (call.argument<Int>("rotate") ?: 0).toString()
-                            val narrow = (call.argument<Int>("narrowWidth") ?: 0).toString()
-                            val wide = (call.argument<Int>("wideWidth") ?: 0).toString()
-                            val data = call.argument<String>("data") ?: ""
+                            val rotate = rotateN.toString()
+                            val narrow = (call.argument<Int>("narrowWidth") ?: 1).toString()
+                            val wide = (call.argument<Int>("wideWidth") ?: 1).toString()
+                            val data = call.argument<String>("data")
+
+                            if (type !in listOf(
+                                    "128",
+                                    "128M",
+                                    "EAN128",
+                                    "39",
+                                    "93",
+                                    "UPCA",
+                                    "MSI",
+                                    "ITF14",
+                                    "EAN13"
+                                )
+                            ) {
+                                throw ClassCastException("Invalid type value $type")
+                            }
 
                             val returnCode = HPRTPrinterHelper.printBarcode(
                                 x,
@@ -724,13 +748,22 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
-                            val x = (call.argument<Int>("x") ?: 0).toString()
-                            val y = (call.argument<Int>("y") ?: 0).toString()
+                            val rotateN = call.argument<Int>("rotate") ?: 0
+                            if (rotateN !in listOf(0, 90, 180, 270)) {
+                                throw ClassCastException("Invalid rotate value $rotateN")
+                            }
+
+                            val x = call.argument<Int>("x").toString()
+                            val y = call.argument<Int>("y").toString()
                             val eccLevel = call.argument<String>("eccLevel") ?: "L"
-                            val unitSize = (call.argument<Int>("unitSize") ?: 0).toString()
-                            val mode = if (call.argument<Int>("mode") == 0) "A" else "M"
-                            val rotate = (call.argument<Int>("rotate") ?: 0).toString()
-                            val data = call.argument<String>("data") ?: ""
+                            val unitSize = call.argument<Int>("unitSize").toString()
+                            val mode = if ((call.argument<Int>("mode") ?: 0) == 0) "A" else "M"
+                            val rotate = rotateN.toString()
+                            val data = call.argument<String>("data")
+
+                            if (eccLevel !in listOf("L", "M", "Q", "H")) {
+                                throw ClassCastException("Invalid eccLevel value $eccLevel")
+                            }
 
                             val returnCode = HPRTPrinterHelper.printQRcode(
                                 x,

@@ -169,134 +169,217 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             { PrinterHelper.portClose() },
             true
         ),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setPrintAreaSize", mapOf(
-            "offset" to 5,
-            "height" to 480,
-        ), { PrinterHelper.printAreaSize("5", "200", "200", "480", "1") }, 1
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setPrintAreaSize", mapOf(
+                "offset" to 5,
+                "height" to 480,
+            ), { PrinterHelper.printAreaSize("5", "200", "200", "480", "1") }, 1
         ),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addText", mapOf(
-            "rotate" to 0,
-            "font" to 1,
-            "x" to 240,
-            "y" to 160,
-            "text" to "Hello World!",
-        ), {
-            PrinterHelper.Text(
-                PrinterHelper.TEXT,
-                "1",
-                "0",
-                "240",
-                "160",
-                "Hello World!"
-            )
-        }, 1
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.addText",
+            mapOf("rotate" to 0, "font" to 1, "x" to 240, "y" to 160),
+            { PrinterHelper.Text(PrinterHelper.TEXT, "1", "0", "240", "160", "Hello World!") }, 1
         ),
         TestEntry("hk.gogovan.label_printer.hanin.cpcl.print", null, { PrinterHelper.Print() }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setPaperType", mapOf("paperType" to 1), { PrinterHelper.setPaperFourInch(1) }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setBold", mapOf("size" to 2), { PrinterHelper.SetBold("2") }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setBold", mapOf("size" to 6), { PrinterHelper.SetBold("5") }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setTextSize", mapOf("width" to 2, "height" to 3), { PrinterHelper.SetMag("2", "3") }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setTextSize", mapOf("width" to 0, "height" to 24), { PrinterHelper.SetMag("1", "16") }, 1),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setPaperType",
+            mapOf("paperType" to 1),
+            { PrinterHelper.setPaperFourInch(1) },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setBold",
+            mapOf("size" to 2),
+            { PrinterHelper.SetBold("2") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setBold",
+            mapOf("size" to 6),
+            { PrinterHelper.SetBold("5") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setTextSize",
+            mapOf("width" to 2, "height" to 3),
+            { PrinterHelper.SetMag("2", "3") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setTextSize",
+            mapOf("width" to 0, "height" to 24),
+            { PrinterHelper.SetMag("1", "16") },
+            1
+        ),
         // TestEntry("hk.gogovan.label_printer.hanin.cpcl.getStatus"),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.space", mapOf("dot" to 80), { PrinterHelper.Prefeed("80") }, 1 ),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setPageWidth", mapOf("width" to 80), { PrinterHelper.PageWidth("80") }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setAlign", mapOf("align" to 1), { PrinterHelper.Align(PrinterHelper.CENTER) }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addBarcode", mapOf(
-            "type" to "code39",
-            "data" to "https://example.com",
-            "width" to 3,
-            "height" to 2,
-            "x" to 100,
-            "y" to 120,
-        ), {
-            PrinterHelper.Barcode(
-                PrinterHelper.BARCODE,
-                PrinterHelper.code39,
-                "3",
-                "0",
-                "2",
-                "100",
-                "120",
-                false,
-                "null",
-                "null",
-                "null",
-                "https://example.com"
-            )
-        }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addBarcode", mapOf(
-            "type" to "CODE39",
-            "data" to "https://example.com",
-            "width" to 3,
-            "height" to 2,
-            "x" to 100,
-            "y" to 120,
-            "showData" to true,
-            "dataFont" to 6,
-            "dataTextSize" to 2,
-            "dataTextOffset" to 0,
-        ), {
-            PrinterHelper.Barcode(
-                PrinterHelper.BARCODE,
-                PrinterHelper.code39,
-                "3",
-                "0",
-                "2",
-                "100",
-                "120",
-                true,
-                "6",
-                "2",
-                "0",
-                "https://example.com"
-            )
-        }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addQRCode", mapOf(
-            "data" to "https://example.com",
-            "x" to 100,
-            "y" to 120,
-            "unitSize" to 5,
-        ), {
-            PrinterHelper.PrintQR(
-                PrinterHelper.BARCODE, "100", "120", "0", "5", "https://example.com"
-            )
-        }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addRectangle",mapOf(
-            "x0" to 10,
-            "y0" to 20,
-            "x1" to 30,
-            "y1" to 40,
-            "width" to 3,
-        ), { PrinterHelper.Box("10", "20", "30", "40", "3") }, 1),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addLine", mapOf(
-            "x0" to 10,
-            "y0" to 20,
-            "x1" to 30,
-            "y1" to 40,
-            "width" to 3,
-        ), { PrinterHelper.Line("10", "20", "30", "40", "3") }, 1),
-        // TestEntry("hk.gogovan.label_printer.hanin.cpcl.addImage"),
-        /*
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.disconnect"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.addText"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.print"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.clear"),
-        // TestEntry("hk.gogovan.label_printer.hanin.tspl.getStatus"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.space"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.addBarcode"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.addQRCode"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.addRectangle"),
-        TestEntry("hk.gogovan.label_printer.hanin.tspl.addLine"),
-
-         */
-        // TestEntry("hk.gogovan.label_printer.hanin.tspl.addImage"),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.space",
+            mapOf("dot" to 80),
+            { PrinterHelper.Prefeed("80") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setPageWidth",
+            mapOf("width" to 80),
+            { PrinterHelper.PageWidth("80") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.setAlign",
+            mapOf("align" to 1),
+            { PrinterHelper.Align(PrinterHelper.CENTER) },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.addBarcode",
+            mapOf(
+                "type" to "code39",
+                "data" to "https://example.com",
+                "width" to 3,
+                "height" to 2,
+                "x" to 100,
+                "y" to 120
+            ),
+            {
+                PrinterHelper.Barcode(
+                    PrinterHelper.BARCODE,
+                    PrinterHelper.code39,
+                    "3",
+                    "0",
+                    "2",
+                    "100",
+                    "120",
+                    false,
+                    "null",
+                    "null",
+                    "null",
+                    "https://example.com"
+                )
+            }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.addBarcode", mapOf(
+                "type" to "CODE39",
+                "data" to "https://example.com",
+                "width" to 3,
+                "height" to 2,
+                "x" to 100,
+                "y" to 120,
+                "showData" to true,
+                "dataFont" to 6,
+                "dataTextSize" to 2,
+                "dataTextOffset" to 0,
+            ), {
+                PrinterHelper.Barcode(
+                    PrinterHelper.BARCODE,
+                    PrinterHelper.code39,
+                    "3",
+                    "0",
+                    "2",
+                    "100",
+                    "120",
+                    true,
+                    "6",
+                    "2",
+                    "0",
+                    "https://example.com"
+                )
+            }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.addQRCode",
+            mapOf("data" to "https://example.com", "x" to 100, "y" to 120, "unitSize" to 5),
+            {
+                PrinterHelper.PrintQR(
+                    PrinterHelper.BARCODE,
+                    "100",
+                    "120",
+                    "0",
+                    "5",
+                    "https://example.com"
+                )
+            }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.addRectangle",
+            mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40, "width" to 3),
+            { PrinterHelper.Box("10", "20", "30", "40", "3") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.addLine",
+            mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40, "width" to 3),
+            { PrinterHelper.Line("10", "20", "30", "40", "3") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.disconnect",
+            null,
+            { HPRTPrinterHelper.PortClose() },
+            true
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize",
+            mapOf("width" to 80, "height" to 60),
+            { HPRTPrinterHelper.printAreaSize("80", "60") }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.addText",
+            mapOf("font" to 9, "x" to 40, "y" to 20, "text" to "Hello World!"),
+            { HPRTPrinterHelper.printText("40", "20", "0", "0", "0", "0", 1, "Hello World!") }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.print",
+            null, { HPRTPrinterHelper.Print("1", "1") }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.clear",
+            null, { HPRTPrinterHelper.CLS() }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.space",
+            mapOf("mm" to 30), { HPRTPrinterHelper.Offset("30") }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.addBarcode",
+            mapOf("x" to 40, "y" to 20, "type" to "39", "height" to 50, "data" to "APV92"),
+            { HPRTPrinterHelper.printBarcode("40", "20", "39", "50", "0", "0", "1", "1", "APV92") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.addQRCode",
+            mapOf("x" to 40, "y" to 20, "unitSize" to 6, "data" to "https://example.com"),
+            {
+                HPRTPrinterHelper.printQRcode(
+                    "40",
+                    "20",
+                    "L",
+                    "6",
+                    "A",
+                    "0",
+                    "https://example.com"
+                )
+            }, 1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.addRectangle",
+            mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40, "width" to 3),
+            { HPRTPrinterHelper.Box("10", "20", "30", "40", "3") },
+            1
+        ),
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.addLine",
+            mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40),
+            { HPRTPrinterHelper.Bar("10", "20", "30", "40") },
+            1
+        ),
     )
 
     describe("generic method list") {
         testList.forEach { entry ->
             it("method success ${entry.methodName}") {
                 every { PrinterHelper.IsOpened() }.returns(true)
+                every { HPRTPrinterHelper.IsOpened() }.returns(true)
                 every { entry.sdkCall() }.returns(entry.sdkCallReturn)
 
                 val log = mockk<Log>()
@@ -310,11 +393,6 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
 
                 mockkStatic(TextUtils::class)
                 every { TextUtils.isEmpty(any()) }.answers { call -> (call.invocation.args.first() as String).isNotEmpty() }
-
-                mockkStatic(BitmapFactory::class)
-                val image = mockk<Bitmap>()
-                every { BitmapFactory.decodeFile("/sdcard/DCIM/1") }.returns(image)
-                unmockkStatic(BitmapFactory::class)
 
                 val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
                 methodHandler.log = log
