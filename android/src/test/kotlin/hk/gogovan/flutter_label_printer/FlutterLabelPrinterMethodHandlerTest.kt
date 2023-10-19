@@ -17,6 +17,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.mockk.verify
+import tspl.HPRTPrinterHelper
 
 class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
     val context = mockk<Context> {
@@ -29,10 +30,12 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
 
     beforeEach {
         mockkStatic(PrinterHelper::class)
+        mockkStatic(HPRTPrinterHelper::class)
     }
 
     afterEach {
         unmockkStatic(PrinterHelper::class)
+        unmockkStatic(HPRTPrinterHelper::class)
     }
 
     describe("setLogLevel") {
@@ -54,7 +57,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         }
     }
 
-    describe("stopSearchHMA300L") {
+    describe("stopSearchBluetooth") {
         it("success") {
             every { bluetoothSearcher.stopScan() }.returns(true)
             val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
@@ -63,7 +66,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
 
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.stopSearchHMA300L", null
+                    "hk.gogovan.label_printer.stopSearchBluetooth", null
                 ), result
             )
             verify { bluetoothSearcher.stopScan() }
@@ -71,289 +74,277 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         }
     }
 
-    describe("connectHMA300L") {
-        it("success") {
-            every { PrinterHelper.portOpenBT(context, "abcd1234") }.returns(0)
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+    data class ConnectTestEntry(
+        val methodName: String,
+        val sdkMethod: () -> Int,
+        val isOpenedMethod: () -> Boolean
+    )
 
-            val result = mockk<MethodChannel.Result>(relaxed = true)
+    val connectTests = listOf(
+        ConnectTestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.connect",
+            { PrinterHelper.portOpenBT(context, "abcd1234") },
+            { PrinterHelper.IsOpened() }),
+        ConnectTestEntry(
+            "hk.gogovan.label_printer.hanin.tspl.connect",
+            { HPRTPrinterHelper.PortOpen("abcd1234") },
+            { HPRTPrinterHelper.IsOpened() }),
+    )
 
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.connectHMA300L",
-                    mapOf("address" to "abcd1234"),
-                ), result
-            )
-            verify { PrinterHelper.portOpenBT(context, "abcd1234") }
-            verify { result.success(true) }
-        }
-
-        it("failure") {
-            every { PrinterHelper.portOpenBT(context, "abcd1234") }.returns(-1)
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.connectHMA300L",
-                    mapOf("address" to "abcd1234"),
-                ), result
-            )
-            verify { PrinterHelper.portOpenBT(context, "abcd1234") }
-            verify { result.error("1008", "Connection timed out.", any()) }
-        }
-
-        it("fail because IsOpened") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.connectHMA300L",
-                    mapOf("address" to "abcd1234"),
-                ), result
-            )
-            verify { result.error("1005", "Printer already connected.", any()) }
-        }
-
-        it("fail because address null") {
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.connectHMA300L", null
-                ), result
-            )
-            verify { result.error("1000", "Unable to extract arguments.", any()) }
-        }
-    }
-
-    describe("PrinterHelper Not opened errors") {
-        listOf(
-            "hk.gogovan.label_printer.disconnectHMA300L",
-            "hk.gogovan.label_printer.setPrintAreaSizeHMA300L",
-            "hk.gogovan.label_printer.addTextHMA300L",
-            "hk.gogovan.label_printer.printHMA300L",
-            "hk.gogovan.label_printer.setPaperTypeHMA300L",
-            "hk.gogovan.label_printer.setBoldHMA300L",
-            "hk.gogovan.label_printer.setTextSizeHMA300L",
-            "hk.gogovan.label_printer.getStatusHMA300L",
-            "hk.gogovan.label_printer.prefeedHMA300L",
-            "hk.gogovan.label_printer.setPageWidthHMA300L",
-            "hk.gogovan.label_printer.setAlignHMA300L",
-            "hk.gogovan.label_printer.addBarcode",
-            "hk.gogovan.label_printer.addQRCode",
-            "hk.gogovan.label_printer.addRectangle",
-            "hk.gogovan.label_printer.addLine",
-            "hk.gogovan.label_printer.addImage",
-        ).forEach { method ->
-            it("method fail because Is not Opened") {
+    describe("connect") {
+        connectTests.forEach { entry ->
+            it("success ${entry.methodName}") {
+                every { entry.sdkMethod() }.returns(0)
                 val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
 
                 val result = mockk<MethodChannel.Result>(relaxed = true)
 
                 methodHandler.onMethodCall(
-                    MethodCall(method, null), result
+                    MethodCall(
+                        entry.methodName,
+                        mapOf("address" to "abcd1234"),
+                    ), result
+                )
+                verify { entry.sdkMethod() }
+                verify { result.success(true) }
+            }
+
+            it("failure ${entry.methodName}") {
+                every { entry.sdkMethod() }.returns(-5)
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+
+                methodHandler.onMethodCall(
+                    MethodCall(
+                        entry.methodName,
+                        mapOf("address" to "abcd1234"),
+                    ), result
+                )
+                verify { entry.sdkMethod() }
+                verify { result.error("1006", "Connection error.", any()) }
+            }
+
+            it("fail because IsOpened ${entry.methodName}") {
+                every { entry.isOpenedMethod() }.returns(true)
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+
+                methodHandler.onMethodCall(
+                    MethodCall(
+                        entry.methodName,
+                        mapOf("address" to "abcd1234"),
+                    ), result
+                )
+                verify { result.error("1005", "Printer already connected.", any()) }
+            }
+
+            it("fail because address null ${entry.methodName}") {
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+
+                methodHandler.onMethodCall(
+                    MethodCall(
+                        entry.methodName, null
+                    ), result
+                )
+                verify { result.error("1000", "Unable to extract arguments.", any()) }
+            }
+        }
+    }
+
+    data class TestEntry<SRT>(
+        val methodName: String,
+        val arguments: Map<String, Any>?,
+        val sdkCall: () -> SRT,
+        val sdkCallReturn: SRT,
+    )
+
+    val testList = listOf(
+        TestEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.disconnect",
+            null,
+            { PrinterHelper.portClose() },
+            true
+        ),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setPrintAreaSize", mapOf(
+            "offset" to 5,
+            "height" to 480,
+        ), { PrinterHelper.printAreaSize("5", "200", "200", "480", "1") }, 1
+        ),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addText", mapOf(
+            "rotate" to 0,
+            "font" to 1,
+            "x" to 240,
+            "y" to 160,
+            "text" to "Hello World!",
+        ), {
+            PrinterHelper.Text(
+                PrinterHelper.TEXT,
+                "1",
+                "0",
+                "240",
+                "160",
+                "Hello World!"
+            )
+        }, 1
+        ),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.print", null, { PrinterHelper.Print() }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setPaperType", mapOf("paperType" to 1), { PrinterHelper.setPaperFourInch(1) }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setBold", mapOf("size" to 2), { PrinterHelper.SetBold("2") }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setBold", mapOf("size" to 6), { PrinterHelper.SetBold("5") }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setTextSize", mapOf("width" to 2, "height" to 3), { PrinterHelper.SetMag("2", "3") }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setTextSize", mapOf("width" to 0, "height" to 24), { PrinterHelper.SetMag("1", "16") }, 1),
+        // TestEntry("hk.gogovan.label_printer.hanin.cpcl.getStatus"),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.space", mapOf("dot" to 80), { PrinterHelper.Prefeed("80") }, 1 ),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setPageWidth", mapOf("width" to 80), { PrinterHelper.PageWidth("80") }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.setAlign", mapOf("align" to 1), { PrinterHelper.Align(PrinterHelper.CENTER) }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addBarcode", mapOf(
+            "type" to "code39",
+            "data" to "https://example.com",
+            "width" to 3,
+            "height" to 2,
+            "x" to 100,
+            "y" to 120,
+        ), {
+            PrinterHelper.Barcode(
+                PrinterHelper.BARCODE,
+                PrinterHelper.code39,
+                "3",
+                "0",
+                "2",
+                "100",
+                "120",
+                false,
+                "null",
+                "null",
+                "null",
+                "https://example.com"
+            )
+        }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addBarcode", mapOf(
+            "type" to "CODE39",
+            "data" to "https://example.com",
+            "width" to 3,
+            "height" to 2,
+            "x" to 100,
+            "y" to 120,
+            "showData" to true,
+            "dataFont" to 6,
+            "dataTextSize" to 2,
+            "dataTextOffset" to 0,
+        ), {
+            PrinterHelper.Barcode(
+                PrinterHelper.BARCODE,
+                PrinterHelper.code39,
+                "3",
+                "0",
+                "2",
+                "100",
+                "120",
+                true,
+                "6",
+                "2",
+                "0",
+                "https://example.com"
+            )
+        }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addQRCode", mapOf(
+            "data" to "https://example.com",
+            "x" to 100,
+            "y" to 120,
+            "unitSize" to 5,
+        ), {
+            PrinterHelper.PrintQR(
+                PrinterHelper.BARCODE, "100", "120", "0", "5", "https://example.com"
+            )
+        }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addRectangle",mapOf(
+            "x0" to 10,
+            "y0" to 20,
+            "x1" to 30,
+            "y1" to 40,
+            "width" to 3,
+        ), { PrinterHelper.Box("10", "20", "30", "40", "3") }, 1),
+        TestEntry("hk.gogovan.label_printer.hanin.cpcl.addLine", mapOf(
+            "x0" to 10,
+            "y0" to 20,
+            "x1" to 30,
+            "y1" to 40,
+            "width" to 3,
+        ), { PrinterHelper.Line("10", "20", "30", "40", "3") }, 1),
+        // TestEntry("hk.gogovan.label_printer.hanin.cpcl.addImage"),
+        /*
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.disconnect"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.addText"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.print"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.clear"),
+        // TestEntry("hk.gogovan.label_printer.hanin.tspl.getStatus"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.space"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.addBarcode"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.addQRCode"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.addRectangle"),
+        TestEntry("hk.gogovan.label_printer.hanin.tspl.addLine"),
+
+         */
+        // TestEntry("hk.gogovan.label_printer.hanin.tspl.addImage"),
+    )
+
+    describe("generic method list") {
+        testList.forEach { entry ->
+            it("method success ${entry.methodName}") {
+                every { PrinterHelper.IsOpened() }.returns(true)
+                every { entry.sdkCall() }.returns(entry.sdkCallReturn)
+
+                val log = mockk<Log>()
+                every { log.w(any()) } just Runs
+                every {
+                    context.getSharedPreferences(
+                        "hk.gogovan.label_printer.flutter_label_printer",
+                        Context.MODE_PRIVATE
+                    ).edit().putInt(any(), any()).apply()
+                } just Runs
+
+                mockkStatic(TextUtils::class)
+                every { TextUtils.isEmpty(any()) }.answers { call -> (call.invocation.args.first() as String).isNotEmpty() }
+
+                mockkStatic(BitmapFactory::class)
+                val image = mockk<Bitmap>()
+                every { BitmapFactory.decodeFile("/sdcard/DCIM/1") }.returns(image)
+                unmockkStatic(BitmapFactory::class)
+
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+                methodHandler.log = log
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+
+                methodHandler.onMethodCall(
+                    MethodCall(
+                        entry.methodName, entry.arguments
+                    ), result
+                )
+                verify { result.success(true) }
+                verify { entry.sdkCall() }
+            }
+        }
+
+        testList.forEach { entry ->
+            it("method fail because Is not Opened ${entry.methodName}") {
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+
+                methodHandler.onMethodCall(
+                    MethodCall(entry.methodName, null), result
                 )
                 verify { result.error("1005", "Printer not connected.", any()) }
             }
         }
     }
 
-    describe("disconnectHMA300L") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.disconnectHMA300L", null
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.portClose() }
-        }
-    }
-
-    describe("setPrintAreaSizeHMA300L") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.printAreaSize(any(), any(), any(), any(), any()) }.returns(1)
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setPrintAreaSizeHMA300L",
-                    mapOf(
-                        "offset" to 5,
-                        "height" to 480,
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.printAreaSize("5", "200", "200", "480", "1") }
-        }
-    }
-
-    describe("addTextHMA300L") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.Text(any(), any(), any(), any(), any(), any()) }.returns(1)
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            mockkStatic(TextUtils::class)
-            every { TextUtils.isEmpty(any()) }.returns(false)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.addTextHMA300L",
-                    mapOf(
-                        "rotate" to 0,
-                        "font" to 1,
-                        "x" to 240,
-                        "y" to 160,
-                        "text" to "Hello World!",
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify {
-                PrinterHelper.Text(
-                    PrinterHelper.TEXT,
-                    "1",
-                    "0",
-                    "240",
-                    "160",
-                    "Hello World!"
-                )
-            }
-        }
-    }
-
-    describe("printHMA300L") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.Print() }.returns(1)
-
-            val log = mockk<Log>()
-            every { log.w(any()) } just Runs
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-            methodHandler.log = log
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.printHMA300L", null
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.Print() }
-        }
-    }
-
-    describe("setPaperTypeHMA300L") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.setPaperFourInch(any()) }.returns(1)
-
-            every {
-                context.getSharedPreferences(
-                    "hk.gogovan.label_printer.flutter_label_printer",
-                    Context.MODE_PRIVATE
-                ).edit().putInt(any(), any()).apply()
-            } just Runs
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setPaperTypeHMA300L",
-                    mapOf("paperType" to 1),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.setPaperFourInch(1) }
-        }
-    }
-
-    describe("setBoldHMA300L") {
-        val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-        beforeEach {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.SetBold(any()) }.returns(1)
-        }
-
-        it("success") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setBoldHMA300L",
-                    mapOf("size" to 2),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.SetBold("2") }
-        }
-
-        it("exceed range success") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setBoldHMA300L",
-                    mapOf("size" to 6),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.SetBold("5") }
-        }
-    }
-
-    describe("setTextSizeHMA300L") {
-        val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-        beforeEach {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.SetMag(any(), any()) }.returns(1)
-        }
-
-        it("success") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setTextSizeHMA300L",
-                    mapOf("width" to 2, "height" to 3),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.SetMag("2", "3") }
-        }
-
-        it("exceed range success") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setTextSizeHMA300L",
-                    mapOf("width" to 0, "height" to 24),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.SetMag("1", "16") }
-        }
-    }
 
     describe("getStatusHMA300L") {
         it("success") {
@@ -365,48 +356,10 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.getStatusHMA300L", null,
+                    "hk.gogovan.label_printer.hanin.cpcl.getStatus", null,
                 ), result
             )
             verify { result.success(6) }
-        }
-    }
-
-    describe("prefeedHMA300L") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.Prefeed(any()) }.returns(1)
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.prefeedHMA300L",
-                    mapOf("dot" to 80),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.Prefeed("80") }
-        }
-    }
-
-    describe("setPageWidthHMA300L") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every { PrinterHelper.PageWidth(any()) }.returns(1)
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setPageWidthHMA300L",
-                    mapOf("width" to 80),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.PageWidth("80") }
         }
     }
 
@@ -416,27 +369,13 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             every { PrinterHelper.Align(any()) }.returns(1)
         }
 
-        it("success") {
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.setAlignHMA300L",
-                    mapOf("align" to 1),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.Align(PrinterHelper.CENTER) }
-        }
-
         it("wrong param failure") {
             val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
 
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.setAlignHMA300L",
+                    "hk.gogovan.label_printer.hanin.cpcl.setAlign",
                     mapOf("align" to 4),
                 ), result
             )
@@ -467,83 +406,11 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             }.returns(1)
         }
 
-        it("success") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.addBarcode",
-                    mapOf(
-                        "type" to 4,
-                        "data" to "https://example.com",
-                        "width" to 3,
-                        "height" to 2,
-                        "x" to 100,
-                        "y" to 120,
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify {
-                PrinterHelper.Barcode(
-                    PrinterHelper.BARCODE,
-                    PrinterHelper.code39,
-                    "3",
-                    "0",
-                    "2",
-                    "100",
-                    "120",
-                    false,
-                    any(),
-                    any(),
-                    any(),
-                    "https://example.com"
-                )
-            }
-        }
-
-        it("success with showData") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.addBarcode",
-                    mapOf(
-                        "type" to 4,
-                        "data" to "https://example.com",
-                        "width" to 3,
-                        "height" to 2,
-                        "x" to 100,
-                        "y" to 120,
-                        "showData" to true,
-                        "dataFont" to 6,
-                        "dataTextSize" to 2,
-                        "dataTextOffset" to 0,
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify {
-                PrinterHelper.Barcode(
-                    PrinterHelper.BARCODE,
-                    PrinterHelper.code39,
-                    "3",
-                    "0",
-                    "2",
-                    "100",
-                    "120",
-                    true,
-                    "6",
-                    "2",
-                    "0",
-                    "https://example.com"
-                )
-            }
-        }
-
         it("wrong barcode type") {
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addBarcode",
+                    "hk.gogovan.label_printer.hanin.cpcl.addBarcode",
                     mapOf(
                         "orientation" to 2,
                     ),
@@ -556,7 +423,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addBarcode",
+                    "hk.gogovan.label_printer.hanin.cpcl.addBarcode",
                     mapOf(
                         "type" to 10,
                     ),
@@ -569,7 +436,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addBarcode",
+                    "hk.gogovan.label_printer.hanin.cpcl.addBarcode",
                     mapOf(
                         "showData" to true,
                     ),
@@ -582,7 +449,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addBarcode",
+                    "hk.gogovan.label_printer.hanin.cpcl.addBarcode",
                     mapOf(
                         "ratio" to 11,
                     ),
@@ -602,32 +469,11 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             }.returns(1)
         }
 
-        it("success") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.addQRCode",
-                    mapOf(
-                        "data" to "https://example.com",
-                        "x" to 100,
-                        "y" to 120,
-                        "unitSize" to 5,
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify {
-                PrinterHelper.PrintQR(
-                    PrinterHelper.BARCODE, "100", "120", "0", "5", "https://example.com"
-                )
-            }
-        }
-
         it("wrong barcode type") {
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addQRCode",
+                    "hk.gogovan.label_printer.hanin.cpcl.addQRCode",
                     mapOf(
                         "orientation" to 2,
                     ),
@@ -640,67 +486,13 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addQRCode",
+                    "hk.gogovan.label_printer.hanin.cpcl.addQRCode",
                     mapOf(
                         "unitSize" to 45,
                     ),
                 ), result
             )
             verify { result.error("1009", any(), any()) }
-        }
-    }
-
-    describe("addRectangle") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every {
-                PrinterHelper.Box(any(), any(), any(), any(), any())
-            }.returns(1)
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.addRectangle",
-                    mapOf(
-                        "x0" to 10,
-                        "y0" to 20,
-                        "x1" to 30,
-                        "y1" to 40,
-                        "width" to 3,
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.Box("10", "20", "30", "40", "3") }
-        }
-    }
-
-    describe("addLine") {
-        it("success") {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every {
-                PrinterHelper.Line(any(), any(), any(), any(), any())
-            }.returns(1)
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.addLine",
-                    mapOf(
-                        "x0" to 10,
-                        "y0" to 20,
-                        "x1" to 30,
-                        "y1" to 40,
-                        "width" to 3,
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.Line("10", "20", "30", "40", "3") }
         }
     }
 
@@ -727,7 +519,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addImage",
+                    "hk.gogovan.label_printer.hanin.cpcl.addImage",
                     mapOf(
                         "imagePath" to "/sdcard/DCIM/1",
                         "x" to 100,
@@ -747,7 +539,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             val result = mockk<MethodChannel.Result>(relaxed = true)
             methodHandler.onMethodCall(
                 MethodCall(
-                    "hk.gogovan.label_printer.addImage",
+                    "hk.gogovan.label_printer.hanin.cpcl.addImage",
                     mapOf(
                         "imagePath" to "/sdcard/DCIM/1",
                         "x" to 100,

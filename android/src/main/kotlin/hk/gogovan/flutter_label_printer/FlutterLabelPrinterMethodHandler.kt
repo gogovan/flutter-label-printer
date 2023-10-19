@@ -45,7 +45,7 @@ class FlutterLabelPrinterMethodHandler(
                     } catch (e: ClassCastException) {
                         result.error(
                             "1009",
-                            "Unable to extract arguments",
+                            "Unable to extract arguments $e",
                             Throwable().stackTraceToString()
                         )
                     }
@@ -135,14 +135,14 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.disconnect" -> {
-                    if (HPRTPrinterHelper.PortClose()) {
-                        result.success(PrinterHelper.portClose())
-                    } else {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
                             Throwable().stackTraceToString()
                         )
+                    } else {
+                        result.success(HPRTPrinterHelper.PortClose())
                     }
                 }
 
@@ -219,7 +219,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -254,7 +254,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -297,7 +297,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -344,7 +344,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -368,7 +368,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -424,7 +424,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -447,7 +447,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -472,7 +472,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -521,7 +521,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -544,7 +544,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -567,7 +567,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -595,7 +595,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -637,7 +637,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -708,7 +708,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -745,7 +745,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -790,7 +790,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -824,7 +824,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -858,7 +858,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -890,7 +890,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -924,7 +924,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -971,7 +971,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
@@ -1017,7 +1017,7 @@ class FlutterLabelPrinterMethodHandler(
                         } catch (e: ClassCastException) {
                             result.error(
                                 "1009",
-                                "Unable to extract arguments",
+                                "Unable to extract arguments $e",
                                 Throwable().stackTraceToString()
                             )
                         }
