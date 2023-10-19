@@ -177,7 +177,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         ),
         TestEntry(
             "hk.gogovan.label_printer.hanin.cpcl.addText",
-            mapOf("rotate" to 0, "font" to 1, "x" to 240, "y" to 160),
+            mapOf("rotate" to 0, "font" to 1, "x" to 240, "y" to 160, "text" to "Hello World!"),
             { PrinterHelper.Text(PrinterHelper.TEXT, "1", "0", "240", "160", "Hello World!") }, 1
         ),
         TestEntry("hk.gogovan.label_printer.hanin.cpcl.print", null, { PrinterHelper.Print() }, 1),
@@ -326,7 +326,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         TestEntry(
             "hk.gogovan.label_printer.hanin.tspl.addText",
             mapOf("font" to 9, "x" to 40, "y" to 20, "text" to "Hello World!"),
-            { HPRTPrinterHelper.printText("40", "20", "0", "0", "0", "0", 1, "Hello World!") }, 1
+            { HPRTPrinterHelper.printText("40", "20", "9", "0", "0", "0", 1, "Hello World!") }, 1
         ),
         TestEntry(
             "hk.gogovan.label_printer.hanin.tspl.print",
