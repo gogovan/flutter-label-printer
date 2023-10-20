@@ -278,7 +278,6 @@ class FlutterLabelPrinterMethodHandler(
                             val x = call.argument<Int>("x").toString()
                             val y = call.argument<Int>("y").toString()
                             val text = call.argument<String>("text")
-                            val alignment = call.argument<Int>("alignment") ?: 1
                             val charWidth = (call.argument<Int>("characterWidth") ?: 0).toString()
                             val charHeight = (call.argument<Int>("characterHeight") ?: 0).toString()
 
@@ -289,7 +288,7 @@ class FlutterLabelPrinterMethodHandler(
                                 rotate,
                                 charWidth,
                                 charHeight,
-                                alignment,
+                                1,
                                 text
                             )
 
@@ -360,9 +359,15 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
+                            if (!areaSizeSet) {
+                                log.w("Print Area Size is not set. This may result in unexpected behavior in printing.")
+                            }
+
                             val count = (call.argument<Int>("count") ?: 1).toString()
 
                             val returnCode = HPRTPrinterHelper.Print(count, "1")
+
+                            areaSizeSet = false
 
                             result.success(returnCode >= 0)
                         } catch (e: ClassCastException) {
@@ -618,8 +623,6 @@ class FlutterLabelPrinterMethodHandler(
                             val showData =
                                 if (call.argument<Boolean>("showData") == true) "1" else "0"
                             val rotate = (call.argument<Int>("rotate") ?: 0).toString()
-                            val narrow = (call.argument<Int>("narrowWidth") ?: 1).toString()
-                            val wide = (call.argument<Int>("wideWidth") ?: 1).toString()
                             val data = call.argument<String>("data")
 
                             if (type !in listOf(
@@ -644,8 +647,8 @@ class FlutterLabelPrinterMethodHandler(
                                 height,
                                 showData,
                                 rotate,
-                                narrow,
-                                wide,
+                                "1",
+                                "1",
                                 data
                             )
                             result.success(returnCode >= 0)
@@ -883,16 +886,16 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
-                            val x0 = call.argument<Int>("x0") ?: 0
-                            val y0 = call.argument<Int>("y0") ?: 0
-                            val x1 = call.argument<Int>("x1") ?: 0
-                            val y1 = call.argument<Int>("y1") ?: 0
+                            val x0 = call.argument<Int>("x") ?: 0
+                            val y0 = call.argument<Int>("y") ?: 0
+                            val width = call.argument<Int>("width") ?: 0
+                            val height = call.argument<Int>("height") ?: 0
 
                             val returnCode = HPRTPrinterHelper.Bar(
                                 x0.toString(),
                                 y0.toString(),
-                                x1.toString(),
-                                y1.toString()
+                                width.toString(),
+                                height.toString()
                             )
 
                             result.success(returnCode >= 0)
@@ -952,7 +955,6 @@ class FlutterLabelPrinterMethodHandler(
                             val imagePath = call.argument<String>("imagePath")
                             val x = call.argument<Int>("x").toString()
                             val y = call.argument<Int>("y").toString()
-                            val negate = call.argument<Boolean>("negate") ?: true
                             val type = call.argument<Int>("type") ?: 0
 
                             val image = BitmapFactory.decodeFile(imagePath)
@@ -966,7 +968,7 @@ class FlutterLabelPrinterMethodHandler(
                             }
 
                             val returnCode =
-                                HPRTPrinterHelper.printImage(x, y, image, negate, false, type)
+                                HPRTPrinterHelper.printImage(x, y, image, true, false, type)
 
                             if (returnCode <= -1) {
                                 result.error(
