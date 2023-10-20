@@ -155,7 +155,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         }
     }
 
-    data class TestEntry<SRT>(
+    data class SuccessCaseEntry<SRT>(
         val methodName: String,
         val arguments: Map<String, Any>?,
         val sdkCall: () -> SRT,
@@ -163,74 +163,78 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
     )
 
     val testList = listOf(
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.disconnect",
             null,
             { PrinterHelper.portClose() },
             true
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setPrintAreaSize", mapOf(
                 "offset" to 5,
                 "height" to 480,
             ), { PrinterHelper.printAreaSize("5", "200", "200", "480", "1") }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.addText",
             mapOf("rotate" to 0, "font" to 1, "x" to 240, "y" to 160, "text" to "Hello World!"),
             { PrinterHelper.Text(PrinterHelper.TEXT, "1", "0", "240", "160", "Hello World!") }, 1
         ),
-        TestEntry("hk.gogovan.label_printer.hanin.cpcl.print", null, { PrinterHelper.Print() }, 1),
-        TestEntry(
+        SuccessCaseEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.print",
+            null,
+            { PrinterHelper.Print() },
+            1
+        ),
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setPaperType",
             mapOf("paperType" to 1),
             { PrinterHelper.setPaperFourInch(1) },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setBold",
             mapOf("size" to 2),
             { PrinterHelper.SetBold("2") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setBold",
             mapOf("size" to 6),
             { PrinterHelper.SetBold("5") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setTextSize",
             mapOf("width" to 2, "height" to 3),
             { PrinterHelper.SetMag("2", "3") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setTextSize",
             mapOf("width" to 0, "height" to 24),
             { PrinterHelper.SetMag("1", "16") },
             1
         ),
-        // TestEntry("hk.gogovan.label_printer.hanin.cpcl.getStatus"),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.space",
             mapOf("dot" to 80),
             { PrinterHelper.Prefeed("80") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setPageWidth",
             mapOf("width" to 80),
             { PrinterHelper.PageWidth("80") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.setAlign",
             mapOf("align" to 1),
             { PrinterHelper.Align(PrinterHelper.CENTER) },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.addBarcode",
             mapOf(
                 "type" to "code39",
@@ -257,7 +261,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
                 )
             }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.addBarcode", mapOf(
                 "type" to "CODE39",
                 "data" to "https://example.com",
@@ -286,7 +290,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
                 )
             }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.addQRCode",
             mapOf("data" to "https://example.com", "x" to 100, "y" to 120, "unitSize" to 5),
             {
@@ -300,53 +304,53 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
                 )
             }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.addRectangle",
             mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40, "width" to 3),
             { PrinterHelper.Box("10", "20", "30", "40", "3") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.cpcl.addLine",
             mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40, "width" to 3),
             { PrinterHelper.Line("10", "20", "30", "40", "3") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.disconnect",
             null,
             { HPRTPrinterHelper.PortClose() },
             true
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize",
             mapOf("width" to 80, "height" to 60),
             { HPRTPrinterHelper.printAreaSize("80", "60") }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addText",
             mapOf("font" to 9, "x" to 40, "y" to 20, "text" to "Hello World!"),
             { HPRTPrinterHelper.printText("40", "20", "9", "0", "0", "0", 1, "Hello World!") }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.print",
             null, { HPRTPrinterHelper.Print("1", "1") }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.clear",
             null, { HPRTPrinterHelper.CLS() }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.space",
             mapOf("mm" to 30), { HPRTPrinterHelper.Offset("30") }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addBarcode",
             mapOf("x" to 40, "y" to 20, "type" to "39", "height" to 50, "data" to "APV92"),
             { HPRTPrinterHelper.printBarcode("40", "20", "39", "50", "0", "0", "1", "1", "APV92") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addQRCode",
             mapOf("x" to 40, "y" to 20, "unitSize" to 6, "data" to "https://example.com"),
             {
@@ -361,13 +365,13 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
                 )
             }, 1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addRectangle",
             mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40, "width" to 3),
             { HPRTPrinterHelper.Box("10", "20", "30", "40", "3") },
             1
         ),
-        TestEntry(
+        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addLine",
             mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40),
             { HPRTPrinterHelper.Bar("10", "20", "30", "40") },
@@ -375,7 +379,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         ),
     )
 
-    describe("generic method list") {
+    describe("success case entry") {
         testList.forEach { entry ->
             it("method success ${entry.methodName}") {
                 every { PrinterHelper.IsOpened() }.returns(true)
@@ -423,15 +427,21 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         }
     }
 
-
-    describe("getStatusHMA300L") {
-        it("success") {
+    describe("getStatus") {
+        lateinit var methodHandler: FlutterLabelPrinterMethodHandler
+        lateinit var result: MethodChannel.Result
+        beforeEach {
             every { PrinterHelper.IsOpened() }.returns(true)
             every { PrinterHelper.getstatus() }.returns(6)
+            every { HPRTPrinterHelper.IsOpened() }.returns(true)
+            every { HPRTPrinterHelper.getPrinterStatus() }.returns(6)
 
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+            methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
 
-            val result = mockk<MethodChannel.Result>(relaxed = true)
+            result = mockk<MethodChannel.Result>(relaxed = true)
+        }
+
+        it("cpcl success") {
             methodHandler.onMethodCall(
                 MethodCall(
                     "hk.gogovan.label_printer.hanin.cpcl.getStatus", null,
@@ -439,7 +449,105 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             )
             verify { result.success(6) }
         }
+
+        it("tspl success") {
+            methodHandler.onMethodCall(
+                MethodCall(
+                    "hk.gogovan.label_printer.hanin.tspl.getStatus", null,
+                ), result
+            )
+            verify { result.success(6) }
+        }
     }
+
+    data class ImageCaseEntry(
+        val methodName: String,
+        val args: Map<String, Any>,
+        val sdkCall: (Bitmap) -> Int
+    )
+
+    val imageMethodCall = listOf(
+        ImageCaseEntry(
+            "hk.gogovan.label_printer.hanin.cpcl.addImage",
+            mapOf(
+                "imagePath" to "/sdcard/DCIM/1",
+                "x" to 100,
+                "y" to 200
+            )
+        ) { image -> PrinterHelper.printBitmapCPCL(image, 100, 200, 0, 0, 0) },
+        ImageCaseEntry(
+            "hk.gogovan.label_printer.hanin.tspl.addImage",
+            mapOf(
+                "imagePath" to "/sdcard/DCIM/1",
+                "x" to 100,
+                "y" to 200
+            )
+        ) { image -> HPRTPrinterHelper.printImage("100", "200", image, true, false, 0) },
+    )
+
+    describe("addImage") {
+        beforeEach {
+            every { PrinterHelper.IsOpened() }.returns(true)
+            every { HPRTPrinterHelper.IsOpened() }.returns(true)
+            every {
+                PrinterHelper.printBitmapCPCL(any(), any(), any(), any(), any(), any())
+            }.returns(1)
+            every {
+                HPRTPrinterHelper.printImage(any(), any(), any(), any(), any(), any())
+            }.returns(1)
+
+            mockkStatic(BitmapFactory::class)
+        }
+
+        afterEach {
+            unmockkStatic(BitmapFactory::class)
+        }
+
+        imageMethodCall.forEach { test ->
+            it("success ${test.methodName}") {
+                val image = mockk<Bitmap>()
+                every { BitmapFactory.decodeFile("/sdcard/DCIM/1") }.returns(image)
+                every { test.sdkCall(image) } returns 1
+
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+                methodHandler.onMethodCall(
+                    MethodCall(test.methodName, test.args), result
+                )
+                verify { result.success(true) }
+                verify { test.sdkCall(image) }
+            }
+
+            it("failure no image ${test.methodName}") {
+                every { BitmapFactory.decodeFile("/sdcard/DCIM/1") }.returns(null)
+
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+                methodHandler.onMethodCall(
+                    MethodCall(test.methodName, test.args), result
+                )
+                verify { result.error("1010", any(), any()) }
+            }
+
+            it("fail image too big ${test.methodName}") {
+                val image = mockk<Bitmap>()
+                every { BitmapFactory.decodeFile("/sdcard/DCIM/1") }.returns(image)
+                every { test.sdkCall(image) } returns -2
+
+                val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+                val result = mockk<MethodChannel.Result>(relaxed = true)
+                methodHandler.onMethodCall(
+                    MethodCall(test.methodName, test.args), result
+                )
+                verify { result.error("1010", any(), any()) }
+                verify { test.sdkCall(image) }
+            }
+        }
+    }
+
 
     describe("setAlignHMA300L") {
         beforeEach {
@@ -522,19 +630,6 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             )
             verify { result.error("1009", any(), any()) }
         }
-
-        it("wrong ratio") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.hanin.cpcl.addBarcode",
-                    mapOf(
-                        "ratio" to 11,
-                    ),
-                ), result
-            )
-            verify { result.error("1009", any(), any()) }
-        }
     }
 
     describe("addQRCode") {
@@ -559,72 +654,6 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             )
             verify { result.error("1009", any(), any()) }
         }
-
-        it("error unit size value") {
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.hanin.cpcl.addQRCode",
-                    mapOf(
-                        "unitSize" to 45,
-                    ),
-                ), result
-            )
-            verify { result.error("1009", any(), any()) }
-        }
     }
 
-    describe("addImage") {
-        beforeEach {
-            every { PrinterHelper.IsOpened() }.returns(true)
-            every {
-                PrinterHelper.printBitmapCPCL(any(), any(), any(), any(), any(), any())
-            }.returns(1)
-
-            mockkStatic(BitmapFactory::class)
-        }
-
-        afterEach {
-            unmockkStatic(BitmapFactory::class)
-        }
-
-        it("success") {
-            val image = mockk<Bitmap>()
-            every { BitmapFactory.decodeFile("/sdcard/DCIM/1") }.returns(image)
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.hanin.cpcl.addImage",
-                    mapOf(
-                        "imagePath" to "/sdcard/DCIM/1",
-                        "x" to 100,
-                        "y" to 200
-                    ),
-                ), result
-            )
-            verify { result.success(true) }
-            verify { PrinterHelper.printBitmapCPCL(image, 100, 200, 0, 0, 0) }
-        }
-
-        it("failure no image") {
-            every { BitmapFactory.decodeFile("/sdcard/DCIM/1") }.returns(null)
-
-            val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
-
-            val result = mockk<MethodChannel.Result>(relaxed = true)
-            methodHandler.onMethodCall(
-                MethodCall(
-                    "hk.gogovan.label_printer.hanin.cpcl.addImage",
-                    mapOf(
-                        "imagePath" to "/sdcard/DCIM/1",
-                        "x" to 100,
-                        "y" to 200
-                    ),
-                ), result
-            )
-        }
-    }
 })

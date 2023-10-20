@@ -273,11 +273,7 @@ class FlutterLabelPrinterMethodHandler(
                             // TODO API for setting language and country
                             HPRTPrinterHelper.LanguageEncode = "gb2312"
 
-                            val rotateN = call.argument<Int>("rotate") ?: 0;
-                            if (rotateN !in listOf(0, 90, 180, 270)) {
-                                throw ClassCastException("Invalid rotate value $rotateN")
-                            }
-                            val rotate = rotateN.toString()
+                            val rotate = (call.argument<Int>("rotate") ?: 0).toString()
                             val font = call.argument<Int>("font").toString()
                             val x = call.argument<Int>("x").toString()
                             val y = call.argument<Int>("y").toString()
@@ -484,7 +480,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.getStatus" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -615,18 +611,13 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
-                            val rotateN = call.argument<Int>("rotate") ?: 0
-                            if (rotateN !in listOf(0, 90, 180, 270)) {
-                                throw ClassCastException("Invalid rotate value $rotateN")
-                            }
-
                             val x = (call.argument<Int>("x") ?: 0).toString()
                             val y = (call.argument<Int>("y") ?: 0).toString()
                             val type = call.argument<String>("type")
                             val height = (call.argument<Int>("height") ?: 0).toString()
                             val showData =
                                 if (call.argument<Boolean>("showData") == true) "1" else "0"
-                            val rotate = rotateN.toString()
+                            val rotate = (call.argument<Int>("rotate") ?: 0).toString()
                             val narrow = (call.argument<Int>("narrowWidth") ?: 1).toString()
                             val wide = (call.argument<Int>("wideWidth") ?: 1).toString()
                             val data = call.argument<String>("data")
@@ -706,9 +697,6 @@ class FlutterLabelPrinterMethodHandler(
                                 "CODABAR" -> PrinterHelper.CODABAR
                                 else -> throw ClassCastException("Invalid type value $type")
                             }
-                            if (!((ratio in 0..4) || (ratio in 20..30))) {
-                                throw ClassCastException("Invalid ratio value $ratio")
-                            }
                             if (showData && (dataFont == null || dataTextSize == null || dataTextOffset == null)) {
                                 throw ClassCastException("showData is requested but required params are not provided.")
                             }
@@ -748,22 +736,13 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
-                            val rotateN = call.argument<Int>("rotate") ?: 0
-                            if (rotateN !in listOf(0, 90, 180, 270)) {
-                                throw ClassCastException("Invalid rotate value $rotateN")
-                            }
-
                             val x = call.argument<Int>("x").toString()
                             val y = call.argument<Int>("y").toString()
                             val eccLevel = call.argument<String>("eccLevel") ?: "L"
                             val unitSize = call.argument<Int>("unitSize").toString()
                             val mode = if ((call.argument<Int>("mode") ?: 0) == 0) "A" else "M"
-                            val rotate = rotateN.toString()
+                            val rotate = (call.argument<Int>("rotate") ?: 0).toString()
                             val data = call.argument<String>("data")
-
-                            if (eccLevel !in listOf("L", "M", "Q", "H")) {
-                                throw ClassCastException("Invalid eccLevel value $eccLevel")
-                            }
 
                             val returnCode = HPRTPrinterHelper.printQRcode(
                                 x,
@@ -805,9 +784,6 @@ class FlutterLabelPrinterMethodHandler(
                                 0 -> PrinterHelper.BARCODE
                                 1 -> PrinterHelper.VBARCODE
                                 else -> throw ClassCastException("Invalid orientation value $orientation")
-                            }
-                            if (unitSize !in 1..32) {
-                                throw ClassCastException("Invalid Unit size value $unitSize")
                             }
 
                             val returnCode = PrinterHelper.PrintQR(
@@ -974,8 +950,8 @@ class FlutterLabelPrinterMethodHandler(
                     } else {
                         try {
                             val imagePath = call.argument<String>("imagePath")
-                            val x = (call.argument<Int>("x") ?: 0).toString()
-                            val y = (call.argument<Int>("y") ?: 0).toString()
+                            val x = call.argument<Int>("x").toString()
+                            val y = call.argument<Int>("y").toString()
                             val negate = call.argument<Boolean>("negate") ?: true
                             val type = call.argument<Int>("type") ?: 0
 
@@ -995,7 +971,7 @@ class FlutterLabelPrinterMethodHandler(
                             if (returnCode <= -1) {
                                 result.error(
                                     "1010",
-                                    "Unable to print the file $imagePath. Code = $returnCode",
+                                    "Unable to print the file $imagePath because the image is too large.",
                                     Throwable().stackTraceToString()
                                 )
                                 return
