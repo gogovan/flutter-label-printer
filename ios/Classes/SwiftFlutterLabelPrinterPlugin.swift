@@ -37,7 +37,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
         if (call.method == "hk.gogovan.label_printer.stopSearchBluetooth") {
             PTDispatcher.share().stopScanBluetooth()
             result(true)
-        } else if (call.method == "hk.gogovan.label_printer.connectHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.connect") {
             if let args = call.arguments as? [String:Any],
                let address = args["address"] as? String {
                 let printer = handler.foundPrinters.filter { p in
@@ -71,10 +71,10 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 result(FlutterError(code: "1000", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
             }
-        } else if (call.method == "hk.gogovan.label_printer.disconnectHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.disconnect") {
             PTDispatcher.share().disconnect()
             result(true)
-        } else if (call.method == "hk.gogovan.label_printer.printTestPageHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.printTestPage") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -83,7 +83,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 PTDispatcher.share().send(cmd.cmdData as Data)
                 result(true)
             }
-        } else if (call.method == "hk.gogovan.label_printer.setPrintAreaSizeHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setPrintAreaSize") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -108,7 +108,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.addTextHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.addText") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -130,7 +130,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.printHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.print") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -158,7 +158,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(true)
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.setPaperTypeHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setPaperType") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -181,7 +181,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.setBoldHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setBold") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -204,7 +204,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.setTextSizeHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setTextSize") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -231,7 +231,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.getStatusHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.getStatus") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -249,7 +249,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 cmd.cpclGetPaperStatus()
                 PTDispatcher.share().send(cmd.cmdData as Data)
             }
-        } else if (call.method == "hk.gogovan.label_printer.prefeedHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.space") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -265,7 +265,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.setPageWidthHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setPageWidth") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -281,7 +281,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.setAlignHMA300L") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setAlign") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -307,7 +307,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.addBarcode") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.addBarcode") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -363,7 +363,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.addQRCode") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.addQRCode") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -398,7 +398,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.addRectangle") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.addRectangle") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -420,7 +420,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.addLine") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.addLine") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
@@ -442,7 +442,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
-        } else if (call.method == "hk.gogovan.label_printer.addImage") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.addImage") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
