@@ -2,7 +2,8 @@
 
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/common_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -160,7 +161,7 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.setPaperTypeHaninCPCL(HMA300LPaperType.blackMark2Inch),
+      await printer.setPaperTypeHaninCPCL(HaninCPCLPaperType.blackMark2Inch),
       true,
     );
   });
@@ -265,15 +266,15 @@ void main() {
     expect(
       await printer.addBarcodeHaninCPCL(
         const HaninCPCLBarcodeParams(
-          type: HMA300LBarcodeType.code39,
-          ratio: HMA300LBarcodeRatio.ratio2,
+          type: HaninCPCLBarcodeType.code39,
+          ratio: HaninCPCLBarcodeRatio.ratio2,
           barWidthUnit: 2,
           height: 40,
           xPosition: 120,
           yPosition: 60,
           data: '74892342348',
-          dataTextParams: HMA300LBarcodeDataTextParams(
-            font: HMA300LFont.font20,
+          dataTextParams: HaninCPCLBarcodeDataTextParams(
+            font: HaninCPCLFont.font20,
             size: 8,
             offset: 18,
           ),
@@ -301,10 +302,10 @@ void main() {
     expect(
       await printer.addQRCodeHaninCPCL(
         const HaninCPCLQRCodeParams(
-          orientation: HMA300LPrintOrientation.horizontal,
+          orientation: HaninCPCLOrientation.horizontal,
           xPosition: 240,
           yPosition: 160,
-          model: HMA300LQRCodeModel.normal,
+          model: HaninCPCLQRCodeModel.normal,
           unitSize: 8,
           data: 'https://example.com',
         ),
@@ -370,11 +371,11 @@ void main() {
 
     expect(
       await printer.addImageHaninCPCL(
-        const HMA300LPrintImageParams(
+        const HaninCPCLPrintImageParams(
           imagePath: '/sdcard/1.jpg',
           xPosition: 80,
           yPosition: 120,
-          mode: HMA300LPrintImageMode.dithering,
+          mode: ImageMode.dithering,
         ),
       ),
       true,

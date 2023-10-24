@@ -5,15 +5,15 @@ import 'package:flutter_label_printer/exception/connection_exception.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/exception/no_current_activity_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_printer.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'hm_a300l_printer_test.mocks.dart';
+import 'hanin_cpcl_printer_test.mocks.dart';
 
 class PrinterPlatformFailureData {
   PrinterPlatformFailureData(
@@ -46,8 +46,8 @@ void main() {
   const HaninCPCLTextParams textParams =
       HaninCPCLTextParams(xPosition: 40, yPosition: 20, text: 'Hello World!');
   const HaninCPCLBarcodeParams barcodeParams = HaninCPCLBarcodeParams(
-    type: HMA300LBarcodeType.code39,
-    ratio: HMA300LBarcodeRatio.ratio23,
+    type: HaninCPCLBarcodeType.code39,
+    ratio: HaninCPCLBarcodeRatio.ratio23,
     barWidthUnit: 3,
     height: 40,
     xPosition: 30,
@@ -55,21 +55,21 @@ void main() {
     data: 'https://example.com',
   );
   const HaninCPCLQRCodeParams qrcodeParams = HaninCPCLQRCodeParams(
-    orientation: HMA300LPrintOrientation.horizontal,
+    orientation: HaninCPCLOrientation.horizontal,
     xPosition: 30,
     yPosition: 10,
-    model: HMA300LQRCodeModel.normal,
+    model: HaninCPCLQRCodeModel.normal,
     unitSize: 6,
     data: 'https://example.com',
   );
-  const HMA300LPrintImageParams imageParams = HMA300LPrintImageParams(
+  const HaninCPCLPrintImageParams imageParams = HaninCPCLPrintImageParams(
     imagePath: '/sdcard/1.jpg',
     xPosition: 40,
     yPosition: 20,
   );
 
   test('connect success, disconnect success', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenAnswer((realInvocation) async => true);
@@ -88,7 +88,7 @@ void main() {
   });
 
   test('connect failure', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenThrow(PlatformException(code: '1006', details: ''));
@@ -101,12 +101,12 @@ void main() {
   });
 
   test('disconnect - not connected', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
     expect(await printer.disconnect(), true);
   });
 
   test('disconnect failure', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenAnswer((realInvocation) async => true);
@@ -122,7 +122,7 @@ void main() {
   });
 
   test('setLogLevel', () async {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenAnswer((realInvocation) async => true);
@@ -136,7 +136,7 @@ void main() {
 
   group('successes', () {
     test('printTestPage', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -150,7 +150,7 @@ void main() {
     });
 
     test('setPrintAreaSizeParams', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -165,7 +165,7 @@ void main() {
     });
 
     test('addTextParams', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -179,7 +179,7 @@ void main() {
     });
 
     test('print', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -193,22 +193,22 @@ void main() {
     });
 
     test('setPaperType', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
           .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setPaperTypeHaninCPCL(HMA300LPaperType.label))
+      when(printerPlatform.setPaperTypeHaninCPCL(HaninCPCLPaperType.label))
           .thenAnswer((realInvocation) async => true);
 
       expect(await printer.connect(), true);
-      expect(await printer.setPaperType(HMA300LPaperType.label), true);
-      verify(printerPlatform.setPaperTypeHaninCPCL(HMA300LPaperType.label))
+      expect(await printer.setPaperType(HaninCPCLPaperType.label), true);
+      verify(printerPlatform.setPaperTypeHaninCPCL(HaninCPCLPaperType.label))
           .called(1);
     });
 
     test('setBold', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -222,7 +222,7 @@ void main() {
     });
 
     test('setTextSize', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -236,7 +236,7 @@ void main() {
     });
 
     test('getStatus', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -245,12 +245,12 @@ void main() {
           .thenAnswer((realInvocation) async => 6);
 
       expect(await printer.connect(), true);
-      expect(await printer.getStatus(), const HMA300LPrinterStatus(6));
+      expect(await printer.getStatus(), const HaninCPCLPrinterStatus(6));
       verify(printerPlatform.getStatusHaninCPCL()).called(1);
     });
 
     test('prefeed', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -264,7 +264,7 @@ void main() {
     });
 
     test('setPageWidth', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -278,7 +278,7 @@ void main() {
     });
 
     test('setAlign', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -292,7 +292,7 @@ void main() {
     });
 
     test('addBarcodeParams', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -306,7 +306,7 @@ void main() {
     });
 
     test('addQRCodeParams', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -320,7 +320,7 @@ void main() {
     });
 
     test('addRectangleParam', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
       const rect = Rect.fromLTRB(10, 20, 30, 40);
 
@@ -335,7 +335,7 @@ void main() {
     });
 
     test('addLineParam', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
       const rect = Rect.fromLTRB(10, 20, 30, 40);
 
@@ -350,7 +350,7 @@ void main() {
     });
 
     test('addImageParams', () async {
-      final printer = HMA300LPrinter(device)
+      final printer = HaninCPCLPrinter(device)
         ..platformInstance = printerPlatform;
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
@@ -365,14 +365,14 @@ void main() {
   });
 
   group('not connected failures', () {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
     final funcs = {
       printer.printTestPage: [],
       printer.print: [],
       printer.getStatus: [],
       printer.setPrintAreaSizeParams: [printAreaSizeParams],
       printer.addTextParams: [textParams],
-      printer.setPaperType: [HMA300LPaperType.label],
+      printer.setPaperType: [HaninCPCLPaperType.label],
       printer.setBold: [5],
       printer.setTextSize: [3, 4],
       printer.prefeed: [24],
@@ -394,7 +394,7 @@ void main() {
   });
 
   group('printer platform failures', () {
-    final printer = HMA300LPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
     final testData = [
       PrinterPlatformFailureData(
         printer.printTestPage,
@@ -424,7 +424,7 @@ void main() {
       PrinterPlatformFailureData(
         printer.setPaperType,
         printerPlatform.setPaperTypeHaninCPCL,
-        [HMA300LPaperType.label],
+        [HaninCPCLPaperType.label],
       ),
       PrinterPlatformFailureData(
         printer.setBold,

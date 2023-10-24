@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer/n31_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 
 /// An implementation of [FlutterLabelPrinterPlatform] that uses method channels.
 class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
@@ -103,7 +103,8 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   @override
   Future<bool> printTestPageHaninTSPL() async {
     final result = await methodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.hanin.tspl.printTestPage');
+      'hk.gogovan.label_printer.hanin.tspl.printTestPage',
+    );
 
     return result ?? false;
   }
@@ -111,14 +112,16 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   @override
   Future<bool> printTestPageHaninCPCL() async {
     final result = await methodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.hanin.cpcl.printTestPage');
+      'hk.gogovan.label_printer.hanin.cpcl.printTestPage',
+    );
 
     return result ?? false;
   }
 
   @override
   Future<bool> setPrintAreaHaninTSPL(
-      HaninTSPLPrintAreaSizeParams params) async {
+    HaninTSPLPrintAreaSizeParams params,
+  ) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize',
       <String, dynamic>{
@@ -198,7 +201,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setPaperTypeHaninCPCL(HMA300LPaperType type) async {
+  Future<bool> setPaperTypeHaninCPCL(HaninCPCLPaperType type) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.setPaperType',
       <String, dynamic>{
@@ -452,7 +455,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addImageHaninCPCL(HMA300LPrintImageParams params) async {
+  Future<bool> addImageHaninCPCL(HaninCPCLPrintImageParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.addImage',
       <String, dynamic>{

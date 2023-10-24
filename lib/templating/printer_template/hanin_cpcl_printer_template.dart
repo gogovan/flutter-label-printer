@@ -1,8 +1,8 @@
 import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_printer.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_barcode.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
@@ -13,9 +13,9 @@ import 'package:flutter_label_printer/templating/command_parameters/print_text_a
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
 /// Interface for Templating for the Hanin (HPRT) HM-A300L Printer.
-class HMA300LPrinterTemplate extends HMA300LPrinter
+class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
     implements TemplatablePrinterInterface {
-  HMA300LPrinterTemplate(super.device);
+  HaninCPCLPrinterTemplate(super.device);
 
   @override
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {
@@ -34,16 +34,16 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
       );
     }
 
-    final HMA300LPaperType paperType;
+    final HaninCPCLPaperType paperType;
     switch (printAreaSize.paperType) {
       case PrintPaperType.continuous:
-        paperType = HMA300LPaperType.continuous;
+        paperType = HaninCPCLPaperType.continuous;
         break;
       case PrintPaperType.label:
-        paperType = HMA300LPaperType.label;
+        paperType = HaninCPCLPaperType.label;
         break;
       default:
-        paperType = HMA300LPaperType.continuous;
+        paperType = HaninCPCLPaperType.continuous;
         break;
     }
 
@@ -78,16 +78,16 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
     }
   }
 
-  HMA300LPrintOrientation getHMA300LPrintOrientation(double angle) {
+  HaninCPCLOrientation getHMA300LPrintOrientation(double angle) {
     final roundedRotation = (angle / 90).round() * 90 % 180;
     switch (roundedRotation) {
       case 0:
-        return HMA300LPrintOrientation.horizontal;
+        return HaninCPCLOrientation.horizontal;
       // ignore: no-magic-number, well-formed angles.
       case 90:
-        return HMA300LPrintOrientation.vertical;
+        return HaninCPCLOrientation.vertical;
       default:
-        return HMA300LPrintOrientation.horizontal;
+        return HaninCPCLOrientation.horizontal;
     }
   }
 
@@ -159,31 +159,31 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
       );
     }
 
-    final HMA300LBarcodeType barcodeType;
+    final HaninCPCLBarcodeType barcodeType;
     switch (barcode.type) {
       case PrintBarcodeType.upca:
-        barcodeType = HMA300LBarcodeType.upca;
+        barcodeType = HaninCPCLBarcodeType.upca;
         break;
       case PrintBarcodeType.upce:
-        barcodeType = HMA300LBarcodeType.upce;
+        barcodeType = HaninCPCLBarcodeType.upce;
         break;
       case PrintBarcodeType.ean13:
-        barcodeType = HMA300LBarcodeType.ean13;
+        barcodeType = HaninCPCLBarcodeType.ean13;
         break;
       case PrintBarcodeType.ean8:
-        barcodeType = HMA300LBarcodeType.ean8;
+        barcodeType = HaninCPCLBarcodeType.ean8;
         break;
       case PrintBarcodeType.code39:
-        barcodeType = HMA300LBarcodeType.code39;
+        barcodeType = HaninCPCLBarcodeType.code39;
         break;
       case PrintBarcodeType.code93:
-        barcodeType = HMA300LBarcodeType.code93;
+        barcodeType = HaninCPCLBarcodeType.code93;
         break;
       case PrintBarcodeType.code128:
-        barcodeType = HMA300LBarcodeType.code128;
+        barcodeType = HaninCPCLBarcodeType.code128;
         break;
       case PrintBarcodeType.codabar:
-        barcodeType = HMA300LBarcodeType.codabar;
+        barcodeType = HaninCPCLBarcodeType.codabar;
         break;
       default:
         throw UnsupportedError(
@@ -194,7 +194,7 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
     final barcodeParams = HaninCPCLBarcodeParams(
       orientation: getHMA300LPrintOrientation(barcode.rotation),
       type: barcodeType,
-      ratio: HMA300LBarcodeRatio.ratio0,
+      ratio: HaninCPCLBarcodeRatio.ratio0,
       barWidthUnit: barcode.barLineWidth.toInt(),
       height: barcode.height.toInt(),
       xPosition: barcode.xPosition.toInt(),
@@ -218,7 +218,7 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
       orientation: getHMA300LPrintOrientation(qrCode.rotation),
       xPosition: qrCode.xPosition.toInt(),
       yPosition: qrCode.yPosition.toInt(),
-      model: HMA300LQRCodeModel.normal,
+      model: HaninCPCLQRCodeModel.normal,
       unitSize: qrCode.unitSize.toInt(),
       data: qrCode.data,
     );
@@ -276,7 +276,7 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
         );
     }
 
-    final imageParams = HMA300LPrintImageParams(
+    final imageParams = HaninCPCLPrintImageParams(
       imagePath: printImage.path,
       xPosition: printImage.xPosition.toInt(),
       yPosition: printImage.yPosition.toInt(),

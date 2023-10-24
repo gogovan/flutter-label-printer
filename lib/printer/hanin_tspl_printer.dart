@@ -1,14 +1,14 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
-import 'package:flutter_label_printer/printer/n31_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
-class N31Printer extends PrinterInterface {
-  N31Printer(super.device);
+class HaninTSPLPrinter extends PrinterInterface {
+  HaninTSPLPrinter(super.device);
 
   @override
   Future<bool> connectImpl(PrinterSearchResult device) {

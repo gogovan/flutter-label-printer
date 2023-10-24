@@ -12,7 +12,7 @@ import 'package:flutter_label_printer/printer/common_classes.dart';
 /// 7: 21 x 27 dot fixed pitch font OCR-B.
 /// 8: 14 x 25 dot fixed pitch font OCR-A.
 /// 9: 只有这个字体能够打印中文。.
-enum N31Font {
+enum HaninTSPLFont {
   fontTriumvirate(0),
   font1(1),
   font2(2),
@@ -24,22 +24,22 @@ enum N31Font {
   font8(8),
   fontChinese(9);
 
-  const N31Font(this.code);
+  const HaninTSPLFont(this.code);
 
   final int code;
 }
 
-enum N31PrinterTextAlign {
+enum HaninTSPLTextAlign {
   left(1),
   center(2),
   right(3);
 
-  const N31PrinterTextAlign(this.code);
+  const HaninTSPLTextAlign(this.code);
 
   final int code;
 }
 
-enum N31BarcodeType {
+enum HaninTSPLBarcodeType {
   code128('128'),
   code128m('128M'),
   ean128('EAN128'),
@@ -50,27 +50,27 @@ enum N31BarcodeType {
   itf14('ITF14'),
   ean13('EAN13');
 
-  const N31BarcodeType(this.code);
+  const HaninTSPLBarcodeType(this.code);
 
   final String code;
 }
 
-enum N31QRCodeECC {
+enum HaninTSPLQRCodeECC {
   low('L'),
   medium('M'),
   quality('Q'),
   high('H');
 
-  const N31QRCodeECC(this.code);
+  const HaninTSPLQRCodeECC(this.code);
 
   final String code;
 }
 
-enum N31QRCodeMode {
+enum HaninTSPLQRCodeMode {
   auto(0),
   manual(1);
 
-  const N31QRCodeMode(this.code);
+  const HaninTSPLQRCodeMode(this.code);
 
   final int code;
 }
@@ -107,8 +107,8 @@ class HaninTSPLTextParams {
     required this.yPos,
     required this.text,
     this.rotate = Rotation90.text,
-    this.font = N31Font.fontChinese,
-    this.alignment = N31PrinterTextAlign.left,
+    this.font = HaninTSPLFont.fontChinese,
+    this.alignment = HaninTSPLTextAlign.left,
     this.charWidth = 1,
     this.charHeight = 1,
   });
@@ -117,8 +117,8 @@ class HaninTSPLTextParams {
   final int yPos;
   final String text;
   final Rotation90 rotate;
-  final N31Font font;
-  final N31PrinterTextAlign alignment;
+  final HaninTSPLFont font;
+  final HaninTSPLTextAlign alignment;
   final int charWidth;
   final int charHeight;
 
@@ -166,7 +166,7 @@ class HaninTSPLBarcodeParams {
 
   final int xPos;
   final int yPos;
-  final N31BarcodeType barcodeType;
+  final HaninTSPLBarcodeType barcodeType;
   final int height;
   final bool showData;
   final Rotation90 rotate;
@@ -205,18 +205,18 @@ class HaninTSPLQRCodeParams {
   const HaninTSPLQRCodeParams({
     required this.xPos,
     required this.yPos,
-    this.eccLevel = N31QRCodeECC.low,
+    this.eccLevel = HaninTSPLQRCodeECC.low,
     required this.unitSize,
-    this.mode = N31QRCodeMode.auto,
+    this.mode = HaninTSPLQRCodeMode.auto,
     this.rotate = Rotation90.text,
     required this.data,
   });
 
   final int xPos;
   final int yPos;
-  final N31QRCodeECC eccLevel;
+  final HaninTSPLQRCodeECC eccLevel;
   final int unitSize;
-  final N31QRCodeMode mode;
+  final HaninTSPLQRCodeMode mode;
   final Rotation90 rotate;
   final String data;
 

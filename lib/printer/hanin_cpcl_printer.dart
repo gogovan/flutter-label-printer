@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
@@ -21,8 +21,8 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 ///
 /// You should call `connect` first to connect the printer.
 /// All commands throw InvalidConnectionStateException if the printer is not connected.
-class HMA300LPrinter extends PrinterInterface {
-  HMA300LPrinter(super.device);
+class HaninCPCLPrinter extends PrinterInterface {
+  HaninCPCLPrinter(super.device);
 
   FlutterLabelPrinterPlatform get platformInstance =>
       FlutterLabelPrinterPlatform.instance;
@@ -138,7 +138,7 @@ class HMA300LPrinter extends PrinterInterface {
   }
 
   /// Command to set paper type currently used on the printer.
-  Future<bool> setPaperType(HMA300LPaperType type) async {
+  Future<bool> setPaperType(HaninCPCLPaperType type) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -197,7 +197,7 @@ class HMA300LPrinter extends PrinterInterface {
 
   /// Get status of the printer. It may be unable to return a status while the printer is printing.
   /// Use when there are issues printing after print commands are sent.
-  Future<HMA300LPrinterStatus> getStatus() async {
+  Future<HaninCPCLPrinterStatus> getStatus() async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -209,7 +209,7 @@ class HMA300LPrinter extends PrinterInterface {
       final code =
           await FlutterLabelPrinterPlatform.instance.getStatusHaninCPCL();
 
-      return HMA300LPrinterStatus(code);
+      return HaninCPCLPrinterStatus(code);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -345,7 +345,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addImageParams(HMA300LPrintImageParams params) {
+  Future<bool> addImageParams(HaninCPCLPrintImageParams params) {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',

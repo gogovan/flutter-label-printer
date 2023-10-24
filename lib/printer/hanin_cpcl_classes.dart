@@ -18,7 +18,7 @@ import 'package:flutter_label_printer/printer/common_classes.dart';
 /// 24:24x24或者12x24，视中英文而定.
 /// 28:< chinese:28x28  english: 14x28.
 /// 55:16x16或者8x16，视中英文而定.
-enum HMA300LFont {
+enum HaninCPCLFont {
   font0(0),
   font1(1),
   font2(2),
@@ -32,19 +32,19 @@ enum HMA300LFont {
   font28(28),
   font55(55);
 
-  const HMA300LFont(this.code);
+  const HaninCPCLFont(this.code);
 
   final int code;
 }
 
-enum HMA300LPaperType {
+enum HaninCPCLPaperType {
   continuous(0),
   label(2),
   blackMark2Inch(4),
   blackMark3Inch(5),
   blackMark4Inch(6);
 
-  const HMA300LPaperType(this.code);
+  const HaninCPCLPaperType(this.code);
 
   final int code;
 }
@@ -59,16 +59,16 @@ enum HMA300LPrinterTextAlign {
   final int code;
 }
 
-enum HMA300LPrintOrientation {
+enum HaninCPCLOrientation {
   horizontal(0),
   vertical(1);
 
-  const HMA300LPrintOrientation(this.code);
+  const HaninCPCLOrientation(this.code);
 
   final int code;
 }
 
-enum HMA300LBarcodeType {
+enum HaninCPCLBarcodeType {
   upca(0),
   upce(1),
   ean13(2),
@@ -78,12 +78,12 @@ enum HMA300LBarcodeType {
   code128(6),
   codabar(7);
 
-  const HMA300LBarcodeType(this.code);
+  const HaninCPCLBarcodeType(this.code);
 
   final int code;
 }
 
-enum HMA300LBarcodeRatio {
+enum HaninCPCLBarcodeRatio {
   ratio0(0),
   ratio1(1),
   ratio2(2),
@@ -101,16 +101,16 @@ enum HMA300LBarcodeRatio {
   ratio29(29),
   ratio30(30);
 
-  const HMA300LBarcodeRatio(this.code);
+  const HaninCPCLBarcodeRatio(this.code);
 
   final int code;
 }
 
-enum HMA300LQRCodeModel {
+enum HaninCPCLQRCodeModel {
   normal(1),
   extraSymbols(2);
 
-  const HMA300LQRCodeModel(this.code);
+  const HaninCPCLQRCodeModel(this.code);
 
   final int code;
 }
@@ -148,14 +148,14 @@ class HaninCPCLPrintAreaSizeParams {
 class HaninCPCLTextParams {
   const HaninCPCLTextParams({
     this.rotate = Rotation90.text,
-    this.font = HMA300LFont.font0,
+    this.font = HaninCPCLFont.font0,
     required this.xPosition,
     required this.yPosition,
     required this.text,
   });
 
   final Rotation90 rotate;
-  final HMA300LFont font;
+  final HaninCPCLFont font;
   final int xPosition;
   final int yPosition;
   final String text;
@@ -187,7 +187,7 @@ class HaninCPCLTextParams {
 @immutable
 class HaninCPCLBarcodeParams {
   const HaninCPCLBarcodeParams({
-    this.orientation = HMA300LPrintOrientation.horizontal,
+    this.orientation = HaninCPCLOrientation.horizontal,
     required this.type,
     required this.ratio,
     required this.barWidthUnit,
@@ -198,15 +198,15 @@ class HaninCPCLBarcodeParams {
     this.dataTextParams,
   });
 
-  final HMA300LPrintOrientation orientation;
-  final HMA300LBarcodeType type;
+  final HaninCPCLOrientation orientation;
+  final HaninCPCLBarcodeType type;
   final int barWidthUnit;
-  final HMA300LBarcodeRatio ratio;
+  final HaninCPCLBarcodeRatio ratio;
   final int height;
   final int xPosition;
   final int yPosition;
   final String data;
-  final HMA300LBarcodeDataTextParams? dataTextParams;
+  final HaninCPCLBarcodeDataTextParams? dataTextParams;
 
   @override
   String toString() =>
@@ -241,14 +241,14 @@ class HaninCPCLBarcodeParams {
 }
 
 @immutable
-class HMA300LBarcodeDataTextParams {
-  const HMA300LBarcodeDataTextParams({
+class HaninCPCLBarcodeDataTextParams {
+  const HaninCPCLBarcodeDataTextParams({
     required this.font,
     required this.size,
     required this.offset,
   });
 
-  final HMA300LFont font;
+  final HaninCPCLFont font;
   final int size;
   final int offset;
 
@@ -259,7 +259,7 @@ class HMA300LBarcodeDataTextParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HMA300LBarcodeDataTextParams &&
+      other is HaninCPCLBarcodeDataTextParams &&
           runtimeType == other.runtimeType &&
           font == other.font &&
           size == other.size &&
@@ -280,10 +280,10 @@ class HaninCPCLQRCodeParams {
     required this.data,
   });
 
-  final HMA300LPrintOrientation orientation;
+  final HaninCPCLOrientation orientation;
   final int xPosition;
   final int yPosition;
-  final HMA300LQRCodeModel model;
+  final HaninCPCLQRCodeModel model;
   final int unitSize;
   final String data;
 
@@ -314,8 +314,8 @@ class HaninCPCLQRCodeParams {
 }
 
 @immutable
-class HMA300LPrintImageParams {
-  const HMA300LPrintImageParams({
+class HaninCPCLPrintImageParams {
+  const HaninCPCLPrintImageParams({
     required this.imagePath,
     required this.xPosition,
     required this.yPosition,
@@ -336,8 +336,8 @@ class HMA300LPrintImageParams {
 
 /// Printer status.
 @immutable
-class HMA300LPrinterStatus {
-  const HMA300LPrinterStatus(this.code);
+class HaninCPCLPrinterStatus {
+  const HaninCPCLPrinterStatus(this.code);
 
   final int code;
 
@@ -360,7 +360,7 @@ class HMA300LPrinterStatus {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HMA300LPrinterStatus &&
+      other is HaninCPCLPrinterStatus &&
           runtimeType == other.runtimeType &&
           code == other.code;
 

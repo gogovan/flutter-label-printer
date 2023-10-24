@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer/n31_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
@@ -108,7 +108,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> setPaperTypeHaninCPCL(HMA300LPaperType type) {
+  Future<bool> setPaperTypeHaninCPCL(HaninCPCLPaperType type) {
     throw UnimplementedError(
       'setPaperTypeHaninCPCL() has not been implemented.',
     );
@@ -216,7 +216,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> addImageHaninCPCL(HMA300LPrintImageParams params) {
+  Future<bool> addImageHaninCPCL(HaninCPCLPrintImageParams params) {
     throw UnimplementedError(
       'addImage() has not been implemented.',
     );
