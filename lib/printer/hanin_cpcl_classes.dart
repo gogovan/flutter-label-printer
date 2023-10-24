@@ -49,12 +49,12 @@ enum HaninCPCLPaperType {
   final int code;
 }
 
-enum HMA300LPrinterTextAlign {
+enum HaninCPCLTextAlign {
   left(0),
   center(1),
   right(2);
 
-  const HMA300LPrinterTextAlign(this.code);
+  const HaninCPCLTextAlign(this.code);
 
   final int code;
 }

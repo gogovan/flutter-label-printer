@@ -156,7 +156,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> setAlignHaninCPCL(int align) {
+  Future<bool> setAlignHaninCPCL(HaninCPCLTextAlign align) {
     throw UnimplementedError(
       'setAlignHaninCPCL() has not been implemented.',
     );

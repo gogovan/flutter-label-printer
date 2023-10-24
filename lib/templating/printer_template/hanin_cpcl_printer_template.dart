@@ -112,19 +112,19 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
       );
       boldResult = await setBold(style.bold?.toInt() ?? 0);
 
-      HMA300LPrinterTextAlign hmA300lAlign;
+      HaninCPCLTextAlign hmA300lAlign;
       switch (style.align) {
         case PrintTextAlign.left:
-          hmA300lAlign = HMA300LPrinterTextAlign.left;
+          hmA300lAlign = HaninCPCLTextAlign.left;
           break;
         case PrintTextAlign.center:
-          hmA300lAlign = HMA300LPrinterTextAlign.center;
+          hmA300lAlign = HaninCPCLTextAlign.center;
           break;
         case PrintTextAlign.right:
-          hmA300lAlign = HMA300LPrinterTextAlign.right;
+          hmA300lAlign = HaninCPCLTextAlign.right;
           break;
         default:
-          hmA300lAlign = HMA300LPrinterTextAlign.left;
+          hmA300lAlign = HaninCPCLTextAlign.left;
       }
       alignResult = await setAlign(hmA300lAlign);
     } else {
@@ -144,7 +144,7 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
     if (style != null) {
       sizeResult = sizeResult && await setTextSize(1, 1);
       boldResult = boldResult && await setBold(0);
-      alignResult = alignResult && await setAlign(HMA300LPrinterTextAlign.left);
+      alignResult = alignResult && await setAlign(HaninCPCLTextAlign.left);
     }
 
     return sizeResult && boldResult && alignResult && textResult;

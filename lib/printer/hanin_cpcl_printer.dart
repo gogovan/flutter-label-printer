@@ -254,7 +254,7 @@ class HaninCPCLPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> setAlign(HMA300LPrinterTextAlign align) async {
+  Future<bool> setAlign(HaninCPCLTextAlign align) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -263,7 +263,7 @@ class HaninCPCLPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setAlignHaninCPCL(align.code);
+      return FlutterLabelPrinterPlatform.instance.setAlignHaninCPCL(align);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

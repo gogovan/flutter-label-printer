@@ -22,26 +22,26 @@ void main() {
     mockEventChannel,
   );
 
-  test('searchHMA300L', () async {
+  test('searchBluetooth', () async {
     when(mockEventChannel.receiveBroadcastStream())
         .thenAnswer((realInvocation) => Stream.value(['AB:CD:EF:12:13:14']));
 
     expect((await printer.searchBluetooth().first).first, 'AB:CD:EF:12:13:14');
   });
 
-  test('stopSearchHMA300L', () async {
+  test('stopSearchBluetooth', () async {
     when(
       mockMethodChannel
-          .invokeMethod<bool>('hk.gogovan.label_printer.stopSearchHMA300L'),
+          .invokeMethod<bool>('hk.gogovan.label_printer.stopSearchBluetooth'),
     ).thenAnswer((realInvocation) async => true);
 
     expect(await printer.stopSearchBluetooth(), true);
   });
 
-  test('connectHMA300L', () async {
+  test('hanin.cpcl.connect', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.connectHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.connect',
         <String, dynamic>{
           'address': 'AB:CD:EF:12:13:14',
         },
@@ -51,24 +51,24 @@ void main() {
     expect(await printer.connectHaninCPCL('AB:CD:EF:12:13:14'), true);
   });
 
-  test('disconnectHMA300L', () async {
+  test('hanin.cpcl.disconnect', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.disconnectHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.disconnect',
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.disconnectHaninTSPL(), true);
+    expect(await printer.disconnectHaninCPCL(), true);
   });
 
-  test('printTestPageHMA300L', () async {
+  test('hanin.cpcl.printTestPage', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.printTestPageHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.printTestPage',
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.printTestPageHaninTSPL(), true);
+    expect(await printer.printTestPageHaninCPCL(), true);
   });
 
   test('setLogLevel', () async {
@@ -92,10 +92,10 @@ void main() {
     ).called(1);
   });
 
-  test('setPrintAreaSizeHMA300L', () async {
+  test('hanin.cpcl.setPrintAreaSize', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.setPrintAreaSizeHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.setPrintAreaSize',
         <String, dynamic>{
           'offset': 0,
           'height': 24,
@@ -114,10 +114,10 @@ void main() {
     );
   });
 
-  test('addTextHMA300L', () async {
+  test('hanin.cpcl.addText', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.addTextHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.addText',
         <String, dynamic>{
           'rotate': 0,
           'font': 0,
@@ -140,20 +140,20 @@ void main() {
     );
   });
 
-  test('printHMA300L', () async {
+  test('hanin.cpcl.print', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.printHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.print',
       ),
     ).thenAnswer((realInvocation) async => true);
 
     expect(await printer.printHaninCPCL(), true);
   });
 
-  test('setPaperTypeHMA300L', () async {
+  test('hanin.cpcl.setPaperType', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.setPaperTypeHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.setPaperType',
         <String, dynamic>{
           'paperType': 4,
         },
@@ -166,10 +166,10 @@ void main() {
     );
   });
 
-  test('setBoldHMA300L', () async {
+  test('hanin.cpcl.setBold', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.setBoldHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.setBold',
         <String, dynamic>{
           'size': 4,
         },
@@ -179,10 +179,10 @@ void main() {
     expect(await printer.setBoldHaninCPCL(4), true);
   });
 
-  test('setTextSizeHMA300L', () async {
+  test('hanin.cpcl.setTextSize', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.setTextSizeHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.setTextSize',
         <String, dynamic>{
           'width': 16,
           'height': 24,
@@ -193,20 +193,20 @@ void main() {
     expect(await printer.setHaninCPCLTextSize(16, 24), true);
   });
 
-  test('getStatusHMA300L', () async {
+  test('hanin.cpcl.getStatus', () async {
     when(
       mockMethodChannel.invokeMethod<int>(
-        'hk.gogovan.label_printer.getStatusHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.getStatus',
       ),
     ).thenAnswer((realInvocation) async => 16);
 
     expect(await printer.getStatusHaninCPCL(), 16);
   });
 
-  test('prefeedHMA300L', () async {
+  test('hanin.cpcl.space', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.prefeedHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.space',
         <String, dynamic>{
           'dot': 18,
         },
@@ -216,10 +216,10 @@ void main() {
     expect(await printer.addSpaceHaninCPCL(18), true);
   });
 
-  test('setPageWidthHMA300L', () async {
+  test('hanin.cpcl.setPageWidth', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.setPageWidthHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.setPageWidth',
         <String, dynamic>{
           'width': 400,
         },
@@ -229,23 +229,23 @@ void main() {
     expect(await printer.setPageWidthHaninCPCL(400), true);
   });
 
-  test('setAlignHMA300L', () async {
+  test('hanin.cpcl.setAlign', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.setAlignHMA300L',
+        'hk.gogovan.label_printer.hanin.cpcl.setAlign',
         <String, dynamic>{
-          'align': 2,
+          'align': 1,
         },
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.setAlignHaninCPCL(2), true);
+    expect(await printer.setAlignHaninCPCL(HaninCPCLTextAlign.center), true);
   });
 
-  test('addBarcode', () async {
+  test('hanin.cpcl.addBarcode', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.addBarcode',
+        'hk.gogovan.label_printer.hanin.cpcl.addBarcode',
         <String, dynamic>{
           'orientation': 0,
           'type': 4,
@@ -284,10 +284,10 @@ void main() {
     );
   });
 
-  test('addQRCode', () async {
+  test('hanin.cpcl.addQRCode', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.addQRCode',
+        'hk.gogovan.label_printer.hanin.cpcl.addQRCode',
         <String, dynamic>{
           'orientation': 0,
           'x': 240,
@@ -314,10 +314,10 @@ void main() {
     );
   });
 
-  test('addRectangle', () async {
+  test('hanin.cpcl.addRectangle', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.addRectangle',
+        'hk.gogovan.label_printer.hanin.cpcl.addRectangle',
         <String, dynamic>{
           'x0': 10,
           'y0': 20,
@@ -334,10 +334,10 @@ void main() {
     );
   });
 
-  test('addLine', () async {
+  test('hanin.cpcl.addLine', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.addLine',
+        'hk.gogovan.label_printer.hanin.cpcl.addLine',
         <String, dynamic>{
           'x0': 10,
           'y0': 20,
@@ -354,10 +354,10 @@ void main() {
     );
   });
 
-  test('addImage', () async {
+  test('hanin.cpcl.addImage', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
-        'hk.gogovan.label_printer.addImage',
+        'hk.gogovan.label_printer.hanin.cpcl.addImage',
         <String, dynamic>{
           'imagePath': '/sdcard/1.jpg',
           'x': 80,

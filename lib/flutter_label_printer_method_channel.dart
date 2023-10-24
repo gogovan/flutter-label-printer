@@ -171,7 +171,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   @override
   Future<bool> addTextHaninCPCL(HaninCPCLTextParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.cpcl.addText',
+      'hk.gogovan.label_printer.hanin.cpcl.addText',
       <String, dynamic>{
         'rotate': params.rotate.rot,
         'font': params.font.code,
@@ -289,11 +289,11 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setAlignHaninCPCL(int align) async {
+  Future<bool> setAlignHaninCPCL(HaninCPCLTextAlign align) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.setAlign',
       <String, dynamic>{
-        'align': align,
+        'align': align.code,
       },
     );
 

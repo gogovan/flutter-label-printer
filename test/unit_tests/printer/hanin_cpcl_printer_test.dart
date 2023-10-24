@@ -69,7 +69,8 @@ void main() {
   );
 
   test('connect success, disconnect success', () async {
-    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)
+      ..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenAnswer((realInvocation) async => true);
@@ -88,7 +89,8 @@ void main() {
   });
 
   test('connect failure', () async {
-    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)
+      ..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenThrow(PlatformException(code: '1006', details: ''));
@@ -101,12 +103,14 @@ void main() {
   });
 
   test('disconnect - not connected', () async {
-    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)
+      ..platformInstance = printerPlatform;
     expect(await printer.disconnect(), true);
   });
 
   test('disconnect failure', () async {
-    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)
+      ..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenAnswer((realInvocation) async => true);
@@ -122,7 +126,8 @@ void main() {
   });
 
   test('setLogLevel', () async {
-    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)
+      ..platformInstance = printerPlatform;
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenAnswer((realInvocation) async => true);
@@ -283,12 +288,13 @@ void main() {
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
           .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setAlignHaninCPCL(1))
+      when(printerPlatform.setAlignHaninCPCL(HaninCPCLTextAlign.center))
           .thenAnswer((realInvocation) async => true);
 
       expect(await printer.connect(), true);
-      expect(await printer.setAlign(HMA300LPrinterTextAlign.center), true);
-      verify(printerPlatform.setAlignHaninCPCL(1)).called(1);
+      expect(await printer.setAlign(HaninCPCLTextAlign.center), true);
+      verify(printerPlatform.setAlignHaninCPCL(HaninCPCLTextAlign.center))
+          .called(1);
     });
 
     test('addBarcodeParams', () async {
@@ -365,7 +371,8 @@ void main() {
   });
 
   group('not connected failures', () {
-    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)
+      ..platformInstance = printerPlatform;
     final funcs = {
       printer.printTestPage: [],
       printer.print: [],
@@ -377,7 +384,7 @@ void main() {
       printer.setTextSize: [3, 4],
       printer.prefeed: [24],
       printer.setPageWidth: [8],
-      printer.setAlign: [HMA300LPrinterTextAlign.center],
+      printer.setAlign: [HaninCPCLTextAlign.center],
       printer.addBarcodeParams: [barcodeParams],
       printer.addQRCodeParams: [qrcodeParams],
       printer.addRectangleParam: [const Rect.fromLTRB(10, 20, 30, 40), 2],
@@ -386,15 +393,18 @@ void main() {
     };
 
     for (final func in funcs.entries) {
-      expect(
-        () async => Function.apply(func.key, func.value),
-        throwsA(isA<InvalidConnectionStateException>()),
-      );
+      test('invalid connection for ${func.key}', () {
+        expect(
+          () async => Function.apply(func.key, func.value),
+          throwsA(isA<InvalidConnectionStateException>()),
+        );
+      });
     }
   });
 
   group('printer platform failures', () {
-    final printer = HaninCPCLPrinter(device)..platformInstance = printerPlatform;
+    final printer = HaninCPCLPrinter(device)
+      ..platformInstance = printerPlatform;
     final testData = [
       PrinterPlatformFailureData(
         printer.printTestPage,
@@ -444,8 +454,7 @@ void main() {
       PrinterPlatformFailureData(
         printer.setAlign,
         printerPlatform.setAlignHaninCPCL,
-        [HMA300LPrinterTextAlign.center],
-        [1],
+        [HaninCPCLTextAlign.center],
       ),
       PrinterPlatformFailureData(
         printer.addBarcodeParams,
