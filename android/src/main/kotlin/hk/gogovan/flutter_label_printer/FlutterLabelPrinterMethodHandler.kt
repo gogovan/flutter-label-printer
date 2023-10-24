@@ -747,6 +747,10 @@ class FlutterLabelPrinterMethodHandler(
                             val rotate = (call.argument<Int>("rotate") ?: 0).toString()
                             val data = call.argument<String>("data")
 
+                            if (eccLevel !in listOf("L", "M", "Q", "H")) {
+                                throw ClassCastException("Invalid eccLevel $eccLevel")
+                            }
+
                             val returnCode = HPRTPrinterHelper.printQRcode(
                                 x,
                                 y,

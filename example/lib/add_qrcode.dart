@@ -21,7 +21,7 @@ class _AddQRCodeState extends State<AddQRCode> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await (MyApp.printer as HMA300LPrinter).addQRCodeParams(HMA300LQRCodeParams(
+      await (MyApp.printer as HMA300LPrinter).addQRCodeParams(HaninCPCLQRCodeParams(
           orientation: _orientation,
         xPosition: int.parse(_xController.text),
         yPosition: int.parse(_yController.text),

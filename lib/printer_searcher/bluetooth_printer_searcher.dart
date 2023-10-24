@@ -12,7 +12,7 @@ class BluetoothPrinterSearcher extends PrinterSearcherInterface {
   @override
   Stream<List<PrinterSearchResult>> search() {
     try {
-      return FlutterLabelPrinterPlatform.instance.searchHMA300L().map(
+      return FlutterLabelPrinterPlatform.instance.searchBluetooth().map(
             (event) => event.map((e) {
               final spl = e.split(';');
 

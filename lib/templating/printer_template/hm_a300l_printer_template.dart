@@ -49,7 +49,7 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
 
     final typeResult = await setPaperType(paperType);
 
-    final HMA300LPrintAreaSizeParams params = HMA300LPrintAreaSizeParams(
+    final HaninCPCLPrintAreaSizeParams params = HaninCPCLPrintAreaSizeParams(
       offset: printAreaSize.originX?.toInt() ?? 0,
       height: height.toInt(),
     );
@@ -133,7 +133,7 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
       alignResult = true;
     }
 
-    final textParams = HMA300LTextParams(
+    final textParams = HaninCPCLTextParams(
       xPosition: printText.xPosition.toInt(),
       yPosition: printText.yPosition.toInt(),
       text: printText.text,
@@ -191,7 +191,7 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
         );
     }
 
-    final barcodeParams = HMA300LBarcodeParams(
+    final barcodeParams = HaninCPCLBarcodeParams(
       orientation: getHMA300LPrintOrientation(barcode.rotation),
       type: barcodeType,
       ratio: HMA300LBarcodeRatio.ratio0,
@@ -214,7 +214,7 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
       );
     }
 
-    final qrCodeParams = HMA300LQRCodeParams(
+    final qrCodeParams = HaninCPCLQRCodeParams(
       orientation: getHMA300LPrintOrientation(qrCode.rotation),
       xPosition: qrCode.xPosition.toInt(),
       yPosition: qrCode.yPosition.toInt(),
@@ -259,16 +259,16 @@ class HMA300LPrinterTemplate extends HMA300LPrinter
       );
     }
 
-    final HMA300LPrintImageMode printImageMode;
+    final ImageMode printImageMode;
     switch (printImage.monochromizationAlgorithm) {
       case MonochromizationAlgorithm.binary:
-        printImageMode = HMA300LPrintImageMode.binary;
+        printImageMode = ImageMode.binary;
         break;
       case MonochromizationAlgorithm.dithering:
-        printImageMode = HMA300LPrintImageMode.dithering;
+        printImageMode = ImageMode.dithering;
         break;
       case MonochromizationAlgorithm.cluster:
-        printImageMode = HMA300LPrintImageMode.cluster;
+        printImageMode = ImageMode.cluster;
         break;
       default:
         throw UnsupportedError(

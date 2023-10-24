@@ -14,7 +14,7 @@ class N31Printer extends PrinterInterface {
   Future<bool> connectImpl(PrinterSearchResult device) {
     try {
       return FlutterLabelPrinterPlatform.instance
-          .connectN31((device as BluetoothResult).address);
+          .connectHaninTSPL((device as BluetoothResult).address);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -26,7 +26,7 @@ class N31Printer extends PrinterInterface {
   @override
   Future<bool> disconnectImpl() {
     try {
-      return FlutterLabelPrinterPlatform.instance.disconnectN31();
+      return FlutterLabelPrinterPlatform.instance.disconnectHaninCPCL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -45,7 +45,7 @@ class N31Printer extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.printTestPageN31();
+      return FlutterLabelPrinterPlatform.instance.printTestPageHaninCPCL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -55,7 +55,7 @@ class N31Printer extends PrinterInterface {
   }
 
   Future<bool> setPrintAreaSizeParams(
-      N31PrintAreaSizeParams printAreaSizeParams,
+      HaninTSPLPrintAreaSizeParams printAreaSizeParams,
       ) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
@@ -66,25 +66,7 @@ class N31Printer extends PrinterInterface {
 
     try {
       return FlutterLabelPrinterPlatform.instance
-          .setPrintAreaSizeN31(printAreaSizeParams);
-    } on PlatformException catch (ex, st) {
-      Error.throwWithStackTrace(
-        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
-        st,
-      );
-    }
-  }
-
-  Future<bool> addTextParams(N31TextParams params) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
-
-    try {
-      return FlutterLabelPrinterPlatform.instance.addTextN31(params);
+          .setPrintAreaHaninTSPL(printAreaSizeParams);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -102,7 +84,7 @@ class N31Printer extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.printN31();
+      return FlutterLabelPrinterPlatform.instance.printHaninTSPL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -110,4 +92,24 @@ class N31Printer extends PrinterInterface {
       );
     }
   }
+
+  Future<bool> addTextParams(HaninTSPLTextParams params) async {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
+    }
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addTextHaninTSPL(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+
 }

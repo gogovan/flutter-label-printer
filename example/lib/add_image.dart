@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_label_printer/printer/common_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
 import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
 import 'package:flutter_label_printer_example/main.dart';
@@ -17,7 +18,7 @@ class _AddImageState extends State<AddImage> {
   String? imagePath;
   final xController = TextEditingController();
   final yController = TextEditingController();
-  var mode = HMA300LPrintImageMode.dithering;
+  var mode = ImageMode.dithering;
   var compress = false;
   var package = false;
 
@@ -99,14 +100,14 @@ class _AddImageState extends State<AddImage> {
                 controller: yController,
               ),
               const Text('Mode'),
-              DropdownButton<HMA300LPrintImageMode>(
+              DropdownButton<ImageMode>(
                 items: const [
                   DropdownMenuItem(
-                      value: HMA300LPrintImageMode.binary, child: Text('Binary')),
+                      value: ImageMode.binary, child: Text('Binary')),
                   DropdownMenuItem(
-                      value: HMA300LPrintImageMode.cluster, child: Text('Cluster')),
+                      value: ImageMode.cluster, child: Text('Cluster')),
                   DropdownMenuItem(
-                      value: HMA300LPrintImageMode.dithering,
+                      value: ImageMode.dithering,
                       child: Text('Dithering')),
                 ],
                 onChanged: (item) {

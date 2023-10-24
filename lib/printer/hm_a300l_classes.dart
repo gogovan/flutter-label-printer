@@ -115,19 +115,9 @@ enum HMA300LQRCodeModel {
   final int code;
 }
 
-enum HMA300LPrintImageMode {
-  binary(0),
-  dithering(1),
-  cluster(2);
-
-  const HMA300LPrintImageMode(this.code);
-
-  final int code;
-}
-
 @immutable
-class HMA300LPrintAreaSizeParams {
-  const HMA300LPrintAreaSizeParams({
+class HaninCPCLPrintAreaSizeParams {
+  const HaninCPCLPrintAreaSizeParams({
     this.offset = 0,
     required this.height,
     this.quantity = 1,
@@ -144,7 +134,7 @@ class HMA300LPrintAreaSizeParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HMA300LPrintAreaSizeParams &&
+      other is HaninCPCLPrintAreaSizeParams &&
           runtimeType == other.runtimeType &&
           offset == other.offset &&
           height == other.height &&
@@ -155,8 +145,8 @@ class HMA300LPrintAreaSizeParams {
 }
 
 @immutable
-class HMA300LTextParams {
-  const HMA300LTextParams({
+class HaninCPCLTextParams {
+  const HaninCPCLTextParams({
     this.rotate = Rotation90.text,
     this.font = HMA300LFont.font0,
     required this.xPosition,
@@ -177,7 +167,7 @@ class HMA300LTextParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HMA300LTextParams &&
+      other is HaninCPCLTextParams &&
           runtimeType == other.runtimeType &&
           rotate == other.rotate &&
           font == other.font &&
@@ -195,8 +185,8 @@ class HMA300LTextParams {
 }
 
 @immutable
-class HMA300LBarcodeParams {
-  const HMA300LBarcodeParams({
+class HaninCPCLBarcodeParams {
+  const HaninCPCLBarcodeParams({
     this.orientation = HMA300LPrintOrientation.horizontal,
     required this.type,
     required this.ratio,
@@ -225,7 +215,7 @@ class HMA300LBarcodeParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HMA300LBarcodeParams &&
+      other is HaninCPCLBarcodeParams &&
           runtimeType == other.runtimeType &&
           orientation == other.orientation &&
           type == other.type &&
@@ -280,8 +270,8 @@ class HMA300LBarcodeDataTextParams {
 }
 
 @immutable
-class HMA300LQRCodeParams {
-  const HMA300LQRCodeParams({
+class HaninCPCLQRCodeParams {
+  const HaninCPCLQRCodeParams({
     required this.orientation,
     required this.xPosition,
     required this.yPosition,
@@ -304,7 +294,7 @@ class HMA300LQRCodeParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HMA300LQRCodeParams &&
+      other is HaninCPCLQRCodeParams &&
           runtimeType == other.runtimeType &&
           orientation == other.orientation &&
           xPosition == other.xPosition &&
@@ -329,7 +319,7 @@ class HMA300LPrintImageParams {
     required this.imagePath,
     required this.xPosition,
     required this.yPosition,
-    this.mode = HMA300LPrintImageMode.binary,
+    this.mode = ImageMode.binary,
     this.compress = true,
     this.package = false,
   });
@@ -339,7 +329,7 @@ class HMA300LPrintImageParams {
   final String imagePath;
   final int xPosition;
   final int yPosition;
-  final HMA300LPrintImageMode mode;
+  final ImageMode mode;
   final bool compress;
   final bool package;
 }

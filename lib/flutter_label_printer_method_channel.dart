@@ -28,7 +28,15 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   final EventChannel scanBluetoothEventChannel;
 
   @override
-  Stream<List<String>> searchHMA300L() =>
+  Future<void> setLogLevel(int level) async {
+    await methodChannel.invokeMethod<void>(
+      'hk.gogovan.label_printer.setLogLevel',
+      <String, dynamic>{'level': level},
+    );
+  }
+
+  @override
+  Stream<List<String>> searchBluetooth() =>
       scanBluetoothEventChannel.receiveBroadcastStream().map(
             (event) =>
                 (event as List<dynamic>).map((e) => e.toString()).toList(),
@@ -43,9 +51,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> connectHMA300L(String address) async {
+  Future<bool> connectHaninCPCL(String address) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.connectHMA300L',
+      'hk.gogovan.label_printer.hanin.cpcl.connect',
       <String, dynamic>{
         'address': address,
       },
@@ -55,9 +63,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> connectN31(String address) async {
+  Future<bool> connectHaninTSPL(String address) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.connectN31',
+      'hk.gogovan.label_printer.hanin.tspl.connect',
       <String, dynamic>{
         'address': address,
       },
@@ -67,50 +75,52 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> disconnectHMA300L() async {
+  Future<bool> disconnectHaninTSPL() async {
     final result = await methodChannel
-        .invokeMethod<bool>('hk.gogovan.label_printer.disconnectHMA300L');
+        .invokeMethod<bool>('hk.gogovan.label_printer.hanin.tspl.disconnect');
 
     return result ?? false;
   }
 
   @override
-  Future<bool> disconnectN31() async {
+  Future<bool> disconnectHaninCPCL() async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.disconnectN31',
+      'hk.gogovan.label_printer.hanin.cpcl.disconnect',
     );
 
     return result ?? false;
   }
 
   @override
-  Future<bool> printTestPageHMA300L() async {
-    final result = await methodChannel
-        .invokeMethod<bool>('hk.gogovan.label_printer.printTestPageHMA300L');
-
-    return result ?? false;
-  }
-
-  @override
-  Future<bool> printTestPageN31() async {
-    final result = await methodChannel
-        .invokeMethod<bool>('hk.gogovan.label_printer.printTestPageN31');
-
-    return result ?? false;
-  }
-
-  @override
-  Future<void> setLogLevel(int level) async {
-    await methodChannel.invokeMethod<void>(
-      'hk.gogovan.label_printer.setLogLevel',
-      <String, dynamic>{'level': level},
-    );
-  }
-
-  @override
-  Future<bool> setPrintAreaSizeN31(N31PrintAreaSizeParams params) async {
+  Future<bool> clearHaninTSPL() async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setPrintAreaSizeN31',
+      'hk.gogovan.label_printer.hanin.tspl.clear',
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> printTestPageHaninTSPL() async {
+    final result = await methodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.printTestPage');
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> printTestPageHaninCPCL() async {
+    final result = await methodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.cpcl.printTestPage');
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> setPrintAreaHaninTSPL(
+      HaninTSPLPrintAreaSizeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize',
       <String, dynamic>{
         'width': params.width,
         'height': params.height,
@@ -121,11 +131,11 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setPrintAreaSizeHMA300L(
-    HMA300LPrintAreaSizeParams params,
+  Future<bool> setPrintAreaHaninCPCL(
+    HaninCPCLPrintAreaSizeParams params,
   ) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setPrintAreaSizeHMA300L',
+      'hk.gogovan.label_printer.hanin.cpcl.setPrintAreaSize',
       <String, dynamic>{
         'offset': params.offset,
         'height': params.height,
@@ -137,9 +147,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addTextN31(N31TextParams params) async {
+  Future<bool> addTextHaninTSPL(HaninTSPLTextParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addTextN31',
+      'hk.gogovan.label_printer.hanin.tspl.addText',
       <String, dynamic>{
         'rotate': params.rotate.rot,
         'font': params.font.code,
@@ -156,9 +166,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addTextHMA300L(HMA300LTextParams params) async {
+  Future<bool> addTextHaninCPCL(HaninCPCLTextParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addTextHMA300L',
+      'hk.gogovan.label_printer.cpcl.addText',
       <String, dynamic>{
         'rotate': params.rotate.rot,
         'font': params.font.code,
@@ -172,25 +182,25 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> printN31() async {
+  Future<bool> printHaninTSPL() async {
     final result = await methodChannel
-        .invokeMethod<bool>('hk.gogovan.label_printer.printN31');
+        .invokeMethod<bool>('hk.gogovan.label_printer.hanin.tspl.print');
 
     return result ?? false;
   }
 
   @override
-  Future<bool> printHMA300L() async {
+  Future<bool> printHaninCPCL() async {
     final result = await methodChannel
-        .invokeMethod<bool>('hk.gogovan.label_printer.printHMA300L');
+        .invokeMethod<bool>('hk.gogovan.label_printer.hanin.cpcl.print');
 
     return result ?? false;
   }
 
   @override
-  Future<bool> setPaperTypeHMA300L(HMA300LPaperType type) async {
+  Future<bool> setPaperTypeHaninCPCL(HMA300LPaperType type) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setPaperTypeHMA300L',
+      'hk.gogovan.label_printer.hanin.cpcl.setPaperType',
       <String, dynamic>{
         'paperType': type.code,
       },
@@ -200,9 +210,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setBoldHMA300L(int size) async {
+  Future<bool> setBoldHaninCPCL(int size) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setBoldHMA300L',
+      'hk.gogovan.label_printer.hanin.cpcl.setBold',
       <String, dynamic>{
         'size': size,
       },
@@ -212,9 +222,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setTextSizeHMA300L(int width, int height) async {
+  Future<bool> setHaninCPCLTextSize(int width, int height) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setTextSizeHMA300L',
+      'hk.gogovan.label_printer.hanin.cpcl.setTextSize',
       <String, dynamic>{
         'width': width,
         'height': height,
@@ -224,18 +234,37 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
     return result ?? false;
   }
 
-  @override
-  Future<int> getStatusHMA300L() async {
+  Future<int> getStatusHaninTSPL() async {
     final result = await methodChannel
-        .invokeMethod<int>('hk.gogovan.label_printer.getStatusHMA300L');
+        .invokeMethod<int>('hk.gogovan.label_printer.hanin.tspl.getStatus');
 
     return result ?? -1;
   }
 
   @override
-  Future<bool> prefeedHMA300L(int dot) async {
+  Future<int> getStatusHaninCPCL() async {
+    final result = await methodChannel
+        .invokeMethod<int>('hk.gogovan.label_printer.hanin.cpcl.getStatus');
+
+    return result ?? -1;
+  }
+
+  @override
+  Future<bool> addSpaceHaninTSPL(int dot) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.prefeedHMA300L',
+      'hk.gogovan.label_printer.hanin.tspl.space',
+      <String, dynamic>{
+        'mm': dot,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addSpaceHaninCPCL(int dot) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.cpcl.space',
       <String, dynamic>{
         'dot': dot,
       },
@@ -245,9 +274,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setPageWidthHMA300L(int width) async {
+  Future<bool> setPageWidthHaninCPCL(int width) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setPageWidthHMA300L',
+      'hk.gogovan.label_printer.hanin.cpcl.setPageWidth',
       <String, dynamic>{
         'width': width,
       },
@@ -257,9 +286,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> setAlignHMA300L(int align) async {
+  Future<bool> setAlignHaninCPCL(int align) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.setAlignHMA300L',
+      'hk.gogovan.label_printer.hanin.cpcl.setAlign',
       <String, dynamic>{
         'align': align,
       },
@@ -269,9 +298,27 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addBarcode(HMA300LBarcodeParams params) async {
+  Future<bool> addBarcodeHaninTSPL(HaninTSPLBarcodeParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addBarcode',
+      'hk.gogovan.label_printer.hanin.tspl.addBarcode',
+      <String, dynamic>{
+        'x': params.xPos,
+        'y': params.yPos,
+        'type': params.barcodeType.code,
+        'height': params.height,
+        'showData': params.showData,
+        'rotate': params.rotate.rot,
+        'data': params.data,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addBarcodeHaninCPCL(HaninCPCLBarcodeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.cpcl.addBarcode',
       <String, dynamic>{
         'orientation': params.orientation.code,
         'type': params.type.code,
@@ -292,9 +339,27 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addQRCode(HMA300LQRCodeParams params) async {
+  Future<bool> addQRCodeHaninTSPL(HaninTSPLQRCodeParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addQRCode',
+      'hk.gogovan.label_printer.hanin.tspl.addQRCode',
+      <String, dynamic>{
+        'x': params.xPos,
+        'y': params.yPos,
+        'eccLevel': params.eccLevel.code,
+        'unitSize': params.unitSize,
+        'mode': params.mode.code,
+        'rotate': params.rotate.rot,
+        'data': params.data,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addQRCodeHaninCPCL(HaninCPCLQRCodeParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.cpcl.addQRCode',
       <String, dynamic>{
         'orientation': params.orientation.code,
         'x': params.xPosition,
@@ -309,9 +374,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addRectangle(Rect rect, int strokeWidth) async {
+  Future<bool> addRectangleHaninTSPL(Rect rect, int strokeWidth) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addRectangle',
+      'hk.gogovan.label_printer.hanin.tspl.addRectangle',
       <String, dynamic>{
         'x0': rect.left.round(),
         'y0': rect.top.round(),
@@ -325,9 +390,9 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addLine(Rect rect, int strokeWidth) async {
+  Future<bool> addRectangleHaninCPCL(Rect rect, int strokeWidth) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addLine',
+      'hk.gogovan.label_printer.hanin.cpcl.addRectangle',
       <String, dynamic>{
         'x0': rect.left.round(),
         'y0': rect.top.round(),
@@ -341,9 +406,55 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addImage(HMA300LPrintImageParams params) async {
+  Future<bool> addLineHaninTSPL(Rect rect) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.addImage',
+      'hk.gogovan.label_printer.hanin.cpcl.addLine',
+      <String, dynamic>{
+        'x0': rect.left.round(),
+        'y0': rect.top.round(),
+        'width': rect.width.round(),
+        'height': rect.height.round(),
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addLineHaninCPCL(Rect rect, int strokeWidth) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.cpcl.addLine',
+      <String, dynamic>{
+        'x0': rect.left.round(),
+        'y0': rect.top.round(),
+        'x1': rect.right.round(),
+        'y1': rect.bottom.round(),
+        'width': strokeWidth,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addImageHaninTSPL(HaninTSPLImageParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.tspl.addImage',
+      <String, dynamic>{
+        'imagePath': params.imagePath,
+        'x': params.xPos,
+        'y': params.yPos,
+        'type': params.imageMode.code,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> addImageHaninCPCL(HMA300LPrintImageParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.cpcl.addImage',
       <String, dynamic>{
         'imagePath': params.imagePath,
         'x': params.xPosition,

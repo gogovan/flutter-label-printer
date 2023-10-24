@@ -32,7 +32,7 @@ class _AddTextState extends State<AddText> {
     try {
       final printer = MyApp.printer;
       if (printer is HMA300LPrinter) {
-        await printer.addTextParams(HMA300LTextParams(
+        await printer.addTextParams(HaninCPCLTextParams(
           rotate: rotation,
           font: hma300font,
           xPosition: int.parse(xController.text),
@@ -41,7 +41,7 @@ class _AddTextState extends State<AddText> {
         ));
       } else if (printer is N31Printer) {
         await printer.addTextParams(
-          N31TextParams(
+          HaninTSPLTextParams(
             xPos: int.parse(xController.text),
             yPos: int.parse(yController.text),
             text: textController.text,

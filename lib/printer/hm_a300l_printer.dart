@@ -35,7 +35,7 @@ class HMA300LPrinter extends PrinterInterface {
   Future<bool> connectImpl(PrinterSearchResult device) {
     try {
       return FlutterLabelPrinterPlatform.instance
-          .connectHMA300L((device as BluetoothResult).address);
+          .connectHaninCPCL((device as BluetoothResult).address);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -47,7 +47,7 @@ class HMA300LPrinter extends PrinterInterface {
   @override
   Future<bool> disconnectImpl() {
     try {
-      return FlutterLabelPrinterPlatform.instance.disconnectHMA300L();
+      return FlutterLabelPrinterPlatform.instance.disconnectHaninTSPL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -66,7 +66,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.printTestPageHMA300L();
+      return FlutterLabelPrinterPlatform.instance.printTestPageHaninTSPL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -81,7 +81,7 @@ class HMA300LPrinter extends PrinterInterface {
       FlutterLabelPrinterPlatform.instance.setLogLevel(level);
 
   Future<bool> setPrintAreaSizeParams(
-    HMA300LPrintAreaSizeParams printAreaSizeParams,
+    HaninCPCLPrintAreaSizeParams printAreaSizeParams,
   ) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
@@ -92,7 +92,7 @@ class HMA300LPrinter extends PrinterInterface {
 
     try {
       return FlutterLabelPrinterPlatform.instance
-          .setPrintAreaSizeHMA300L(printAreaSizeParams);
+          .setPrintAreaHaninCPCL(printAreaSizeParams);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -101,7 +101,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addTextParams(HMA300LTextParams params) async {
+  Future<bool> addTextParams(HaninCPCLTextParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -110,7 +110,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addTextHMA300L(params);
+      return FlutterLabelPrinterPlatform.instance.addTextHaninCPCL(params);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -128,7 +128,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.printHMA300L();
+      return FlutterLabelPrinterPlatform.instance.printHaninCPCL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -147,7 +147,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setPaperTypeHMA300L(type);
+      return FlutterLabelPrinterPlatform.instance.setPaperTypeHaninCPCL(type);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -166,7 +166,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setBoldHMA300L(size);
+      return FlutterLabelPrinterPlatform.instance.setBoldHaninCPCL(size);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -186,7 +186,7 @@ class HMA300LPrinter extends PrinterInterface {
 
     try {
       return FlutterLabelPrinterPlatform.instance
-          .setTextSizeHMA300L(width, height);
+          .setHaninCPCLTextSize(width, height);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -207,7 +207,7 @@ class HMA300LPrinter extends PrinterInterface {
 
     try {
       final code =
-          await FlutterLabelPrinterPlatform.instance.getStatusHMA300L();
+          await FlutterLabelPrinterPlatform.instance.getStatusHaninCPCL();
 
       return HMA300LPrinterStatus(code);
     } on PlatformException catch (ex, st) {
@@ -227,7 +227,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.prefeedHMA300L(dot);
+      return FlutterLabelPrinterPlatform.instance.addSpaceHaninCPCL(dot);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -245,7 +245,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setPageWidthHMA300L(width);
+      return FlutterLabelPrinterPlatform.instance.setPageWidthHaninCPCL(width);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -263,7 +263,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.setAlignHMA300L(align.code);
+      return FlutterLabelPrinterPlatform.instance.setAlignHaninCPCL(align.code);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -272,7 +272,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addBarcodeParams(HMA300LBarcodeParams params) async {
+  Future<bool> addBarcodeParams(HaninCPCLBarcodeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -281,7 +281,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addBarcode(params);
+      return FlutterLabelPrinterPlatform.instance.addBarcodeHaninCPCL(params);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -290,7 +290,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addQRCodeParams(HMA300LQRCodeParams params) async {
+  Future<bool> addQRCodeParams(HaninCPCLQRCodeParams params) async {
     if (!isConnected()) {
       throw InvalidConnectionStateException(
         'Device not connected.',
@@ -299,7 +299,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addQRCode(params);
+      return FlutterLabelPrinterPlatform.instance.addQRCodeHaninCPCL(params);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -318,7 +318,7 @@ class HMA300LPrinter extends PrinterInterface {
 
     try {
       return FlutterLabelPrinterPlatform.instance
-          .addRectangle(rect, strokeWidth);
+          .addRectangleHaninCPCL(rect, strokeWidth);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -336,7 +336,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addLine(rect, strokeWidth);
+      return FlutterLabelPrinterPlatform.instance.addLineHaninCPCL(rect, strokeWidth);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -354,7 +354,7 @@ class HMA300LPrinter extends PrinterInterface {
     }
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addImage(params);
+      return FlutterLabelPrinterPlatform.instance.addImageHaninCPCL(params);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

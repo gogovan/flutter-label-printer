@@ -39,9 +39,45 @@ enum N31PrinterTextAlign {
   final int code;
 }
 
+enum N31BarcodeType {
+  code128('128'),
+  code128m('128M'),
+  ean128('EAN128'),
+  code39('39'),
+  code93('93'),
+  upca('UPCA'),
+  msi('MSI'),
+  itf14('ITF14'),
+  ean13('EAN13');
+
+  const N31BarcodeType(this.code);
+
+  final String code;
+}
+
+enum N31QRCodeECC {
+  low('L'),
+  medium('M'),
+  quality('Q'),
+  high('H');
+
+  const N31QRCodeECC(this.code);
+
+  final String code;
+}
+
+enum N31QRCodeMode {
+  auto(0),
+  manual(1);
+
+  const N31QRCodeMode(this.code);
+
+  final int code;
+}
+
 @immutable
-class N31PrintAreaSizeParams {
-  const N31PrintAreaSizeParams({
+class HaninTSPLPrintAreaSizeParams {
+  const HaninTSPLPrintAreaSizeParams({
     required this.width,
     required this.height,
   });
@@ -55,7 +91,7 @@ class N31PrintAreaSizeParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is N31PrintAreaSizeParams &&
+      other is HaninTSPLPrintAreaSizeParams &&
           runtimeType == other.runtimeType &&
           width == other.width &&
           height == other.height;
@@ -65,8 +101,8 @@ class N31PrintAreaSizeParams {
 }
 
 @immutable
-class N31TextParams {
-  const N31TextParams({
+class HaninTSPLTextParams {
+  const HaninTSPLTextParams({
     required this.xPos,
     required this.yPos,
     required this.text,
@@ -93,7 +129,7 @@ class N31TextParams {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is N31TextParams &&
+      other is HaninTSPLTextParams &&
           runtimeType == other.runtimeType &&
           xPos == other.xPos &&
           yPos == other.yPos &&
@@ -114,4 +150,133 @@ class N31TextParams {
       alignment.hashCode ^
       charWidth.hashCode ^
       charHeight.hashCode;
+}
+
+@immutable
+class HaninTSPLBarcodeParams {
+  const HaninTSPLBarcodeParams({
+    required this.xPos,
+    required this.yPos,
+    required this.barcodeType,
+    required this.height,
+    this.showData = false,
+    this.rotate = Rotation90.text,
+    required this.data,
+  });
+
+  final int xPos;
+  final int yPos;
+  final N31BarcodeType barcodeType;
+  final int height;
+  final bool showData;
+  final Rotation90 rotate;
+  final String data;
+
+  @override
+  String toString() =>
+      'HaninTSPLBarcodeParams{xPos: $xPos, yPos: $yPos, barcodeType: $barcodeType, height: $height, showData: $showData, rotate: $rotate, data: $data}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HaninTSPLBarcodeParams &&
+          runtimeType == other.runtimeType &&
+          xPos == other.xPos &&
+          yPos == other.yPos &&
+          barcodeType == other.barcodeType &&
+          height == other.height &&
+          showData == other.showData &&
+          rotate == other.rotate &&
+          data == other.data;
+
+  @override
+  int get hashCode =>
+      xPos.hashCode ^
+      yPos.hashCode ^
+      barcodeType.hashCode ^
+      height.hashCode ^
+      showData.hashCode ^
+      rotate.hashCode ^
+      data.hashCode;
+}
+
+@immutable
+class HaninTSPLQRCodeParams {
+  const HaninTSPLQRCodeParams({
+    required this.xPos,
+    required this.yPos,
+    this.eccLevel = N31QRCodeECC.low,
+    required this.unitSize,
+    this.mode = N31QRCodeMode.auto,
+    this.rotate = Rotation90.text,
+    required this.data,
+  });
+
+  final int xPos;
+  final int yPos;
+  final N31QRCodeECC eccLevel;
+  final int unitSize;
+  final N31QRCodeMode mode;
+  final Rotation90 rotate;
+  final String data;
+
+  @override
+  String toString() =>
+      'HaninTSPLQRCodeParams{xPos: $xPos, yPos: $yPos, eccLevel: $eccLevel, unitSize: $unitSize, mode: $mode, rotate: $rotate, data: $data}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HaninTSPLQRCodeParams &&
+          runtimeType == other.runtimeType &&
+          xPos == other.xPos &&
+          yPos == other.yPos &&
+          eccLevel == other.eccLevel &&
+          unitSize == other.unitSize &&
+          mode == other.mode &&
+          rotate == other.rotate &&
+          data == other.data;
+
+  @override
+  int get hashCode =>
+      xPos.hashCode ^
+      yPos.hashCode ^
+      eccLevel.hashCode ^
+      unitSize.hashCode ^
+      mode.hashCode ^
+      rotate.hashCode ^
+      data.hashCode;
+}
+
+@immutable
+class HaninTSPLImageParams {
+  const HaninTSPLImageParams({
+    required this.imagePath,
+    required this.xPos,
+    required this.yPos,
+    this.imageMode = ImageMode.binary,
+  });
+
+  final String imagePath;
+  final int xPos;
+  final int yPos;
+  final ImageMode imageMode;
+
+  @override
+  String toString() =>
+      'HaninTSPLImageParams{imagePath: $imagePath, xPos: $xPos, yPos: $yPos, imageMode: $imageMode}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HaninTSPLImageParams &&
+          runtimeType == other.runtimeType &&
+          imagePath == other.imagePath &&
+          xPos == other.xPos &&
+          yPos == other.yPos &&
+          imageMode == other.imageMode;
+
+  @override
+  int get hashCode =>
+      imagePath.hashCode ^ xPos.hashCode ^ yPos.hashCode ^ imageMode.hashCode;
 }

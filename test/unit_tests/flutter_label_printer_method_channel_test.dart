@@ -25,7 +25,7 @@ void main() {
     when(mockEventChannel.receiveBroadcastStream())
         .thenAnswer((realInvocation) => Stream.value(['AB:CD:EF:12:13:14']));
 
-    expect((await printer.searchHMA300L().first).first, 'AB:CD:EF:12:13:14');
+    expect((await printer.searchBluetooth().first).first, 'AB:CD:EF:12:13:14');
   });
 
   test('stopSearchHMA300L', () async {
@@ -47,7 +47,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.connectHMA300L('AB:CD:EF:12:13:14'), true);
+    expect(await printer.connectHaninCPCL('AB:CD:EF:12:13:14'), true);
   });
 
   test('disconnectHMA300L', () async {
@@ -57,7 +57,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.disconnectHMA300L(), true);
+    expect(await printer.disconnectHaninTSPL(), true);
   });
 
   test('printTestPageHMA300L', () async {
@@ -67,7 +67,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.printTestPageHMA300L(), true);
+    expect(await printer.printTestPageHaninTSPL(), true);
   });
 
   test('setLogLevel', () async {
@@ -104,8 +104,8 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.setPrintAreaSizeHMA300L(
-        const HMA300LPrintAreaSizeParams(
+      await printer.setPrintAreaHaninCPCL(
+        const HaninCPCLPrintAreaSizeParams(
           height: 24,
         ),
       ),
@@ -128,8 +128,8 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addTextHMA300L(
-        const HMA300LTextParams(
+      await printer.addTextHaninCPCL(
+        const HaninCPCLTextParams(
           xPosition: 180,
           yPosition: 120,
           text: 'Hello World!',
@@ -146,7 +146,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.printHMA300L(), true);
+    expect(await printer.printHaninCPCL(), true);
   });
 
   test('setPaperTypeHMA300L', () async {
@@ -160,7 +160,7 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.setPaperTypeHMA300L(HMA300LPaperType.blackMark2Inch),
+      await printer.setPaperTypeHaninCPCL(HMA300LPaperType.blackMark2Inch),
       true,
     );
   });
@@ -175,7 +175,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.setBoldHMA300L(4), true);
+    expect(await printer.setBoldHaninCPCL(4), true);
   });
 
   test('setTextSizeHMA300L', () async {
@@ -189,7 +189,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.setTextSizeHMA300L(16, 24), true);
+    expect(await printer.setHaninCPCLTextSize(16, 24), true);
   });
 
   test('getStatusHMA300L', () async {
@@ -199,7 +199,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => 16);
 
-    expect(await printer.getStatusHMA300L(), 16);
+    expect(await printer.getStatusHaninCPCL(), 16);
   });
 
   test('prefeedHMA300L', () async {
@@ -212,7 +212,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.prefeedHMA300L(18), true);
+    expect(await printer.addSpaceHaninCPCL(18), true);
   });
 
   test('setPageWidthHMA300L', () async {
@@ -225,7 +225,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.setPageWidthHMA300L(400), true);
+    expect(await printer.setPageWidthHaninCPCL(400), true);
   });
 
   test('setAlignHMA300L', () async {
@@ -238,7 +238,7 @@ void main() {
       ),
     ).thenAnswer((realInvocation) async => true);
 
-    expect(await printer.setAlignHMA300L(2), true);
+    expect(await printer.setAlignHaninCPCL(2), true);
   });
 
   test('addBarcode', () async {
@@ -263,8 +263,8 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addBarcode(
-        const HMA300LBarcodeParams(
+      await printer.addBarcodeHaninCPCL(
+        const HaninCPCLBarcodeParams(
           type: HMA300LBarcodeType.code39,
           ratio: HMA300LBarcodeRatio.ratio2,
           barWidthUnit: 2,
@@ -299,8 +299,8 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addQRCode(
-        const HMA300LQRCodeParams(
+      await printer.addQRCodeHaninCPCL(
+        const HaninCPCLQRCodeParams(
           orientation: HMA300LPrintOrientation.horizontal,
           xPosition: 240,
           yPosition: 160,
@@ -328,7 +328,7 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addRectangle(const Rect.fromLTRB(10, 20, 30, 40), 5),
+      await printer.addRectangleHaninCPCL(const Rect.fromLTRB(10, 20, 30, 40), 5),
       true,
     );
   });
@@ -348,7 +348,7 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addLine(const Rect.fromLTRB(10, 20, 30, 40), 5),
+      await printer.addLineHaninCPCL(const Rect.fromLTRB(10, 20, 30, 40), 5),
       true,
     );
   });
@@ -369,7 +369,7 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addImage(
+      await printer.addImageHaninCPCL(
         const HMA300LPrintImageParams(
           imagePath: '/sdcard/1.jpg',
           xPosition: 80,

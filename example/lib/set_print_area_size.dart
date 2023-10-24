@@ -23,13 +23,13 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
     try {
       final printer = MyApp.printer;
       if (printer is HMA300LPrinter) {
-        printer.setPrintAreaSizeParams(HMA300LPrintAreaSizeParams(
+        printer.setPrintAreaSizeParams(HaninCPCLPrintAreaSizeParams(
           offset: int.parse(offsetController.text),
           height: int.parse(heightController.text),
           quantity: int.parse(quantityController.text),
         ));
       } else if (printer is N31Printer) {
-        printer.setPrintAreaSizeParams(N31PrintAreaSizeParams(
+        printer.setPrintAreaSizeParams(HaninTSPLPrintAreaSizeParams(
           width: int.parse(widthController.text),
           height: int.parse(heightController.text),
         ));

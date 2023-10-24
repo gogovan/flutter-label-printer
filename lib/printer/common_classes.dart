@@ -11,3 +11,14 @@ enum Rotation90 {
 
   final int rot;
 }
+
+/// Algorithm to monochromize image when printing.
+enum ImageMode {
+  binary(0),
+  dithering(1),
+  cluster(2);
+
+  const ImageMode(this.code);
+
+  final int code;
+}
