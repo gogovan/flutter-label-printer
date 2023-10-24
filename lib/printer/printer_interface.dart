@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 
 /// Interface all printers should implement.
@@ -49,6 +50,18 @@ abstract class PrinterInterface {
       return result;
     } else {
       return true;
+    }
+  }
+
+  /// Check whether the printer is already connected, and throws InvalidConnectionStateException if not.
+  @protected
+  @nonVirtual
+  void checkConnected() {
+    if (!isConnected()) {
+      throw InvalidConnectionStateException(
+        'Device not connected.',
+        StackTrace.current.toString(),
+      );
     }
   }
 

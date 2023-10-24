@@ -74,7 +74,7 @@ void main() {
 
     when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
         .thenAnswer((realInvocation) async => true);
-    when(printerPlatform.disconnectHaninTSPL())
+    when(printerPlatform.disconnectHaninCPCL())
         .thenAnswer((realInvocation) async => true);
 
     expect(await printer.connect(), true);
@@ -85,7 +85,7 @@ void main() {
     expect(await printer.disconnect(), true);
     expect(printer.isConnected(), false);
 
-    verify(printerPlatform.disconnectHaninTSPL()).called(1);
+    verify(printerPlatform.disconnectHaninCPCL()).called(1);
   });
 
   test('connect failure', () async {
@@ -494,29 +494,16 @@ void main() {
 
         expect(await printer.connect(), true);
 
+        expect(
+          () async => Function.apply(data.functionToTest, data.args),
+          throwsA(isA<ConnectionException>()),
+        );
+
         if (data.args.isEmpty) {
-          expect(
-            () async => data.functionToTest(),
-            throwsA(
-              isA<ConnectionException>(),
-            ),
-          );
           verify(data.platformFunction()).called(1);
         } else if (data.args.length == 1) {
-          expect(
-            () async => data.functionToTest(data.args.first),
-            throwsA(
-              isA<ConnectionException>(),
-            ),
-          );
           verify(data.platformFunction(data.platformArgs.first)).called(1);
         } else if (data.args.length == 2) {
-          expect(
-            () async => data.functionToTest(data.args.first, data.args[1]),
-            throwsA(
-              isA<ConnectionException>(),
-            ),
-          );
           verify(data.platformFunction(data.platformArgs.first, data.args[1]))
               .called(1);
         }

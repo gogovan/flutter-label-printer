@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
@@ -37,12 +36,7 @@ class HaninTSPLPrinter extends PrinterInterface {
 
   @override
   Future<bool> printTestPage() {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.printTestPageHaninCPCL();
@@ -57,12 +51,7 @@ class HaninTSPLPrinter extends PrinterInterface {
   Future<bool> setPrintAreaSizeParams(
       HaninTSPLPrintAreaSizeParams printAreaSizeParams,
       ) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance
@@ -76,12 +65,7 @@ class HaninTSPLPrinter extends PrinterInterface {
   }
 
   Future<bool> print() async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.printHaninTSPL();
@@ -94,12 +78,7 @@ class HaninTSPLPrinter extends PrinterInterface {
   }
 
   Future<bool> addTextParams(HaninTSPLTextParams params) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.addTextHaninTSPL(params);

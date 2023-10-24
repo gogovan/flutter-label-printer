@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
@@ -58,12 +57,7 @@ class HaninCPCLPrinter extends PrinterInterface {
 
   @override
   Future<bool> printTestPage() async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.printTestPageHaninTSPL();
@@ -83,12 +77,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   Future<bool> setPrintAreaSizeParams(
     HaninCPCLPrintAreaSizeParams printAreaSizeParams,
   ) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance
@@ -102,12 +91,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> addTextParams(HaninCPCLTextParams params) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.addTextHaninCPCL(params);
@@ -120,12 +104,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> print() async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.printHaninCPCL();
@@ -139,12 +118,7 @@ class HaninCPCLPrinter extends PrinterInterface {
 
   /// Command to set paper type currently used on the printer.
   Future<bool> setPaperType(HaninCPCLPaperType type) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.setPaperTypeHaninCPCL(type);
@@ -158,12 +132,7 @@ class HaninCPCLPrinter extends PrinterInterface {
 
   /// Command to set boldness of text. Size should be within 0 to 5.
   Future<bool> setBold(int size) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.setBoldHaninCPCL(size);
@@ -177,12 +146,7 @@ class HaninCPCLPrinter extends PrinterInterface {
 
   /// Command to set size of text. Size should be within 1 to 16.
   Future<bool> setTextSize(int width, int height) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance
@@ -198,12 +162,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   /// Get status of the printer. It may be unable to return a status while the printer is printing.
   /// Use when there are issues printing after print commands are sent.
   Future<HaninCPCLPrinterStatus> getStatus() async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       final code =
@@ -219,12 +178,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> prefeed(int dot) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.addSpaceHaninCPCL(dot);
@@ -237,12 +191,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> setPageWidth(int width) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.setPageWidthHaninCPCL(width);
@@ -255,12 +204,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> setAlign(HaninCPCLTextAlign align) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.setAlignHaninCPCL(align);
@@ -273,12 +217,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> addBarcodeParams(HaninCPCLBarcodeParams params) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.addBarcodeHaninCPCL(params);
@@ -291,12 +230,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> addQRCodeParams(HaninCPCLQRCodeParams params) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.addQRCodeHaninCPCL(params);
@@ -309,12 +243,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> addRectangleParam(Rect rect, int strokeWidth) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance
@@ -328,12 +257,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> addLineParam(Rect rect, int strokeWidth) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.addLineHaninCPCL(rect, strokeWidth);
@@ -346,12 +270,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   }
 
   Future<bool> addImageParams(HaninCPCLPrintImageParams params) {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     try {
       return FlutterLabelPrinterPlatform.instance.addImageHaninCPCL(params);
