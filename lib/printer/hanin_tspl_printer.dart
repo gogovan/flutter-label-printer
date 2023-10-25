@@ -39,7 +39,7 @@ class HaninTSPLPrinter extends PrinterInterface {
     checkConnected();
 
     try {
-      return FlutterLabelPrinterPlatform.instance.printTestPageHaninCPCL();
+      return FlutterLabelPrinterPlatform.instance.printTestPageHaninTSPL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -105,6 +105,85 @@ class HaninTSPLPrinter extends PrinterInterface {
       await FlutterLabelPrinterPlatform.instance.getStatusHaninTSPL();
 
       return HaninTSPLPrinterStatus(code);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addSpace(int mm) async {
+    checkConnected();
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addSpaceHaninTSPL(mm);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addBarcodeParams(HaninTSPLBarcodeParams params) async {
+    checkConnected();
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addBarcodeHaninTSPL(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addQRCodeParams(HaninTSPLQRCodeParams params) async {
+    checkConnected();
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addQRCodeHaninTSPL(params);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addRectangleParam(Rect rect, int strokeWidth) async {
+    checkConnected();
+
+    try {
+      return FlutterLabelPrinterPlatform.instance
+          .addRectangleHaninTSPL(rect, strokeWidth);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addLineParam(Rect rect) async {
+    checkConnected();
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addLineHaninTSPL(rect);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
+  Future<bool> addImageParams(HaninTSPLImageParams params) {
+    checkConnected();
+
+    try {
+      return FlutterLabelPrinterPlatform.instance.addImageHaninTSPL(params);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

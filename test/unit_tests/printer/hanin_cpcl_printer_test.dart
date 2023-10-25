@@ -145,7 +145,7 @@ void main() {
     verify(printerPlatform.getStatusHaninCPCL()).called(1);
   });
 
-  group('printer platform failures', () {
+  group('printer platform tests', () {
     final testData = [
       TestCase(
         'printTestPage',
