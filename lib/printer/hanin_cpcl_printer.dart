@@ -23,13 +23,6 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 class HaninCPCLPrinter extends PrinterInterface {
   HaninCPCLPrinter(super.device);
 
-  FlutterLabelPrinterPlatform get platformInstance =>
-      FlutterLabelPrinterPlatform.instance;
-
-  @visibleForTesting
-  set platformInstance(FlutterLabelPrinterPlatform instance) =>
-      FlutterLabelPrinterPlatform.instance = instance;
-
   @override
   Future<bool> connectImpl(PrinterSearchResult device) {
     try {
@@ -46,7 +39,7 @@ class HaninCPCLPrinter extends PrinterInterface {
   @override
   Future<bool> disconnectImpl() {
     try {
-      return FlutterLabelPrinterPlatform.instance.disconnectHaninTSPL();
+      return FlutterLabelPrinterPlatform.instance.disconnectHaninCPCL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
@@ -60,7 +53,7 @@ class HaninCPCLPrinter extends PrinterInterface {
     checkConnected();
 
     try {
-      return FlutterLabelPrinterPlatform.instance.printTestPageHaninTSPL();
+      return FlutterLabelPrinterPlatform.instance.printTestPageHaninCPCL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

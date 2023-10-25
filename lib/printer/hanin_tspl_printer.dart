@@ -25,7 +25,7 @@ class HaninTSPLPrinter extends PrinterInterface {
   @override
   Future<bool> disconnectImpl() {
     try {
-      return FlutterLabelPrinterPlatform.instance.disconnectHaninCPCL();
+      return FlutterLabelPrinterPlatform.instance.disconnectHaninTSPL();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
