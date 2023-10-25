@@ -90,5 +90,10 @@ class HaninTSPLPrinter extends PrinterInterface {
     }
   }
 
+  /// Set logging level.
+  /// `level` should be from 0 to 5, indicating from VERBOSE, DEBUG, INFO, WARN, ERROR to ASSERT levels.
+  Future<void> setLogLevel(int level) async =>
+      FlutterLabelPrinterPlatform.instance.setLogLevel(level);
+
 
 }

@@ -15,20 +15,16 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'hanin_cpcl_printer_test.mocks.dart';
 
-class PrinterPlatformFailureData {
-  PrinterPlatformFailureData(
+class TestCase {
+  TestCase(
+    this.name,
     this.functionToTest,
     this.platformFunction,
-    this.args, [
-    this._platformArgs,
-  ]);
+  );
 
+  final String name;
   final Function functionToTest;
   final Function platformFunction;
-  final List<dynamic> args;
-  final List<dynamic>? _platformArgs;
-
-  List<dynamic> get platformArgs => _platformArgs ?? args;
 }
 
 @GenerateNiceMocks([
@@ -136,356 +132,134 @@ void main() {
     verify(printerPlatform.setLogLevel(3)).called(1);
   });
 
-  group('successes', () {
-    test('printTestPage', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.printTestPageHaninCPCL())
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.printTestPage(), true);
-      verify(printerPlatform.printTestPageHaninCPCL()).called(1);
-    });
-
-    test('setPrintAreaSizeParams', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setPrintAreaHaninCPCL(printAreaSizeParams))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.setPrintAreaSizeParams(printAreaSizeParams), true);
-      verify(printerPlatform.setPrintAreaHaninCPCL(printAreaSizeParams))
-          .called(1);
-    });
-
-    test('addTextParams', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.addTextHaninCPCL(textParams))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.addTextParams(textParams), true);
-      verify(printerPlatform.addTextHaninCPCL(textParams)).called(1);
-    });
-
-    test('print', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.printHaninCPCL())
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.print(), true);
-      verify(printerPlatform.printHaninCPCL()).called(1);
-    });
-
-    test('setPaperType', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setPaperTypeHaninCPCL(HaninCPCLPaperType.label))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.setPaperType(HaninCPCLPaperType.label), true);
-      verify(printerPlatform.setPaperTypeHaninCPCL(HaninCPCLPaperType.label))
-          .called(1);
-    });
-
-    test('setBold', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setBoldHaninCPCL(2))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.setBold(2), true);
-      verify(printerPlatform.setBoldHaninCPCL(2)).called(1);
-    });
-
-    test('setTextSize', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setHaninCPCLTextSize(2, 4))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.setTextSize(2, 4), true);
-      verify(printerPlatform.setHaninCPCLTextSize(2, 4)).called(1);
-    });
-
-    test('getStatus', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.getStatusHaninCPCL())
-          .thenAnswer((realInvocation) async => 6);
-
-      expect(await printer.connect(), true);
-      expect(await printer.getStatus(), const HaninCPCLPrinterStatus(6));
-      verify(printerPlatform.getStatusHaninCPCL()).called(1);
-    });
-
-    test('prefeed', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.addSpaceHaninCPCL(16))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.prefeed(16), true);
-      verify(printerPlatform.addSpaceHaninCPCL(16)).called(1);
-    });
-
-    test('setPageWidth', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setPageWidthHaninCPCL(80))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.setPageWidth(80), true);
-      verify(printerPlatform.setPageWidthHaninCPCL(80)).called(1);
-    });
-
-    test('setAlign', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.setAlignHaninCPCL(HaninCPCLTextAlign.center))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.setAlign(HaninCPCLTextAlign.center), true);
-      verify(printerPlatform.setAlignHaninCPCL(HaninCPCLTextAlign.center))
-          .called(1);
-    });
-
-    test('addBarcodeParams', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.addBarcodeHaninCPCL(barcodeParams))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.addBarcodeParams(barcodeParams), true);
-      verify(printerPlatform.addBarcodeHaninCPCL(barcodeParams)).called(1);
-    });
-
-    test('addQRCodeParams', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.addQRCodeHaninCPCL(qrcodeParams))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.addQRCodeParams(qrcodeParams), true);
-      verify(printerPlatform.addQRCodeHaninCPCL(qrcodeParams)).called(1);
-    });
-
-    test('addRectangleParam', () async {
-      final printer = HaninCPCLPrinter(device);
-      const rect = Rect.fromLTRB(10, 20, 30, 40);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.addRectangleHaninCPCL(rect, 3))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.addRectangleParam(rect, 3), true);
-      verify(printerPlatform.addRectangleHaninCPCL(rect, 3)).called(1);
-    });
-
-    test('addLineParam', () async {
-      final printer = HaninCPCLPrinter(device);
-      const rect = Rect.fromLTRB(10, 20, 30, 40);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.addLineHaninCPCL(rect, 3))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.addLineParam(rect, 3), true);
-      verify(printerPlatform.addLineHaninCPCL(rect, 3)).called(1);
-    });
-
-    test('addImageParams', () async {
-      final printer = HaninCPCLPrinter(device);
-
-      when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
-          .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.addImageHaninCPCL(imageParams))
-          .thenAnswer((realInvocation) async => true);
-
-      expect(await printer.connect(), true);
-      expect(await printer.addImageParams(imageParams), true);
-      verify(printerPlatform.addImageHaninCPCL(imageParams)).called(1);
-    });
-  });
-
-  group('not connected failures', () {
+  test('getStatus', () async {
     final printer = HaninCPCLPrinter(device);
-    final funcs = {
-      printer.printTestPage: [],
-      printer.print: [],
-      printer.getStatus: [],
-      printer.setPrintAreaSizeParams: [printAreaSizeParams],
-      printer.addTextParams: [textParams],
-      printer.setPaperType: [HaninCPCLPaperType.label],
-      printer.setBold: [5],
-      printer.setTextSize: [3, 4],
-      printer.prefeed: [24],
-      printer.setPageWidth: [8],
-      printer.setAlign: [HaninCPCLTextAlign.center],
-      printer.addBarcodeParams: [barcodeParams],
-      printer.addQRCodeParams: [qrcodeParams],
-      printer.addRectangleParam: [const Rect.fromLTRB(10, 20, 30, 40), 2],
-      printer.addLineParam: [const Rect.fromLTRB(10, 20, 30, 40), 2],
-      printer.addImageParams: [imageParams],
-    };
 
-    for (final func in funcs.entries) {
-      test('invalid connection for ${func.key}', () {
-        expect(
-          () async => Function.apply(func.key, func.value),
-          throwsA(isA<InvalidConnectionStateException>()),
-        );
-      });
-    }
+    when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
+        .thenAnswer((realInvocation) async => true);
+    when(printerPlatform.getStatusHaninCPCL())
+        .thenAnswer((realInvocation) async => 6);
+
+    expect(await printer.connect(), true);
+    expect(await printer.getStatus(), const HaninCPCLPrinterStatus(6));
+    verify(printerPlatform.getStatusHaninCPCL()).called(1);
   });
 
   group('printer platform failures', () {
-    final printer = HaninCPCLPrinter(device);
     final testData = [
-      PrinterPlatformFailureData(
-        printer.printTestPage,
+      TestCase(
+        'printTestPage',
+        (printer) => printer.printTestPage(),
         printerPlatform.printTestPageHaninCPCL,
-        [],
       ),
-      PrinterPlatformFailureData(
-        printer.print,
+      TestCase(
+        'print',
+        (printer) => printer.print(),
         printerPlatform.printHaninCPCL,
-        [],
       ),
-      PrinterPlatformFailureData(
-        printer.getStatus,
-        printerPlatform.getStatusHaninCPCL,
-        [],
+      TestCase(
+        'setPrintAreaSizeParams',
+        (printer) => printer.setPrintAreaSizeParams(printAreaSizeParams),
+        () => printerPlatform.setPrintAreaHaninCPCL(printAreaSizeParams),
       ),
-      PrinterPlatformFailureData(
-        printer.setPrintAreaSizeParams,
-        printerPlatform.setPrintAreaHaninCPCL,
-        [printAreaSizeParams],
+      TestCase(
+        'addTextParams',
+        (printer) => printer.addTextParams(textParams),
+        () => printerPlatform.addTextHaninCPCL(textParams),
       ),
-      PrinterPlatformFailureData(
-        printer.addTextParams,
-        printerPlatform.addTextHaninCPCL,
-        [textParams],
+      TestCase(
+        'setPaperType',
+        (printer) => printer.setPaperType(HaninCPCLPaperType.label),
+        () => printerPlatform.setPaperTypeHaninCPCL(HaninCPCLPaperType.label),
       ),
-      PrinterPlatformFailureData(
-        printer.setPaperType,
-        printerPlatform.setPaperTypeHaninCPCL,
-        [HaninCPCLPaperType.label],
+      TestCase(
+        'setBold',
+        (printer) => printer.setBold(5),
+        () => printerPlatform.setBoldHaninCPCL(5),
       ),
-      PrinterPlatformFailureData(
-        printer.setBold,
-        printerPlatform.setBoldHaninCPCL,
-        [5],
+      TestCase(
+        'setTextSize',
+        (printer) => printer.setTextSize(3, 4),
+        () => printerPlatform.setHaninCPCLTextSize(3, 4),
       ),
-      PrinterPlatformFailureData(
-        printer.setTextSize,
-        printerPlatform.setHaninCPCLTextSize,
-        [3, 4],
+      TestCase(
+        'prefeed',
+        (printer) => printer.prefeed(24),
+        () => printerPlatform.addSpaceHaninCPCL(24),
       ),
-      PrinterPlatformFailureData(
-        printer.prefeed,
-        printerPlatform.addSpaceHaninCPCL,
-        [24],
+      TestCase(
+        'setAlign',
+        (printer) => printer.setAlign(HaninCPCLTextAlign.center),
+        () => printerPlatform.setAlignHaninCPCL(HaninCPCLTextAlign.center),
       ),
-      PrinterPlatformFailureData(
-        printer.setAlign,
-        printerPlatform.setAlignHaninCPCL,
-        [HaninCPCLTextAlign.center],
+      TestCase(
+        'addBarcodeParams',
+        (printer) => printer.addBarcodeParams(barcodeParams),
+        () => printerPlatform.addBarcodeHaninCPCL(barcodeParams),
       ),
-      PrinterPlatformFailureData(
-        printer.addBarcodeParams,
-        printerPlatform.addBarcodeHaninCPCL,
-        [barcodeParams],
+      TestCase(
+        'addQRCodeParams',
+        (printer) => printer.addQRCodeParams(qrcodeParams),
+        () => printerPlatform.addQRCodeHaninCPCL(qrcodeParams),
       ),
-      PrinterPlatformFailureData(
-        printer.addQRCodeParams,
-        printerPlatform.addQRCodeHaninCPCL,
-        [qrcodeParams],
+      TestCase(
+        'addRectangleParam',
+        (printer) =>
+            printer.addRectangleParam(const Rect.fromLTRB(10, 20, 30, 40), 2),
+        () => printerPlatform.addRectangleHaninCPCL(
+            const Rect.fromLTRB(10, 20, 30, 40), 2,),
       ),
-      PrinterPlatformFailureData(
-        printer.addRectangleParam,
-        printerPlatform.addRectangleHaninCPCL,
-        [const Rect.fromLTRB(10, 20, 30, 40), 2],
+      TestCase(
+        'addLineParam',
+        (printer) =>
+            printer.addLineParam(const Rect.fromLTRB(10, 20, 30, 40), 2),
+        () => printerPlatform.addLineHaninCPCL(
+            const Rect.fromLTRB(10, 20, 30, 40), 2,),
       ),
-      PrinterPlatformFailureData(
-        printer.addLineParam,
-        printerPlatform.addLineHaninCPCL,
-        [const Rect.fromLTRB(10, 20, 30, 40), 2],
-      ),
-      PrinterPlatformFailureData(
-        printer.addImageParams,
-        printerPlatform.addImageHaninCPCL,
-        [imageParams],
+      TestCase(
+        'addImageParams',
+        (printer) => printer.addImageParams(imageParams),
+        () => printerPlatform.addImageHaninCPCL(imageParams),
       ),
     ];
 
     for (final data in testData) {
-      test('platform failure ${data.functionToTest}', () async {
+      test('invalid connection for ${data.name}', () {
+        final printer = HaninCPCLPrinter(device);
+        expect(
+          () async => data.functionToTest(printer),
+          throwsA(isA<InvalidConnectionStateException>()),
+        );
+      });
+
+      test('platform failure ${data.name}', () async {
+        final printer = HaninCPCLPrinter(device);
         when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
             .thenAnswer((realInvocation) async => true);
 
-        when(Function.apply(data.platformFunction, data.args)).thenThrow(
+        when(data.platformFunction()).thenThrow(
           PlatformException(code: '1006', details: 'Disconnected'),
         );
 
         expect(await printer.connect(), true);
-
         expect(
-          () async => Function.apply(data.functionToTest, data.args),
+          () async => data.functionToTest(printer),
           throwsA(isA<ConnectionException>()),
         );
 
-        if (data.args.isEmpty) {
-          verify(data.platformFunction()).called(1);
-        } else if (data.args.length == 1) {
-          verify(data.platformFunction(data.platformArgs.first)).called(1);
-        } else if (data.args.length == 2) {
-          verify(data.platformFunction(data.platformArgs.first, data.args[1]))
-              .called(1);
-        }
+        verify(data.platformFunction()).called(1);
+      });
+
+      test('success ${data.name}', () async {
+        final printer = HaninCPCLPrinter(device);
+
+        when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
+            .thenAnswer((realInvocation) async => true);
+        when(data.platformFunction()).thenAnswer((realInvocation)async => true);
+
+        expect(await printer.connect(), true);
+        expect(await data.functionToTest(printer), true);
+        verify(data.platformFunction()).called(1);
       });
     }
   });

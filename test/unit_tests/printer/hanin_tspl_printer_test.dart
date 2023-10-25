@@ -1,3 +1,8 @@
+// ignore_for_file: no-magic-number
+
+import 'package:flutter/services.dart';
+import 'package:flutter_label_printer/exception/connection_exception.dart';
+import 'package:flutter_label_printer/exception/no_current_activity_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer/hanin_tspl_printer.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
@@ -35,5 +40,52 @@ void main() {
     expect(printer.isConnected(), false);
 
     verify(printerPlatform.disconnectHaninTSPL()).called(1);
+  });
+
+  test('connect failure', () async {
+    final printer = HaninTSPLPrinter(device);
+
+    when(printerPlatform.connectHaninTSPL('12:34:56:AB:CD:EF'))
+        .thenThrow(PlatformException(code: '1006', details: ''));
+
+    expect(
+          () async => printer.connect(),
+      throwsA(isA<ConnectionException>()),
+    );
+    expect(printer.isConnected(), false);
+  });
+
+  test('disconnect - not connected', () async {
+    final printer = HaninTSPLPrinter(device);
+    expect(await printer.disconnect(), true);
+  });
+
+  test('disconnect failure', () async {
+    final printer = HaninTSPLPrinter(device);
+
+    when(printerPlatform.connectHaninTSPL('12:34:56:AB:CD:EF'))
+        .thenAnswer((realInvocation) async => true);
+    when(printerPlatform.disconnectHaninTSPL())
+        .thenThrow(PlatformException(code: '1003', details: ''));
+
+    expect(await printer.connect(), true);
+    expect(
+          () async => printer.disconnect(),
+      throwsA(isA<NoCurrentActivityException>()),
+    );
+    expect(printer.isConnected(), true);
+  });
+
+  test('setLogLevel', () async {
+    final printer = HaninTSPLPrinter(device);
+
+    when(printerPlatform.connectHaninTSPL('12:34:56:AB:CD:EF'))
+        .thenAnswer((realInvocation) async => true);
+    when(printerPlatform.setLogLevel(3))
+        .thenAnswer((realInvocation) async => true);
+
+    expect(await printer.connect(), true);
+    await printer.setLogLevel(3);
+    verify(printerPlatform.setLogLevel(3)).called(1);
   });
 }
