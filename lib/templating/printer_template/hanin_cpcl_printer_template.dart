@@ -276,7 +276,7 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
         );
     }
 
-    final imageParams = HaninCPCLPrintImageParams(
+    final imageParams = HaninCPCLImageParams(
       imagePath: printImage.path,
       xPosition: printImage.xPosition.toInt(),
       yPosition: printImage.yPosition.toInt(),

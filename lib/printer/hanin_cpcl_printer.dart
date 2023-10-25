@@ -269,7 +269,7 @@ class HaninCPCLPrinter extends PrinterInterface {
     }
   }
 
-  Future<bool> addImageParams(HaninCPCLPrintImageParams params) {
+  Future<bool> addImageParams(HaninCPCLImageParams params) {
     checkConnected();
 
     try {

@@ -62,7 +62,7 @@ void main() {
     unitSize: 6,
     data: 'https://example.com',
   );
-  const HaninCPCLPrintImageParams imageParams = HaninCPCLPrintImageParams(
+  const HaninCPCLImageParams imageParams = HaninCPCLImageParams(
     imagePath: '/sdcard/1.jpg',
     xPosition: 40,
     yPosition: 20,
@@ -146,12 +146,12 @@ void main() {
 
       when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
           .thenAnswer((realInvocation) async => true);
-      when(printerPlatform.printTestPageHaninTSPL())
+      when(printerPlatform.printTestPageHaninCPCL())
           .thenAnswer((realInvocation) async => true);
 
       expect(await printer.connect(), true);
       expect(await printer.printTestPage(), true);
-      verify(printerPlatform.printTestPageHaninTSPL()).called(1);
+      verify(printerPlatform.printTestPageHaninCPCL()).called(1);
     });
 
     test('setPrintAreaSizeParams', () async {

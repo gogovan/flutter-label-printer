@@ -156,10 +156,10 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
       <String, dynamic>{
         'rotate': params.rotate.rot,
         'font': params.font.code,
-        'x': params.xPos,
-        'y': params.yPos,
+        'x': params.xPosition,
+        'y': params.yPosition,
         'text': params.text,
-        'alignment': params.alignment,
+        'alignment': params.alignment.code,
         'characterWidth': params.charWidth,
         'characterHeight': params.charHeight,
       },
@@ -237,6 +237,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
     return result ?? false;
   }
 
+  @override
   Future<int> getStatusHaninTSPL() async {
     final result = await methodChannel
         .invokeMethod<int>('hk.gogovan.label_printer.hanin.tspl.getStatus');
@@ -305,8 +306,8 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.tspl.addBarcode',
       <String, dynamic>{
-        'x': params.xPos,
-        'y': params.yPos,
+        'x': params.xPosition,
+        'y': params.yPosition,
         'type': params.barcodeType.code,
         'height': params.height,
         'showData': params.showData,
@@ -346,8 +347,8 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.tspl.addQRCode',
       <String, dynamic>{
-        'x': params.xPos,
-        'y': params.yPos,
+        'x': params.xPosition,
+        'y': params.yPosition,
         'eccLevel': params.eccLevel.code,
         'unitSize': params.unitSize,
         'mode': params.mode.code,
@@ -411,7 +412,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   @override
   Future<bool> addLineHaninTSPL(Rect rect) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.hanin.cpcl.addLine',
+      'hk.gogovan.label_printer.hanin.tspl.addLine',
       <String, dynamic>{
         'x0': rect.left.round(),
         'y0': rect.top.round(),
@@ -445,8 +446,8 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
       'hk.gogovan.label_printer.hanin.tspl.addImage',
       <String, dynamic>{
         'imagePath': params.imagePath,
-        'x': params.xPos,
-        'y': params.yPos,
+        'x': params.xPosition,
+        'y': params.yPosition,
         'type': params.imageMode.code,
       },
     );
@@ -455,7 +456,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> addImageHaninCPCL(HaninCPCLPrintImageParams params) async {
+  Future<bool> addImageHaninCPCL(HaninCPCLImageParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.addImage',
       <String, dynamic>{

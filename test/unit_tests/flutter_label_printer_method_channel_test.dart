@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
 import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -51,6 +52,19 @@ void main() {
     expect(await printer.connectHaninCPCL('AB:CD:EF:12:13:14'), true);
   });
 
+  test('hanin.tspl.connect', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.connect',
+        <String, dynamic>{
+          'address': 'AB:CD:EF:12:13:14',
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(await printer.connectHaninTSPL('AB:CD:EF:12:13:14'), true);
+  });
+
   test('hanin.cpcl.disconnect', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -61,6 +75,16 @@ void main() {
     expect(await printer.disconnectHaninCPCL(), true);
   });
 
+  test('hanin.tspl.disconnect', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.disconnect',
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(await printer.disconnectHaninTSPL(), true);
+  });
+
   test('hanin.cpcl.printTestPage', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -69,6 +93,16 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(await printer.printTestPageHaninCPCL(), true);
+  });
+
+  test('hanin.tspl.printTestPage', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.printTestPage',
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(await printer.printTestPageHaninTSPL(), true);
   });
 
   test('setLogLevel', () async {
@@ -114,6 +148,28 @@ void main() {
     );
   });
 
+  test('hanin.tspl.setPrintAreaSize', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize',
+        <String, dynamic>{
+          'width': 80,
+          'height': 60,
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(
+      await printer.setPrintAreaHaninTSPL(
+        const HaninTSPLPrintAreaSizeParams(
+          width: 80,
+          height: 60,
+        ),
+      ),
+      true,
+    );
+  });
+
   test('hanin.cpcl.addText', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -140,6 +196,35 @@ void main() {
     );
   });
 
+  test('hanin.tspl.addText', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.addText',
+        <String, dynamic>{
+          'rotate': 0,
+          'font': 9,
+          'x': 180,
+          'y': 120,
+          'text': 'Hello World!',
+          'alignment': 1,
+          'characterWidth': 1,
+          'characterHeight': 1,
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(
+      await printer.addTextHaninTSPL(
+        const HaninTSPLTextParams(
+          xPosition: 180,
+          yPosition: 120,
+          text: 'Hello World!',
+        ),
+      ),
+      true,
+    );
+  });
+
   test('hanin.cpcl.print', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -148,6 +233,16 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(await printer.printHaninCPCL(), true);
+  });
+
+  test('hanin.tspl.print', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.print',
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(await printer.printHaninTSPL(), true);
   });
 
   test('hanin.cpcl.setPaperType', () async {
@@ -203,6 +298,16 @@ void main() {
     expect(await printer.getStatusHaninCPCL(), 16);
   });
 
+  test('hanin.tspl.getStatus', () async {
+    when(
+      mockMethodChannel.invokeMethod<int>(
+        'hk.gogovan.label_printer.hanin.tspl.getStatus',
+      ),
+    ).thenAnswer((realInvocation) async => 4);
+
+    expect(await printer.getStatusHaninTSPL(), 4);
+  });
+
   test('hanin.cpcl.space', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -214,6 +319,19 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(await printer.addSpaceHaninCPCL(18), true);
+  });
+
+  test('hanin.tspl.space', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.space',
+        <String, dynamic>{
+          'mm': 18,
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(await printer.addSpaceHaninTSPL(18), true);
   });
 
   test('hanin.cpcl.setPageWidth', () async {
@@ -284,6 +402,36 @@ void main() {
     );
   });
 
+  test('hanin.tspl.addBarcode', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.addBarcode',
+        <String, dynamic>{
+          'type': '39',
+          'height': 40,
+          'x': 120,
+          'y': 60,
+          'data': '74892342348',
+          'rotate': 0,
+          'showData': false,
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(
+      await printer.addBarcodeHaninTSPL(
+        const HaninTSPLBarcodeParams(
+          barcodeType: HaninTSPLBarcodeType.code39,
+          height: 40,
+          xPosition: 120,
+          yPosition: 60,
+          data: '74892342348',
+        ),
+      ),
+      true,
+    );
+  });
+
   test('hanin.cpcl.addQRCode', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -314,6 +462,35 @@ void main() {
     );
   });
 
+  test('hanin.tspl.addQRCode', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.addQRCode',
+        <String, dynamic>{
+          'rotate': 0,
+          'x': 240,
+          'y': 160,
+          'eccLevel': 'L',
+          'mode': 0,
+          'unitSize': 8,
+          'data': 'https://example.com',
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(
+      await printer.addQRCodeHaninTSPL(
+        const HaninTSPLQRCodeParams(
+          xPosition: 240,
+          yPosition: 160,
+          unitSize: 8,
+          data: 'https://example.com',
+        ),
+      ),
+      true,
+    );
+  });
+
   test('hanin.cpcl.addRectangle', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -330,6 +507,26 @@ void main() {
 
     expect(
       await printer.addRectangleHaninCPCL(const Rect.fromLTRB(10, 20, 30, 40), 5),
+      true,
+    );
+  });
+
+  test('hanin.tspl.addRectangle', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.addRectangle',
+        <String, dynamic>{
+          'x0': 10,
+          'y0': 20,
+          'x1': 30,
+          'y1': 40,
+          'width': 5,
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(
+      await printer.addRectangleHaninTSPL(const Rect.fromLTRB(10, 20, 30, 40), 5),
       true,
     );
   });
@@ -354,6 +551,25 @@ void main() {
     );
   });
 
+  test('hanin.tspl.addLine', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.addLine',
+        <String, dynamic>{
+          'x0': 10,
+          'y0': 20,
+          'width': 20,
+          'height': 20,
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(
+      await printer.addLineHaninTSPL(const Rect.fromLTRB(10, 20, 30, 40)),
+      true,
+    );
+  });
+
   test('hanin.cpcl.addImage', () async {
     when(
       mockMethodChannel.invokeMethod<bool>(
@@ -371,11 +587,37 @@ void main() {
 
     expect(
       await printer.addImageHaninCPCL(
-        const HaninCPCLPrintImageParams(
+        const HaninCPCLImageParams(
           imagePath: '/sdcard/1.jpg',
           xPosition: 80,
           yPosition: 120,
           mode: ImageMode.dithering,
+        ),
+      ),
+      true,
+    );
+  });
+
+  test('hanin.tspl.addImage', () async {
+    when(
+      mockMethodChannel.invokeMethod<bool>(
+        'hk.gogovan.label_printer.hanin.tspl.addImage',
+        <String, dynamic>{
+          'imagePath': '/sdcard/1.jpg',
+          'x': 80,
+          'y': 120,
+          'type': 1,
+        },
+      ),
+    ).thenAnswer((realInvocation) async => true);
+
+    expect(
+      await printer.addImageHaninTSPL(
+        const HaninTSPLImageParams(
+          imagePath: '/sdcard/1.jpg',
+          xPosition: 80,
+          yPosition: 120,
+          imageMode: ImageMode.dithering,
         ),
       ),
       true,

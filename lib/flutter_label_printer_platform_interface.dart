@@ -216,7 +216,7 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
-  Future<bool> addImageHaninCPCL(HaninCPCLPrintImageParams params) {
+  Future<bool> addImageHaninCPCL(HaninCPCLImageParams params) {
     throw UnimplementedError(
       'addImage() has not been implemented.',
     );

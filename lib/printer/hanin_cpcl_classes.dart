@@ -314,8 +314,8 @@ class HaninCPCLQRCodeParams {
 }
 
 @immutable
-class HaninCPCLPrintImageParams {
-  const HaninCPCLPrintImageParams({
+class HaninCPCLImageParams {
+  const HaninCPCLImageParams({
     required this.imagePath,
     required this.xPosition,
     required this.yPosition,
