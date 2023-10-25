@@ -1,3 +1,5 @@
+// ignore_for_file: no-magic-number, for enum codes, default values and manufacturer codes.
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
 
@@ -279,4 +281,46 @@ class HaninTSPLImageParams {
   @override
   int get hashCode =>
       imagePath.hashCode ^ xPosition.hashCode ^ yPosition.hashCode ^ imageMode.hashCode;
+}
+
+@immutable
+class HaninTSPLPrinterStatus {
+  const HaninTSPLPrinterStatus(this.code);
+
+  final int code;
+
+  bool isDisconnected() => code == -1;
+
+  bool isTimeout() => code == -2;
+
+  bool isNormal() => code == 0;
+
+  bool isHeadOpened() => code & 1 == 1;
+
+  bool isPaperJammed() => code & 2 == 2;
+
+  bool isOutOfPaper() => code & 4 == 4;
+
+  bool isOutOfInk() => code & 8 == 8;
+
+  bool isPaused() => code & 16 == 16;
+
+  bool isPrinting() => code & 32 == 32;
+
+  bool isCoverOpened() => code & 64 == 64;
+
+  bool isOverheated() => code & 128 == 128;
+
+  @override
+  String toString() => 'HaninTSPLPrinterStatus{code: $code}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HaninTSPLPrinterStatus &&
+          runtimeType == other.runtimeType &&
+          code == other.code;
+
+  @override
+  int get hashCode => code.hashCode;
 }

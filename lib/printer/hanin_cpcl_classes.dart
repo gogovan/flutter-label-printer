@@ -1,4 +1,4 @@
-// ignore_for_file: no-magic-number, for enum codes and some default values.
+// ignore_for_file: no-magic-number, for enum codes, default values and manufacturer codes.
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';

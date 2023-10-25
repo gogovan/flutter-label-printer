@@ -492,8 +492,19 @@ class FlutterLabelPrinterMethodHandler(
                             Throwable().stackTraceToString()
                         )
                     } else {
-                        val status = HPRTPrinterHelper.getPrinterStatus()
-                        result.success(status)
+                        // For some insane reason status code are not aligned between Android and iOS SDK :facepalm: :facepalm: :facepalm:
+                        // Here we convert the status code to match the one used in iOS SDK since the code there gives more information
+                        val realStatus = when (HPRTPrinterHelper.getPrinterStatus()) {
+                            HPRTPrinterHelper.STATUS_DISCONNECT -> -1
+                            HPRTPrinterHelper.STATUS_TIMEOUT -> -2
+                            HPRTPrinterHelper.STATUS_NOPAPER -> 4
+                            HPRTPrinterHelper.STATUS_PRINTING -> 32
+                            HPRTPrinterHelper.STATUS_COVER_OPENED -> 65
+                            HPRTPrinterHelper.STATUS_OVER_HEATING -> 128
+                            else -> 0
+                        }
+
+                        result.success(realStatus)
                     }
                 }
 

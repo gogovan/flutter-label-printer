@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/exception/connection_exception.dart';
 import 'package:flutter_label_printer/exception/no_current_activity_exception.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
+import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 import 'package:flutter_label_printer/printer/hanin_tspl_printer.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -87,5 +88,18 @@ void main() {
     expect(await printer.connect(), true);
     await printer.setLogLevel(3);
     verify(printerPlatform.setLogLevel(3)).called(1);
+  });
+
+  test('getStatus', () async {
+    final printer = HaninTSPLPrinter(device);
+
+    when(printerPlatform.connectHaninTSPL('12:34:56:AB:CD:EF'))
+        .thenAnswer((realInvocation) async => true);
+    when(printerPlatform.getStatusHaninTSPL())
+        .thenAnswer((realInvocation) async => 6);
+
+    expect(await printer.connect(), true);
+    expect(await printer.getStatus(), const HaninTSPLPrinterStatus(6));
+    verify(printerPlatform.getStatusHaninTSPL()).called(1);
   });
 }

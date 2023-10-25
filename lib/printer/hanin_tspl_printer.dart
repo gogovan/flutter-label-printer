@@ -95,5 +95,21 @@ class HaninTSPLPrinter extends PrinterInterface {
   Future<void> setLogLevel(int level) async =>
       FlutterLabelPrinterPlatform.instance.setLogLevel(level);
 
+  /// Get status of the printer. It may be unable to return a status while the printer is printing.
+  /// Use when there are issues printing after print commands are sent.
+  Future<HaninTSPLPrinterStatus> getStatus() async {
+    checkConnected();
 
+    try {
+      final code =
+      await FlutterLabelPrinterPlatform.instance.getStatusHaninTSPL();
+
+      return HaninTSPLPrinterStatus(code);
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
 }
