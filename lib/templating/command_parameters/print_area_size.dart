@@ -9,8 +9,6 @@ class PrintAreaSize implements CommandParameter {
     this.originY,
     this.width,
     this.height,
-    this.horizontalResolution,
-    this.verticalResolution,
   });
 
   final PrintPaperType? paperType;
@@ -18,12 +16,10 @@ class PrintAreaSize implements CommandParameter {
   final double? originY;
   final double? width;
   final double? height;
-  final double? horizontalResolution;
-  final double? verticalResolution;
 
   @override
   String toString() =>
-      'PrintAreaSize{paperType: $paperType, originX: $originX, originY: $originY, width: $width, height: $height, horizontalResolution: $horizontalResolution, verticalResolution: $verticalResolution}';
+      'PrintAreaSize{paperType: $paperType, originX: $originX, originY: $originY, width: $width, height: $height}';
 
   @override
   bool operator ==(Object other) =>
@@ -34,9 +30,7 @@ class PrintAreaSize implements CommandParameter {
           originX == other.originX &&
           originY == other.originY &&
           width == other.width &&
-          height == other.height &&
-          horizontalResolution == other.horizontalResolution &&
-          verticalResolution == other.verticalResolution;
+          height == other.height;
 
   @override
   int get hashCode =>
@@ -44,9 +38,7 @@ class PrintAreaSize implements CommandParameter {
       originX.hashCode ^
       originY.hashCode ^
       width.hashCode ^
-      height.hashCode ^
-      horizontalResolution.hashCode ^
-      verticalResolution.hashCode;
+      height.hashCode;
 }
 
 enum PrintPaperType { continuous, label }

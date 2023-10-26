@@ -137,8 +137,6 @@ class Template {
         originY: _toDouble(paramMap['originY']),
         width: _toDouble(paramMap['width']),
         height: _toDouble(paramMap['height']),
-        horizontalResolution: _toDouble(paramMap['horizontalResolution']),
-        verticalResolution: _toDouble(paramMap['verticalResolution']),
       );
 
   final List<Command> commands;

@@ -3,7 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
 
-/// Font settings for Hanin N31.
+/// Font settings for Hanin TSPL
 /// 0: Monotye CG Triumvirate Bold Condensed, font width and height is stretchable.
 /// 1: 8 x 12 fixed pitch dot font.
 /// 2: 12 x 20 fixed pitch dot font.

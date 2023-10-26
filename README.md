@@ -9,8 +9,10 @@ Integrate printers with Flutter apps.
 
 # Supported Printers
 
-- Hanin (HPRT) HM-A300L
-    - HM-A400 and HM-A300S shares the same native SDK and hence should work in theory, but they are untested.
+- Hanin (HPRT) CPCL Printers
+  - HM-A300L is tested
+- Hanin (HPRT) TSPL Printers
+  - N31 is tested
 
 # Setup
 
@@ -80,7 +82,7 @@ OS.
       devices.
 
 ```dart
-HMA300LSearcher _searcher = HMA300LSearcher();
+BluetoothPrinterSearcher _searcher = BluetoothPrinterSearcher();
 _searcher.search().listen((event) {
   // event contains a list of `PrinterSearchResult`s
 });
@@ -92,8 +94,8 @@ _searcher.search().listen((event) {
    of `PrinterInterface`.
 
 ```dart
-HMA300L? _printer;
-_printer = HMA300L(result);
+HaninTSPLPrinter? _printer;
+_printer = HaninTSPLPrinter(result);
 await _printer?.connect();
 ```
 
@@ -134,13 +136,20 @@ and edit your YAML with [VSCode](https://code.visualstudio.com/) that has [YAML 
 
 ### Supported commands
 
+For each command, a table is provided listing support for each printing SDK. Legends is as follows:
+:x: Not supported
+:o: Supported
+:star: Required
+
 #### Size
-Command `size` set the printing area. _Note that this command is required, otherwise unexpected behavior may occur._ Support following parameters:
-- `paperType`: Either `continuous` or `label`
-- `originX` and `originY`: Where the printing area starts
-- `width` and `height`: Width and height of the printing area.
-- `horizontalResolution` and `verticalResolution`: Set resolutions in dpi. 
-    - HM-A300L ignore this parameter and always use 200dpi.
+Command `size` set the printing area. _Note that this command is required and should be the first command, otherwise unexpected behavior may occur._
+| Parameter | Description | Possible Values | Hanin CPCL | Hanin TSPL |
+|-----------|-------------|-----------------|------------|------------|
+| `paperType` | Type of paper. | `continuous` for receipt papers. `label` for label papers. | :o: | :x: |
+| `originX` | Starting horizontal position of the printing area. | number | :o: | :x: |
+| `originY` | Starting vertical position of the printing area. | number | :o: | :x: |
+| `width` | Width of the printing area. | number | :o: | :star: |
+| `height` | Height of the printing area. | number | :star: | :star: |
 
 #### Text
 Command `text` adds text with styling. Support following parameters:
@@ -201,7 +210,7 @@ String replacement is supported on all fields that takes a String:
 
 # Known Issues
 
-## HM-A300L
+## Hanin CPCL
 - Currently in iOS it can only print very small images, otherwise the printer will be stuck and unable to do anything, and can only be fixed by restarting the printer.
 
 # Contributing

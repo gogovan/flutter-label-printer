@@ -1,5 +1,4 @@
 import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
-import 'package:flutter_label_printer/exception/invalid_connection_state_exception.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
 import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
 import 'package:flutter_label_printer/printer/hanin_cpcl_printer.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_qr_cod
 import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
 /// Interface for Templating for the Hanin (HPRT) HM-A300L Printer.
@@ -19,12 +19,7 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
 
   @override
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     final height = printAreaSize.height;
     if (height == null) {
@@ -59,26 +54,7 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
     return typeResult && sizeResult;
   }
 
-  Rotation90 getHMA300LRotation(double angle) {
-    final roundedRotation = (angle / 90).round() * 90 % 360;
-    switch (roundedRotation) {
-      case 0:
-        return Rotation90.text;
-      // ignore: no-magic-number, well-formed angles.
-      case 90:
-        return Rotation90.text90;
-      // ignore: no-magic-number, well-formed angles.
-      case 180:
-        return Rotation90.text180;
-      // ignore: no-magic-number, well-formed angles.
-      case 270:
-        return Rotation90.text270;
-      default:
-        return Rotation90.text;
-    }
-  }
-
-  HaninCPCLOrientation getHMA300LPrintOrientation(double angle) {
+  HaninCPCLOrientation _getOrientation(double angle) {
     final roundedRotation = (angle / 90).round() * 90 % 180;
     switch (roundedRotation) {
       case 0:
@@ -93,12 +69,7 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
 
   @override
   Future<bool> addText(PrintText printText) async {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     final style = printText.style;
 
@@ -112,32 +83,73 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
       );
       boldResult = await setBold(style.bold?.toInt() ?? 0);
 
-      HaninCPCLTextAlign hmA300lAlign;
+      HaninCPCLTextAlign align;
       switch (style.align) {
         case PrintTextAlign.left:
-          hmA300lAlign = HaninCPCLTextAlign.left;
+          align = HaninCPCLTextAlign.left;
           break;
         case PrintTextAlign.center:
-          hmA300lAlign = HaninCPCLTextAlign.center;
+          align = HaninCPCLTextAlign.center;
           break;
         case PrintTextAlign.right:
-          hmA300lAlign = HaninCPCLTextAlign.right;
+          align = HaninCPCLTextAlign.right;
           break;
         default:
-          hmA300lAlign = HaninCPCLTextAlign.left;
+          align = HaninCPCLTextAlign.left;
       }
-      alignResult = await setAlign(hmA300lAlign);
+      alignResult = await setAlign(align);
     } else {
       sizeResult = true;
       boldResult = true;
       alignResult = true;
     }
 
+    final HaninCPCLFont font;
+    switch (printText.style?.font) {
+      case PrintTextFont.small:
+        font = HaninCPCLFont.font2;
+        break;
+      case PrintTextFont.medium:
+        font = HaninCPCLFont.font0;
+        break;
+      case PrintTextFont.large:
+        font = HaninCPCLFont.font28;
+        break;
+      case PrintTextFont.vlarge:
+        font = HaninCPCLFont.font4;
+        break;
+      case PrintTextFont.vvlarge:
+        font = HaninCPCLFont.font4;
+        break;
+      case PrintTextFont.chinese:
+        font = HaninCPCLFont.font1;
+        break;
+      case PrintTextFont.chineseLarge:
+        font = HaninCPCLFont.font28;
+        break;
+      case PrintTextFont.ocrSmall:
+        font = HaninCPCLFont.font0;
+        break;
+      case PrintTextFont.ocrLarge:
+        font = HaninCPCLFont.font4;
+        break;
+      case PrintTextFont.square:
+        font = HaninCPCLFont.font3;
+        break;
+      case PrintTextFont.triumvirate:
+        font = HaninCPCLFont.font0;
+        break;
+      case null:
+        font = HaninCPCLFont.font0;
+        break;
+    }
+
     final textParams = HaninCPCLTextParams(
       xPosition: printText.xPosition.toInt(),
       yPosition: printText.yPosition.toInt(),
       text: printText.text,
-      rotate: getHMA300LRotation(printText.rotation),
+      font: font,
+      rotate: Rotation90.fromAngle(printText.rotation),
     );
     final textResult = await addTextParams(textParams);
 
@@ -152,12 +164,7 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
 
   @override
   Future<bool> addBarcode(PrintBarcode barcode) {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     final HaninCPCLBarcodeType barcodeType;
     switch (barcode.type) {
@@ -187,12 +194,12 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
         break;
       default:
         throw UnsupportedError(
-          'Barcode format ${barcode.type} is unsupported on the HM-A300L.',
+          'Barcode format ${barcode.type} is unsupported on Hanin CPCL',
         );
     }
 
     final barcodeParams = HaninCPCLBarcodeParams(
-      orientation: getHMA300LPrintOrientation(barcode.rotation),
+      orientation: _getOrientation(barcode.rotation),
       type: barcodeType,
       ratio: HaninCPCLBarcodeRatio.ratio0,
       barWidthUnit: barcode.barLineWidth.toInt(),
@@ -207,15 +214,10 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
 
   @override
   Future<bool> addQRCode(PrintQRCode qrCode) {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     final qrCodeParams = HaninCPCLQRCodeParams(
-      orientation: getHMA300LPrintOrientation(qrCode.rotation),
+      orientation: _getOrientation(qrCode.rotation),
       xPosition: qrCode.xPosition.toInt(),
       yPosition: qrCode.yPosition.toInt(),
       model: HaninCPCLQRCodeModel.normal,
@@ -228,53 +230,26 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
 
   @override
   Future<bool> addLine(PrintRect rect) {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     return addLineParam(rect.rect, rect.strokeWidth.toInt());
   }
 
   @override
   Future<bool> addRectangle(PrintRect rect) {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
     return addRectangleParam(rect.rect, rect.strokeWidth.toInt());
   }
 
   @override
   Future<bool> addImage(PrintImage printImage) {
-    if (!isConnected()) {
-      throw InvalidConnectionStateException(
-        'Device not connected.',
-        StackTrace.current.toString(),
-      );
-    }
+    checkConnected();
 
-    final ImageMode printImageMode;
-    switch (printImage.monochromizationAlgorithm) {
-      case MonochromizationAlgorithm.binary:
-        printImageMode = ImageMode.binary;
-        break;
-      case MonochromizationAlgorithm.dithering:
-        printImageMode = ImageMode.dithering;
-        break;
-      case MonochromizationAlgorithm.cluster:
-        printImageMode = ImageMode.cluster;
-        break;
-      default:
-        throw UnsupportedError(
-          'Monochromization Algorithm ${printImage.monochromizationAlgorithm} is unsupported on the HM-A300L.',
-        );
-    }
+    final algo = printImage.monochromizationAlgorithm ??
+        MonochromizationAlgorithm.binary;
+    final ImageMode printImageMode =
+        ImageMode.fromMonochromizationAlgorithm(algo);
 
     final imageParams = HaninCPCLImageParams(
       imagePath: printImage.path,

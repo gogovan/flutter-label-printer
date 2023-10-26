@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 
 @immutable
@@ -9,16 +10,17 @@ class PrintTextStyle implements CommandParameter {
     this.width,
     this.height,
     this.align,
+    this.font,
   });
 
   final double? bold;
   final double? width;
   final double? height;
   final PrintTextAlign? align;
+  final PrintTextFont? font;
 
   @override
-  String toString() =>
-      'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align}';
+  String toString() => 'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font}';
 
   @override
   bool operator ==(Object other) =>
@@ -28,9 +30,14 @@ class PrintTextStyle implements CommandParameter {
           bold == other.bold &&
           width == other.width &&
           height == other.height &&
-          align == other.align;
+          align == other.align &&
+          font == other.font;
 
   @override
   int get hashCode =>
-      bold.hashCode ^ width.hashCode ^ height.hashCode ^ align.hashCode;
+      bold.hashCode ^
+      width.hashCode ^
+      height.hashCode ^
+      align.hashCode ^
+      font.hashCode;
 }

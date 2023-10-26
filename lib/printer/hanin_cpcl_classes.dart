@@ -3,7 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
 
-/// Font settings for Hanin HM-A300L.
+/// Font settings for Hanin CPCL
 /// 字体点阵大小:(单位:dot).
 /// 注意:英文固件只支持(0和1).
 /// 0:12x24.
