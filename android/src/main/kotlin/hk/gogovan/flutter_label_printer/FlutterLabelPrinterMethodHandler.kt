@@ -72,7 +72,7 @@ class FlutterLabelPrinterMethodHandler(
                                 Throwable().stackTraceToString()
                             )
                         } else {
-                            if (HPRTPrinterHelper.PortOpen(address) == 0) {
+                            if (HPRTPrinterHelper.PortOpen("Bluetooth," + address) == 0) {
                                 result.success(true)
                             } else {
                                 result.error(

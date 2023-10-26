@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter_label_printer/printer_searcher/bluetooth_printer_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer/templating/printer_template/hanin_cpcl_printer_template.dart';
 import 'package:flutter_label_printer/templating/printer_template/hanin_tspl_printer_template.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
@@ -115,6 +116,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> _printTestPage(BuildContext context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
+      await MyApp.printer
+          ?.setPrintAreaSize(const PrintAreaSize(width: 80, height: 80));
       await MyApp.printer?.printTestPage();
       scaffoldMessenger
           .showSnackBar(const SnackBar(content: Text("Test page printed.")));
@@ -132,7 +135,8 @@ class _MyAppState extends State<MyApp> {
       final yml = await rootBundle.loadString('assets/template.yaml');
       final template = Template.fromYaml(yml);
 
-      await TemplatePrinter(MyApp.printer!, template, replaceStrings: {'world': 'Earth'}).printTemplate();
+      await TemplatePrinter(MyApp.printer!, template,
+          replaceStrings: {'world': 'Earth'}).printTemplate();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -241,8 +245,7 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddBarcode()));
+                                    builder: (context) => const AddBarcode()));
                           },
                           child: const Text('Add Barcode')),
                       ElevatedButton(

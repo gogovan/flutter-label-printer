@@ -23,6 +23,9 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
       MyApp.printer?.setPrintAreaSize(PrintAreaSize(
         paperType: printPaperType,
         originX: double.tryParse(originXController.text),
+        originY: double.tryParse(originYController.text),
+        width: double.tryParse(widthController.text),
+        height: double.tryParse(heightController.text),
       ));
 
       scaffoldMessenger.showSnackBar(
