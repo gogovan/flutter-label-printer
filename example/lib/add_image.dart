@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
 import 'package:flutter_label_printer_example/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
@@ -18,21 +17,19 @@ class _AddImageState extends State<AddImage> {
   String? imagePath;
   final xController = TextEditingController();
   final yController = TextEditingController();
-  var mode = ImageMode.dithering;
-  var compress = false;
-  var package = false;
+  var mode = MonochromizationAlgorithm.dithering;
 
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await (MyApp.printer as HMA300LPrinter).addImageParams(HMA300LPrintImageParams(
-        imagePath: imagePath!,
-        xPosition: int.parse(xController.text),
-        yPosition: int.parse(yController.text),
-        mode: mode,
-        compress: compress,
-        package: package,
-      ));
+      MyApp.printer?.addImage(
+        PrintImage(
+            path: imagePath!,
+            xPosition: double.parse(xController.text),
+            yPosition: double.parse(yController.text),
+            monochromizationAlgorithm: mode),
+      );
+
       navigator.pop();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
@@ -42,7 +39,8 @@ class _AddImageState extends State<AddImage> {
   Future<void> _onPickImage() async {
     try {
       final picker = ImagePicker();
-      final file = await picker.pickImage(source: ImageSource.gallery, requestFullMetadata: false);
+      final file = await picker.pickImage(
+          source: ImageSource.gallery, requestFullMetadata: false);
 
       if (file != null) {
         final image = await img.decodeImageFile(file.path);
@@ -100,14 +98,16 @@ class _AddImageState extends State<AddImage> {
                 controller: yController,
               ),
               const Text('Mode'),
-              DropdownButton<ImageMode>(
+              DropdownButton<MonochromizationAlgorithm>(
                 items: const [
                   DropdownMenuItem(
-                      value: ImageMode.binary, child: Text('Binary')),
+                      value: MonochromizationAlgorithm.binary,
+                      child: Text('Binary')),
                   DropdownMenuItem(
-                      value: ImageMode.cluster, child: Text('Cluster')),
+                      value: MonochromizationAlgorithm.cluster,
+                      child: Text('Cluster')),
                   DropdownMenuItem(
-                      value: ImageMode.dithering,
+                      value: MonochromizationAlgorithm.dithering,
                       child: Text('Dithering')),
                 ],
                 onChanged: (item) {
@@ -116,22 +116,6 @@ class _AddImageState extends State<AddImage> {
                 },
                 value: mode,
               ),
-              CheckboxListTile(
-                  title: const Text("Compress"),
-                  value: compress,
-                  onChanged: (value) {
-                    setState(() {
-                      compress = value ?? false;
-                    });
-                  }),
-              CheckboxListTile(
-                  title: const Text("Package"),
-                  value: package,
-                  onChanged: (value) {
-                    setState(() {
-                      package = value ?? false;
-                    });
-                  }),
               ElevatedButton(
                   onPressed: () => _onPressed(context),
                   child: const Text("Add image")),

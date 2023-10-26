@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class AddRectangle extends StatefulWidget {
@@ -19,12 +19,13 @@ class _AddRectangleState extends State<AddRectangle> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await (MyApp.printer as HMA300LPrinter).addRectangleParam(Rect.fromLTRB(
-          double.parse(_x0Controller.text),
-          double.parse(_y0Controller.text),
-          double.parse(_x1Controller.text),
-          double.parse(_y1Controller.text)
-      ), int.parse(_widthController.text));
+      MyApp.printer?.addLine(PrintRect(
+          rect: Rect.fromLTRB(
+              double.parse(_x0Controller.text),
+              double.parse(_y0Controller.text),
+              double.parse(_x1Controller.text),
+              double.parse(_y1Controller.text)),
+          strokeWidth: double.parse(_widthController.text)));
       navigator.pop();
     } catch (ex, st) {
       print('Exception: $ex\n$st');

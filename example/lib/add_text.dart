@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
-import 'package:flutter_label_printer/printer/n31_classes.dart';
-import 'package:flutter_label_printer/printer/n31_printer.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class AddText extends StatefulWidget {
@@ -15,42 +15,33 @@ class AddText extends StatefulWidget {
 
 class _AddTextState extends State<AddText> {
   var rotation = Rotation90.text;
+  var font = PrintTextFont.small;
+  var align = PrintTextAlign.left;
 
   final xController = TextEditingController();
   final yController = TextEditingController();
   final widthController = TextEditingController();
   final heightController = TextEditingController();
+  final boldController = TextEditingController();
   final textController = TextEditingController();
-
-  var hma300font = HMA300LFont.font0;
-  var n31font = N31Font.fontChinese;
-
-  var alignment = N31PrinterTextAlign.left;
 
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      final printer = MyApp.printer;
-      if (printer is HMA300LPrinter) {
-        await printer.addTextParams(HaninCPCLTextParams(
-          rotate: rotation,
-          font: hma300font,
-          xPosition: int.parse(xController.text),
-          yPosition: int.parse(yController.text),
-          text: textController.text,
-        ));
-      } else if (printer is N31Printer) {
-        await printer.addTextParams(
-          HaninTSPLTextParams(
-            xPos: int.parse(xController.text),
-            yPos: int.parse(yController.text),
-            text: textController.text,
-            rotate: rotation,
-            font: n31font,
-            alignment: alignment,
-          ),
-        );
-      }
+      MyApp.printer?.addText(PrintText(
+        xPosition: double.parse(xController.text),
+        yPosition: double.parse(yController.text),
+        text: textController.text,
+        rotation: rotation.rot.toDouble(),
+        style: PrintTextStyle(
+          font: font,
+          width: double.tryParse(widthController.text),
+          height: double.tryParse(heightController.text),
+          bold: double.tryParse(boldController.text),
+          align: align,
+        ),
+      ));
+
       navigator.pop();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
@@ -94,90 +85,42 @@ class _AddTextState extends State<AddText> {
                 value: rotation,
               ),
               const Text('Font'),
-              if (MyApp.printer is HMA300LPrinter)
-                DropdownButton<HMA300LFont>(
+              DropdownButton<PrintTextFont>(
                   items: const [
                     DropdownMenuItem(
-                        value: HMA300LFont.font0, child: Text('Font 0:12x24。')),
+                        value: PrintTextFont.small, child: Text('Small')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font1,
-                        child:
-                            Text('Font 1:12x24(中文模式下打印繁体)，英文模式下字体变成(9x17)大小')),
+                        value: PrintTextFont.medium, child: Text('Medium')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font2, child: Text('Font 2:8x16。')),
+                        value: PrintTextFont.large, child: Text('Large')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font3, child: Text('Font 3:20x20。')),
+                        value: PrintTextFont.vlarge, child: Text('Very large')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font4,
-                        child: Text('Font 4:32x32或者16x32，由ID3字体宽高各放大两倍。')),
+                        value: PrintTextFont.vvlarge,
+                        child: Text('Very very large')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font7,
-                        child: Text('Font 7:24x24或者12x24，视中英文而定。')),
+                        value: PrintTextFont.chinese, child: Text('Chinese')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font8,
-                        child: Text('Font 8:24x24或者12x24，视中英文而定。')),
+                        value: PrintTextFont.chineseLarge,
+                        child: Text('Chinese Large')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font20,
-                        child: Text('Font 20:16x16或者8x16，视中英文而定。')),
+                        value: PrintTextFont.ocrSmall,
+                        child: Text('OCR Small')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font28,
-                        child: Text('Font 24:24x24或者12x24，视中英文而定。')),
+                        value: PrintTextFont.ocrLarge,
+                        child: Text('OCR Large')),
                     DropdownMenuItem(
-                        value: HMA300LFont.font55,
-                        child: Text('Font 55:16x16或者8x16，视中英文而定。')),
+                        value: PrintTextFont.square, child: Text('Square')),
+                    DropdownMenuItem(
+                        value: PrintTextFont.triumvirate,
+                        child: Text('Triumvirate')),
                   ],
                   onChanged: (item) {
                     setState(() {
-                      hma300font = item!;
+                      font = item!;
                     });
                   },
-                  value: hma300font,
-                ),
-              if (MyApp.printer is N31Printer)
-                DropdownButton<N31Font>(
-                  items: const [
-                    DropdownMenuItem(
-                        value: N31Font.fontTriumvirate,
-                        child: Text(
-                            'Font 0: Monotye CG Triumvirate Bold Condensed, font width and height is stretchable')),
-                    DropdownMenuItem(
-                        value: N31Font.font1,
-                        child: Text('Font 1: 8 x 12 fixed pitch dot font')),
-                    DropdownMenuItem(
-                        value: N31Font.font2,
-                        child: Text('Font 2: 12 x 20 fixed pitch dot font')),
-                    DropdownMenuItem(
-                        value: N31Font.font3,
-                        child: Text('Font 3: 16 x 24 fixed pitch dot font')),
-                    DropdownMenuItem(
-                        value: N31Font.font4,
-                        child: Text('Font 4: 24 x 32 fixed pitch dot font')),
-                    DropdownMenuItem(
-                        value: N31Font.font5,
-                        child: Text('Font 5: 32 x 48 dot fixed pitch font')),
-                    DropdownMenuItem(
-                        value: N31Font.font6,
-                        child:
-                            Text('Font 6: 14 x 19 dot fixed pitch font OCR-B')),
-                    DropdownMenuItem(
-                        value: N31Font.font7,
-                        child:
-                            Text('Font 7: 21 x 27 dot fixed pitch font OCR-B')),
-                    DropdownMenuItem(
-                        value: N31Font.font8,
-                        child:
-                            Text('Font 8: 14 x25 dot fixed pitch font OCR-A')),
-                    DropdownMenuItem(
-                        value: N31Font.fontChinese,
-                        child: Text('Font 9:只有这个字体能够打印中文。')),
-                  ],
-                  onChanged: (item) {
-                    setState(() {
-                      n31font = item!;
-                    });
-                  },
-                  value: n31font,
-                ),
+                  value: font),
               TextField(
                 decoration: const InputDecoration(
                   hintText: 'x',
@@ -192,22 +135,20 @@ class _AddTextState extends State<AddText> {
                 keyboardType: TextInputType.number,
                 controller: yController,
               ),
-              if (MyApp.printer is N31Printer)
-                TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'width',
-                  ),
-                  keyboardType: TextInputType.number,
-                  controller: widthController,
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: 'width',
                 ),
-              if (MyApp.printer is N31Printer)
-                TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'height',
-                  ),
-                  keyboardType: TextInputType.number,
-                  controller: heightController,
+                keyboardType: TextInputType.number,
+                controller: widthController,
+              ),
+              TextField(
+                decoration: const InputDecoration(
+                  hintText: 'height',
                 ),
+                keyboardType: TextInputType.number,
+                controller: heightController,
+              ),
               TextField(
                 decoration: const InputDecoration(
                   hintText: 'Text',
@@ -215,25 +156,24 @@ class _AddTextState extends State<AddText> {
                 keyboardType: TextInputType.text,
                 controller: textController,
               ),
-              if (MyApp.printer is N31Printer) const Text('Align'),
-              if (MyApp.printer is N31Printer)
-                DropdownButton<N31PrinterTextAlign>(
-                  items: const [
-                    DropdownMenuItem(
-                        value: N31PrinterTextAlign.left, child: Text('Left')),
-                    DropdownMenuItem(
-                        value: N31PrinterTextAlign.center,
-                        child: Text('Center')),
-                    DropdownMenuItem(
-                        value: N31PrinterTextAlign.right, child: Text('Right')),
-                  ],
-                  onChanged: (item) {
-                    setState(() {
-                      alignment = item!;
-                    });
-                  },
-                  value: alignment,
-                ),
+              const Text('Align'),
+              DropdownButton<PrintTextAlign>(
+                items: const [
+                  DropdownMenuItem(
+                      value: PrintTextAlign.left, child: Text('Left')),
+                  DropdownMenuItem(
+                      value: PrintTextAlign.center,
+                      child: Text('Center')),
+                  DropdownMenuItem(
+                      value: PrintTextAlign.right, child: Text('Right')),
+                ],
+                onChanged: (item) {
+                  setState(() {
+                    align = item!;
+                  });
+                },
+                value: align,
+              ),
               ElevatedButton(
                   onPressed: () => _onPressed(context),
                   child: const Text("Add Text command")),

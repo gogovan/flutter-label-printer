@@ -99,9 +99,9 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
       }
       alignResult = await setAlign(align);
     } else {
-      sizeResult = true;
-      boldResult = true;
-      alignResult = true;
+      sizeResult = await setTextSize(1, 1);
+      boldResult = await setBold(0);
+      alignResult = await setAlign(HaninCPCLTextAlign.left);
     }
 
     final HaninCPCLFont font;
