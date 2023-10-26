@@ -72,7 +72,7 @@ class FlutterLabelPrinterMethodHandler(
                                 Throwable().stackTraceToString()
                             )
                         } else {
-                            if (HPRTPrinterHelper.PortOpen("Bluetooth," + address) == 0) {
+                            if (HPRTPrinterHelper.PortOpen("Bluetooth,$address") == 0) {
                                 result.success(true)
                             } else {
                                 result.error(
@@ -198,7 +198,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.setPrintAreaSize" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -262,7 +262,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.addText" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -351,7 +351,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.print" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -522,7 +522,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.space" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -619,7 +619,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.addBarcode" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -742,7 +742,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.addQRCode" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -825,7 +825,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.addRectangle" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -893,7 +893,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.addLine" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
@@ -959,7 +959,7 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.addImage" -> {
-                    if (!PrinterHelper.IsOpened()) {
+                    if (!HPRTPrinterHelper.IsOpened()) {
                         result.error(
                             "1005",
                             "Printer not connected.",
