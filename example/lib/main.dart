@@ -116,8 +116,6 @@ class _MyAppState extends State<MyApp> {
   Future<void> _printTestPage(BuildContext context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer
-          ?.setPrintAreaSize(const PrintAreaSize(width: 80, height: 80));
       await MyApp.printer?.printTestPage();
       scaffoldMessenger
           .showSnackBar(const SnackBar(content: Text("Test page printed.")));

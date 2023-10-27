@@ -270,9 +270,6 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         try {
-                            // TODO API for setting language and country
-                            HPRTPrinterHelper.LanguageEncode = "gb2312"
-
                             val rotate = (call.argument<Int>("rotate") ?: 0).toString()
                             val font = call.argument<Int>("font").toString()
                             val x = call.argument<Int>("x").toString()

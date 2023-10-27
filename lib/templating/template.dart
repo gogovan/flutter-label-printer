@@ -11,14 +11,13 @@ import 'package:flutter_label_printer/templating/command_parameters/print_text_a
 import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:yaml/yaml.dart';
 
-double? _toDouble(x) {
-  if (x == null) {
-    return null;
-  }
+double _toDouble(x, {defValue}) {
   if (x is num) {
     return x.toDouble();
   } else if (x is String) {
     return double.parse(x);
+  } else if (defValue != null) {
+    return defValue;
   } else {
     throw ArgumentError('Unable to convert $x to double.');
   }
@@ -81,25 +80,25 @@ class Template {
 
   static PrintImage _getPrintImage(YamlMap paramMap) => PrintImage(
         path: paramMap['path'].toString(),
-        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
+        xPosition: _toDouble(paramMap['xPosition']),
+        yPosition: _toDouble(paramMap['yPosition']),
       );
 
   static PrintRect _getPrintRect(YamlMap paramMap) => PrintRect(
         rect: Rect.fromLTRB(
-          _toDouble(paramMap['left']) ?? 0,
-          _toDouble(paramMap['top']) ?? 0,
-          _toDouble(paramMap['right']) ?? 0,
-          _toDouble(paramMap['bottom']) ?? 0,
+          _toDouble(paramMap['left']),
+          _toDouble(paramMap['top']),
+          _toDouble(paramMap['right']),
+          _toDouble(paramMap['bottom']),
         ),
-        strokeWidth: _toDouble(paramMap['strokeWidth']) ?? 0,
+        strokeWidth: _toDouble(paramMap['strokeWidth'], defValue: 1),
       );
 
   static PrintQRCode _getPrintQRCode(YamlMap paramMap) => PrintQRCode(
-        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
+        xPosition: _toDouble(paramMap['xPosition']),
+        yPosition: _toDouble(paramMap['yPosition']),
         data: paramMap['data'].toString(),
-        unitSize: _toDouble(paramMap['unitSize']) ?? 1,
+        unitSize: _toDouble(paramMap['unitSize']),
       );
 
   static PrintBarcode _getPrintBarcode(
@@ -108,23 +107,23 @@ class Template {
   ) =>
       PrintBarcode(
         type: type,
-        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
+        xPosition: _toDouble(paramMap['xPosition']) ,
+        yPosition: _toDouble(paramMap['yPosition']),
         data: paramMap['data'].toString(),
-        height: _toDouble(paramMap['height']) ?? 0,
+        height: _toDouble(paramMap['height']),
       );
 
   static PrintText _getPrintText(YamlMap paramMap, YamlMap? style) => PrintText(
         text: paramMap['text'].toString(),
-        xPosition: _toDouble(paramMap['xPosition']) ?? 0,
-        yPosition: _toDouble(paramMap['yPosition']) ?? 0,
-        rotation: _toDouble(paramMap['rotation']) ?? 0,
+        xPosition: _toDouble(paramMap['xPosition']),
+        yPosition: _toDouble(paramMap['yPosition']),
+        rotation: _toDouble(paramMap['rotation'], defValue: 0),
         style: style == null
             ? null
             : PrintTextStyle(
-                bold: _toDouble(style['bold']),
-                width: _toDouble(style['width']),
-                height: _toDouble(style['height']),
+                bold: _toDouble(style['bold'], defValue: 0),
+                width: _toDouble(style['width'], defValue: 1),
+                height: _toDouble(style['height'], defValue: 1),
                 align: PrintTextAlign.values
                     .asNameMap()[style['align'].toString()],
               ),
@@ -133,8 +132,8 @@ class Template {
   static PrintAreaSize _getPrintAreaSize(YamlMap paramMap) => PrintAreaSize(
         paperType:
             PrintPaperType.values.byName(paramMap['paperType'].toString()),
-        originX: _toDouble(paramMap['originX']),
-        originY: _toDouble(paramMap['originY']),
+        originX: _toDouble(paramMap['originX'], defValue: 0),
+        originY: _toDouble(paramMap['originY'], defValue: 0),
         width: _toDouble(paramMap['width']),
         height: _toDouble(paramMap['height']),
       );

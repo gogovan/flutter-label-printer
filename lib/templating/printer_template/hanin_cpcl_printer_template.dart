@@ -73,9 +73,9 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
 
     final style = printText.style;
 
-    bool sizeResult;
-    bool boldResult;
-    bool alignResult;
+    bool sizeResult = true;
+    bool boldResult = true;
+    bool alignResult = true;
     if (style != null) {
       sizeResult = await setTextSize(
         style.width?.toInt() ?? 1,
@@ -98,10 +98,6 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
           align = HaninCPCLTextAlign.left;
       }
       alignResult = await setAlign(align);
-    } else {
-      sizeResult = await setTextSize(1, 1);
-      boldResult = await setBold(0);
-      alignResult = await setAlign(HaninCPCLTextAlign.left);
     }
 
     final HaninCPCLFont font;
@@ -153,7 +149,7 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
     );
     final textResult = await addTextParams(textParams);
 
-    if (style != null) {
+    if (style != null) { // Reset style.
       sizeResult = sizeResult && await setTextSize(1, 1);
       boldResult = boldResult && await setBold(0);
       alignResult = alignResult && await setAlign(HaninCPCLTextAlign.left);
