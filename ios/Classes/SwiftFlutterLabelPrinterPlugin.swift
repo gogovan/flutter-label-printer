@@ -38,7 +38,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
         if (call.method == "hk.gogovan.label_printer.stopSearchBluetooth") {
             PTDispatcher.share().stopScanBluetooth()
             result(true)
-        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.connect" || call.method == "hk.gogovan.label_printer.tspl.connect") {
+        } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.connect" || call.method == "hk.gogovan.label_printer.hanin.tspl.connect") {
             if let args = call.arguments as? [String:Any],
                let address = args["address"] as? String {
                 let printer = handler.foundPrinters.filter { p in
