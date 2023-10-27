@@ -11,7 +11,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_text_a
 import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:yaml/yaml.dart';
 
-double _toDouble(x, {defValue}) {
+double _toDouble(x, {double? defValue}) {
   if (x is num) {
     return x.toDouble();
   } else if (x is String) {

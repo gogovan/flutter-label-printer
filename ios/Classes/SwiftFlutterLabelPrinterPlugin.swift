@@ -480,18 +480,45 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 if let args = call.arguments as? [String:Any],
                    let x = args["x"] as? Int,
                    let y = args["y"] as? Int,
-                   let type = args["type"] as? UInt,
+                   let type = args["type"] as? String,
                    let height = args["height"] as? Int,
                    let showData = args["showData"] as? UInt,
                    let rotate = args["rotate"] as? UInt,
                    let data = args["data"] as? String,
-                   let typeN = PTTSCBarcodeStyle(rawValue: type),
                    let readableN = PTTSCBarcodeReadbleStyle(rawValue: showData),
                    let rotateN = PTTSCStyleRotation(rawValue: rotate),
                    let ratioN = PTTSCBarcodeRatio(rawValue: 1),
                    let cmd = currentTSPLCommand {
-                    cmd.printBarcode(withXPos: x, yPos: y, type: typeN, height: height, readable: readableN, rotation: rotateN, ratio: ratioN, context: data)
-                    result(true)
+                    let typeN: PTTSCBarcodeStyle?
+                    switch (type) {
+                    case "128": typeN = PTTSCBarcodeStyle.style128;
+                        break;
+                    case "128M": typeN = PTTSCBarcodeStyle.style128M;
+                        break;
+                    case "EAN128": typeN = PTTSCBarcodeStyle.styleEAN128;
+                        break;
+                    case "39": typeN = PTTSCBarcodeStyle.style39;
+                        break;
+                    case "93": typeN = PTTSCBarcodeStyle.style93;
+                        break;
+                    case "UPCA": typeN = PTTSCBarcodeStyle.styleUPCA;
+                        break;
+                    case "MSI": typeN = PTTSCBarcodeStyle.styleMSI;
+                        break;
+                    case "ITF14": typeN = PTTSCBarcodeStyle.styleITF14;
+                        break;
+                    case "EAN13": typeN = PTTSCBarcodeStyle.styleEAN13;
+                        break;
+                    default:
+                        typeN = nil;
+                    }
+                    
+                    if let typeR = typeN {
+                        cmd.printBarcode(withXPos: x, yPos: y, type: typeR, height: height, readable: readableN, rotation: rotateN, ratio: ratioN, context: data)
+                        result(true)
+                    } else {
+                        result(FlutterError(code: "1009", message: "Unsupported barcode type \(type)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
@@ -542,20 +569,37 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 if let args = call.arguments as? [String:Any],
                    let x = args["x"] as? Int,
                    let y = args["y"] as? Int,
-                   let eccLevel = args["eccLevel"] as? UInt8,
+                   let eccLevel = args["eccLevel"] as? String,
                    let unitSize = args["unitSize"] as? UInt,
                    let mode = args["mode"] as? UInt8,
                    let rotate = args["rotate"] as? UInt,
                    let data = args["data"] as? String,
-                   let eccLevelN = PTTSCQRcodeEcclevel(rawValue: eccLevel),
                    let cellWidth = PTTSCQRcodeWidth(rawValue: unitSize),
-                   let modeN = PTTSCQRCodeMode(rawValue: mode),
                    let rotateN = PTTSCStyleRotation(rawValue: rotate),
                    let modelN = PTTSCQRCodeModel(rawValue: 0),
                    let codeMaskN = PTTSCQRcodeMask(rawValue: 1),
                    let cmd = currentTSPLCommand {
-                    cmd.printQRcode(withXPos: x, yPos: y, eccLevel: eccLevelN, cellWidth: cellWidth, mode: modeN, rotation: rotateN, model: modelN, mask: codeMaskN, context: data)
-                    result(true)
+                    let modeN = mode == 0 ? PTTSCQRCodeMode.auto : PTTSCQRCodeMode.manual
+                    let eccLevelN: PTTSCQRcodeEcclevel?
+                    switch (eccLevel) {
+                    case "L": eccLevelN = PTTSCQRcodeEcclevel.L;
+                        break;
+                    case "M": eccLevelN = PTTSCQRcodeEcclevel.M;
+                        break;
+                    case "H": eccLevelN = PTTSCQRcodeEcclevel.H;
+                        break;
+                    case "Q": eccLevelN = PTTSCQRcodeEcclevel.Q;
+                        break;
+                    default:
+                        eccLevelN = nil
+                    }
+                    
+                    if let eccLevelR = eccLevelN {
+                        cmd.printQRcode(withXPos: x, yPos: y, eccLevel: eccLevelR, cellWidth: cellWidth, mode: modeN, rotation: rotateN, model: modelN, mask: codeMaskN, context: data)
+                        result(true)
+                    } else {
+                        result(FlutterError(code: "1009", message: "Unsupported ECCLevel type \(eccLevel)", details: Thread.callStackSymbols.joined(separator: "\n")))
+                    }
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }

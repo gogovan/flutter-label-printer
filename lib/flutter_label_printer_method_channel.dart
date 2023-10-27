@@ -414,8 +414,8 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.tspl.addLine',
       <String, dynamic>{
-        'x0': rect.left.round(),
-        'y0': rect.top.round(),
+        'x': rect.left.round(),
+        'y': rect.top.round(),
         'width': rect.width.round(),
         'height': rect.height.round(),
       },
