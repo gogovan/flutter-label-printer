@@ -562,8 +562,8 @@ void main() {
       mockMethodChannel.invokeMethod<bool>(
         'hk.gogovan.label_printer.hanin.tspl.addLine',
         <String, dynamic>{
-          'x0': 10,
-          'y0': 20,
+          'x': 10,
+          'y': 20,
           'width': 20,
           'height': 20,
         },
