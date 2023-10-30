@@ -280,7 +280,10 @@ class HaninTSPLImageParams {
 
   @override
   int get hashCode =>
-      imagePath.hashCode ^ xPosition.hashCode ^ yPosition.hashCode ^ imageMode.hashCode;
+      imagePath.hashCode ^
+      xPosition.hashCode ^
+      yPosition.hashCode ^
+      imageMode.hashCode;
 }
 
 @immutable

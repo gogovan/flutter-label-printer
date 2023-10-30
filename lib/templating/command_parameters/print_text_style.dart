@@ -20,7 +20,8 @@ class PrintTextStyle implements CommandParameter {
   final PrintTextFont? font;
 
   @override
-  String toString() => 'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font}';
+  String toString() =>
+      'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font}';
 
   @override
   bool operator ==(Object other) =>

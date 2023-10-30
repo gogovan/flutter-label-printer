@@ -49,8 +49,8 @@ class HaninTSPLPrinter extends PrinterInterface {
   }
 
   Future<bool> setPrintAreaSizeParams(
-      HaninTSPLPrintAreaSizeParams printAreaSizeParams,
-      ) async {
+    HaninTSPLPrintAreaSizeParams printAreaSizeParams,
+  ) async {
     checkConnected();
 
     try {
@@ -102,7 +102,7 @@ class HaninTSPLPrinter extends PrinterInterface {
 
     try {
       final code =
-      await FlutterLabelPrinterPlatform.instance.getStatusHaninTSPL();
+          await FlutterLabelPrinterPlatform.instance.getStatusHaninTSPL();
 
       return HaninTSPLPrinterStatus(code);
     } on PlatformException catch (ex, st) {

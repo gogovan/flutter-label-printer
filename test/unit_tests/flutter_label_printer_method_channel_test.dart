@@ -506,7 +506,10 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addRectangleHaninCPCL(const Rect.fromLTRB(10, 20, 30, 40), 5),
+      await printer.addRectangleHaninCPCL(
+        const Rect.fromLTRB(10, 20, 30, 40),
+        5,
+      ),
       true,
     );
   });
@@ -526,7 +529,10 @@ void main() {
     ).thenAnswer((realInvocation) async => true);
 
     expect(
-      await printer.addRectangleHaninTSPL(const Rect.fromLTRB(10, 20, 30, 40), 5),
+      await printer.addRectangleHaninTSPL(
+        const Rect.fromLTRB(10, 20, 30, 40),
+        5,
+      ),
       true,
     );
   });

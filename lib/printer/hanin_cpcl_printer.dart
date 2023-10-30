@@ -252,7 +252,8 @@ class HaninCPCLPrinter extends PrinterInterface {
     checkConnected();
 
     try {
-      return FlutterLabelPrinterPlatform.instance.addLineHaninCPCL(rect, strokeWidth);
+      return FlutterLabelPrinterPlatform.instance
+          .addLineHaninCPCL(rect, strokeWidth);
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

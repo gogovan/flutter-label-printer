@@ -107,7 +107,7 @@ class Template {
   ) =>
       PrintBarcode(
         type: type,
-        xPosition: _toDouble(paramMap['xPosition']) ,
+        xPosition: _toDouble(paramMap['xPosition']),
         yPosition: _toDouble(paramMap['yPosition']),
         data: paramMap['data'].toString(),
         height: _toDouble(paramMap['height']),

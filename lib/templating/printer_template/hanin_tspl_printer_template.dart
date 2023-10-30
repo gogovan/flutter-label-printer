@@ -200,7 +200,7 @@ class HaninTSPLPrinterTemplate extends HaninTSPLPrinter
     final algo = printImage.monochromizationAlgorithm ??
         MonochromizationAlgorithm.binary;
     final ImageMode printImageMode =
-    ImageMode.fromMonochromizationAlgorithm(algo);
+        ImageMode.fromMonochromizationAlgorithm(algo);
 
     final imageParams = HaninTSPLImageParams(
       imagePath: printImage.path,

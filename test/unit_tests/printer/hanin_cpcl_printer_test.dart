@@ -207,14 +207,18 @@ void main() {
         (printer) =>
             printer.addRectangleParam(const Rect.fromLTRB(10, 20, 30, 40), 2),
         () => printerPlatform.addRectangleHaninCPCL(
-            const Rect.fromLTRB(10, 20, 30, 40), 2,),
+          const Rect.fromLTRB(10, 20, 30, 40),
+          2,
+        ),
       ),
       TestCase(
         'addLineParam',
         (printer) =>
             printer.addLineParam(const Rect.fromLTRB(10, 20, 30, 40), 2),
         () => printerPlatform.addLineHaninCPCL(
-            const Rect.fromLTRB(10, 20, 30, 40), 2,),
+          const Rect.fromLTRB(10, 20, 30, 40),
+          2,
+        ),
       ),
       TestCase(
         'addImageParams',
@@ -255,7 +259,8 @@ void main() {
 
         when(printerPlatform.connectHaninCPCL('12:34:56:AB:CD:EF'))
             .thenAnswer((realInvocation) async => true);
-        when(data.platformFunction()).thenAnswer((realInvocation)async => true);
+        when(data.platformFunction())
+            .thenAnswer((realInvocation) async => true);
 
         expect(await printer.connect(), true);
         expect(await data.functionToTest(printer), true);

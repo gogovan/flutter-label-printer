@@ -17,10 +17,10 @@ import 'hanin_tspl_printer_test.mocks.dart';
 
 class TestCase {
   TestCase(
-      this.name,
-      this.functionToTest,
-      this.platformFunction,
-      );
+    this.name,
+    this.functionToTest,
+    this.platformFunction,
+  );
 
   final String name;
   final Function functionToTest;
@@ -38,7 +38,7 @@ void main() {
   FlutterLabelPrinterPlatform.instance = printerPlatform;
 
   const HaninTSPLTextParams textParams =
-  HaninTSPLTextParams(xPosition: 40, yPosition: 20, text: 'Hello World!');
+      HaninTSPLTextParams(xPosition: 40, yPosition: 20, text: 'Hello World!');
   const HaninTSPLBarcodeParams barcodeParams = HaninTSPLBarcodeParams(
     barcodeType: HaninTSPLBarcodeType.code39,
     height: 40,
@@ -84,7 +84,7 @@ void main() {
         .thenThrow(PlatformException(code: '1006', details: ''));
 
     expect(
-          () async => printer.connect(),
+      () async => printer.connect(),
       throwsA(isA<ConnectionException>()),
     );
     expect(printer.isConnected(), false);
@@ -105,7 +105,7 @@ void main() {
 
     expect(await printer.connect(), true);
     expect(
-          () async => printer.disconnect(),
+      () async => printer.disconnect(),
       throwsA(isA<NoCurrentActivityException>()),
     );
     expect(printer.isConnected(), true);
@@ -141,52 +141,56 @@ void main() {
     final testData = [
       TestCase(
         'printTestPage',
-            (printer) => printer.printTestPage(),
+        (printer) => printer.printTestPage(),
         printerPlatform.printTestPageHaninTSPL,
       ),
       TestCase(
         'print',
-            (printer) => printer.print(),
+        (printer) => printer.print(),
         printerPlatform.printHaninTSPL,
       ),
       TestCase(
         'addTextParams',
-            (printer) => printer.addTextParams(textParams),
-            () => printerPlatform.addTextHaninTSPL(textParams),
+        (printer) => printer.addTextParams(textParams),
+        () => printerPlatform.addTextHaninTSPL(textParams),
       ),
       TestCase(
         'prefeed',
-            (printer) => printer.addSpace(24),
-            () => printerPlatform.addSpaceHaninTSPL(24),
+        (printer) => printer.addSpace(24),
+        () => printerPlatform.addSpaceHaninTSPL(24),
       ),
       TestCase(
         'addBarcodeParams',
-            (printer) => printer.addBarcodeParams(barcodeParams),
-            () => printerPlatform.addBarcodeHaninTSPL(barcodeParams),
+        (printer) => printer.addBarcodeParams(barcodeParams),
+        () => printerPlatform.addBarcodeHaninTSPL(barcodeParams),
       ),
       TestCase(
         'addQRCodeParams',
-            (printer) => printer.addQRCodeParams(qrcodeParams),
-            () => printerPlatform.addQRCodeHaninTSPL(qrcodeParams),
+        (printer) => printer.addQRCodeParams(qrcodeParams),
+        () => printerPlatform.addQRCodeHaninTSPL(qrcodeParams),
       ),
       TestCase(
         'addRectangleParam',
-            (printer) =>
+        (printer) =>
             printer.addRectangleParam(const Rect.fromLTRB(10, 20, 30, 40), 2),
-            () => printerPlatform.addRectangleHaninTSPL(
-          const Rect.fromLTRB(10, 20, 30, 40), 2,),
+        () => printerPlatform.addRectangleHaninTSPL(
+          const Rect.fromLTRB(10, 20, 30, 40),
+          2,
+        ),
       ),
       TestCase(
         'addLineParam',
-            (printer) =>
-            printer.addLineParam(const Rect.fromLTRB(10, 20, 30, 40),),
-            () => printerPlatform.addLineHaninTSPL(
-          const Rect.fromLTRB(10, 20, 30, 40),),
+        (printer) => printer.addLineParam(
+          const Rect.fromLTRB(10, 20, 30, 40),
+        ),
+        () => printerPlatform.addLineHaninTSPL(
+          const Rect.fromLTRB(10, 20, 30, 40),
+        ),
       ),
       TestCase(
         'addImageParams',
-            (printer) => printer.addImageParams(imageParams),
-            () => printerPlatform.addImageHaninTSPL(imageParams),
+        (printer) => printer.addImageParams(imageParams),
+        () => printerPlatform.addImageHaninTSPL(imageParams),
       ),
     ];
 
@@ -194,7 +198,7 @@ void main() {
       test('invalid connection for ${data.name}', () {
         final printer = HaninTSPLPrinter(device);
         expect(
-              () async => data.functionToTest(printer),
+          () async => data.functionToTest(printer),
           throwsA(isA<InvalidConnectionStateException>()),
         );
       });
@@ -210,7 +214,7 @@ void main() {
 
         expect(await printer.connect(), true);
         expect(
-              () async => data.functionToTest(printer),
+          () async => data.functionToTest(printer),
           throwsA(isA<ConnectionException>()),
         );
 
@@ -222,7 +226,8 @@ void main() {
 
         when(printerPlatform.connectHaninTSPL('12:34:56:AB:CD:EF'))
             .thenAnswer((realInvocation) async => true);
-        when(data.platformFunction()).thenAnswer((realInvocation)async => true);
+        when(data.platformFunction())
+            .thenAnswer((realInvocation) async => true);
 
         expect(await printer.connect(), true);
         expect(await data.functionToTest(printer), true);

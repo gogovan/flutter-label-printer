@@ -69,7 +69,9 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   }
 
   Future<bool> printTestPageHaninCPCL() {
-    throw UnimplementedError('printTestPageHaninCPCL() has not been implemented.');
+    throw UnimplementedError(
+      'printTestPageHaninCPCL() has not been implemented.',
+    );
   }
 
   Future<bool> setPrintAreaHaninTSPL(HaninTSPLPrintAreaSizeParams params) {

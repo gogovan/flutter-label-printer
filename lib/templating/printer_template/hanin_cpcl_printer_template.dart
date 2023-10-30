@@ -149,7 +149,8 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
     );
     final textResult = await addTextParams(textParams);
 
-    if (style != null) { // Reset style.
+    if (style != null) {
+      // Reset style.
       sizeResult = sizeResult && await setTextSize(1, 1);
       boldResult = boldResult && await setBold(0);
       alignResult = alignResult && await setAlign(HaninCPCLTextAlign.left);
