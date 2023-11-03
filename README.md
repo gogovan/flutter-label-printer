@@ -32,7 +32,10 @@ android {
 }
 ```
 
-2. Depending on the connection technology your printer device requires, do the following steps:
+2. Depending on your printer, you may need to include SDKs for the printer in order for your project to build. Refer to manufacturer manual for installation details.
+   1. In particular for iOS, you may need to include the SDK Framework in your project and set the Target to the `flutter_label_printer` pod.  
+
+3. Depending on the connection technology your printer device requires, do the following steps:
 
 ## Bluetooth
 
