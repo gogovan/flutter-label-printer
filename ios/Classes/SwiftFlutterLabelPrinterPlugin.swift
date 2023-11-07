@@ -224,6 +224,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     }
                     
                     cmd.print(withSets: 1, copies: count)
+                    PTDispatcher.share().send(Data(cmd.cmdData))
                     
                     currentTSPLCommand = PTCommandTSPL()
                     areaSizeSet = false
