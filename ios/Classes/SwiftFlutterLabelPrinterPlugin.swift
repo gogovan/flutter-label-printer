@@ -215,9 +215,10 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
                 }
-                if let args = call.arguments as? [String:Any],
-                   let count = args["count"] as? Int,
-                   let cmd = currentTSPLCommand {
+                if let cmd = currentTSPLCommand {
+                    let args = call.arguments as? [String:Any]
+                    let count = args?["count"] as? Int ?? 1
+                    
                     if (!areaSizeSet) {
                         log.w(msg: "Print Area Size is not set. This may result in unexpected behavior in printing.")
                     }
@@ -228,6 +229,8 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     areaSizeSet = false
                     
                     result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
         } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setPaperType") {
