@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/common_classes.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_qr_code.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class AddQRCode extends StatefulWidget {
@@ -10,24 +11,24 @@ class AddQRCode extends StatefulWidget {
 }
 
 class _AddQRCodeState extends State<AddQRCode> {
-  var _orientation = HMA300LPrintOrientation.horizontal;
-  var _qrModel = HMA300LQRCodeModel.normal;
-  final _xController = TextEditingController();
-  final _yController = TextEditingController();
-  final _unitSizeController = TextEditingController();
-  final _dataController = TextEditingController();
+  var rotation = Rotation90.text;
+  final xController = TextEditingController();
+  final yController = TextEditingController();
+  final unitSizeController = TextEditingController();
+  final dataController = TextEditingController();
 
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      await MyApp.printer?.addQRCodeParams(HMA300LQRCodeParams(
-          orientation: _orientation,
-        xPosition: int.parse(_xController.text),
-        yPosition: int.parse(_yController.text),
-        model: _qrModel,
-        unitSize: int.parse(_unitSizeController.text),
-        data: _dataController.text
-      ));
+      MyApp.printer?.addQRCode(
+        PrintQRCode(
+          xPosition: double.parse(xController.text),
+          yPosition: double.parse(yController.text),
+          data: dataController.text,
+          unitSize: double.parse(unitSizeController.text),
+          rotation: rotation.rot.toDouble(),
+        ),
+      );
       navigator.pop();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
@@ -48,65 +49,56 @@ class _AddQRCodeState extends State<AddQRCode> {
                     minHeight: viewportConstraints.maxHeight,
                   ),
                   child: Column(children: [
-                    const Text('Orientation'),
-                    DropdownButton<HMA300LPrintOrientation>(
+                    const Text('Rotation'),
+                    DropdownButton<Rotation90>(
                       items: const [
                         DropdownMenuItem(
-                            value: HMA300LPrintOrientation.horizontal,
-                            child: Text('Horizontal')),
+                            value: Rotation90.text,
+                            child: Text('0 counterclockwise')),
                         DropdownMenuItem(
-                            value: HMA300LPrintOrientation.vertical,
-                            child: Text('Vertical')),
+                            value: Rotation90.text90,
+                            child: Text('90 counterclockwise')),
+                        DropdownMenuItem(
+                            value: Rotation90.text180,
+                            child: Text('180 counterclockwise')),
+                        DropdownMenuItem(
+                            value: Rotation90.text270,
+                            child: Text('270 counterclockwise')),
                       ],
                       onChanged: (item) {
-                        _orientation = item!;
+                        rotation = item!;
                         setState(() {});
                       },
-                      value: _orientation,
+                      value: rotation,
                     ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: 'x',
                       ),
                       keyboardType: TextInputType.number,
-                      controller: _xController,
+                      controller: xController,
                     ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: 'y',
                       ),
                       keyboardType: TextInputType.number,
-                      controller: _yController,
+                      controller: yController,
                     ),
                     const Text('Model'),
-                    DropdownButton<HMA300LQRCodeModel>(
-                      items: const [
-                        DropdownMenuItem(
-                            value: HMA300LQRCodeModel.normal,
-                            child: Text('普通类型')),
-                        DropdownMenuItem(
-                            value: HMA300LQRCodeModel.extraSymbols,
-                            child: Text('在类型1的基础上增加了个别的符号')),
-                      ],
-                      onChanged: (item) {
-                        _qrModel = item!;
-                        setState(() {});
-                      },
-                      value: _qrModel,
-                    ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: 'unit size',
                       ),
                       keyboardType: TextInputType.number,
-                      controller: _unitSizeController,
+                      controller: unitSizeController,
                     ),
                     TextField(
                       decoration: const InputDecoration(
                         hintText: 'data',
                       ),
                       keyboardType: TextInputType.text,
-                      controller: _dataController,
+                      controller: dataController,
                     ),
                     ElevatedButton(
                         onPressed: () => _onPressed(context),

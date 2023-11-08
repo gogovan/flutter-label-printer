@@ -9,8 +9,10 @@ Integrate printers with Flutter apps.
 
 # Supported Printers
 
-- Hanyin (HPRT) HM-A300L
-    - HM-A400 and HM-A300S shares the same native SDK and hence should work in theory, but they are untested.
+- Hanin (HPRT) CPCL Printers
+  - HM-A300L is tested
+- Hanin (HPRT) TSPL Printers
+  - N41BT is tested
 
 # Setup
 
@@ -30,7 +32,10 @@ android {
 }
 ```
 
-2. Depending on the connection technology your printer device requires, do the following steps:
+2. Depending on your printer, you may need to include SDKs for the printer in order for your project to build. Refer to manufacturer manual for installation details.
+   1. In particular for iOS, you may need to include the SDK Framework in your project and set the Target to the `flutter_label_printer` pod.  
+
+3. Depending on the connection technology your printer device requires, do the following steps:
 
 ## Bluetooth
 
@@ -42,10 +47,10 @@ OS.
 1. Add the following to your main `AndroidManifest.xml`.
    See [Android Developers](https://developer.android.com/guide/topics/connectivity/bluetooth/permissions))
    and [this StackOverflow answer](https://stackoverflow.com/a/70793272)
-   for more information about permission settings.
+   for more information about permission settings. 
+   If your app also requires Location permissions, remove `maxSdkVersion` attribute for those permissions.
 
 ```xml
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_label_printer_example">
 
@@ -80,7 +85,7 @@ OS.
       devices.
 
 ```dart
-HMA300LSearcher _searcher = HMA300LSearcher();
+BluetoothPrinterSearcher _searcher = BluetoothPrinterSearcher();
 _searcher.search().listen((event) {
   // event contains a list of `PrinterSearchResult`s
 });
@@ -92,8 +97,8 @@ _searcher.search().listen((event) {
    of `PrinterInterface`.
 
 ```dart
-HMA300L? _printer;
-_printer = HMA300L(result);
+HaninTSPLPrinter? _printer;
+_printer = HaninTSPLPrinter(result);
 await _printer?.connect();
 ```
 
@@ -134,55 +139,89 @@ and edit your YAML with [VSCode](https://code.visualstudio.com/) that has [YAML 
 
 ### Supported commands
 
+For each command, a table is provided listing support for each printing SDK. Legends is as follows:
+:x: Not supported. These parameters will be ignored if sent to unsupported printers.
+:o: Supported.
+:star: Required.
+
 #### Size
-Command `size` set the printing area. _Note that this command is required, otherwise unexpected behavior may occur._ Support following parameters:
-- `paperType`: Either `continuous` or `label`
-- `originX` and `originY`: Where the printing area starts
-- `width` and `height`: Width and height of the printing area.
-- `horizontalResolution` and `verticalResolution`: Set resolutions in dpi. 
-    - HM-A300L ignore this parameter and always use 200dpi.
+Command `size` set the printing area. _Note that this command is required and should be the first command, otherwise unexpected behavior may occur._
+This command create a canvas for drawing items to be printed. Call `print` to perform the actual printing.
+
+| Parameter   | Description                                        | Possible Values                                            | Hanin CPCL | Hanin TSPL |
+|-------------|----------------------------------------------------|------------------------------------------------------------|------------|------------|
+| `paperType` | Type of paper.                                     | `continuous` for receipt papers. `label` for label papers. | :star:     | :x:        |
+| `originX`   | Starting horizontal position of the printing area. | Number                                                     | :o:        | :x:        |
+| `originY`   | Starting vertical position of the printing area.   | Number                                                     | :o:        | :x:        |
+| `width`     | Width of the printing area.                        | Number                                                     | :star:     | :star:     |
+| `height`    | Height of the printing area.                       | Number                                                     | :star:     | :star:     |
 
 #### Text
-Command `text` adds text with styling. Support following parameters:
-- `text`: The text to print.
-- `xPosition` and `yPosition`: The position of the text.
-- `rotation`: Rotation of the text, if the printer support it. 
-    - HM-A300L only support rotation in 90 degrees (i.e. 0, 90, 180 and 270 degrees) and other values will be rounded to nearest 90 degrees value.
-- `style`: The style of the text, accepts an object:
-    - `bold`: Bold and its degree.
-    - `width` and `height`: The width and height of each character in the text.
-    - `align`: Alignment of the text
-        - HM-A300L supports `left`, `center` and `right`.
+Command `text` adds text with styling.
+
+| Parameter      | Description                                       | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
+|----------------|---------------------------------------------------|------------------------------|------------------------------|------------------------------|
+| `text`         | The text to print                                 | Text                         | :star:                       | :star:                       |
+| `xPosition`    | The x position of the text in the canvas.         | Number                       | :star:                       | :star:                       |
+| `yPosition`    | The y position of the text in the canvas.         | Number                       | :star:                       | :star:                       |
+| `rotation`     | Rotation of the text.                             | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
+| `style`        | The style of the text. Accept an object.          |                              | :o:                          | :o:                          |
+| `style.bold`   | Bold text and degree of boldness.                 | Number                       | :o:                          | :x:                          |
+| `style.width`  | Width of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          |
+| `style.height` | Height of each character in text, as a multipler. | Number                       | :o:                          | :o:                          |
+| `style.align`  | Alignment of text.                                | `left`, `center` or `right`. | :o:                          | :o:                          |
 
 #### Barcode
-Command `barcode` prints a barcode. Support following parameters:
-- `type`: The barcode symbology of the barcode.
-    - One of the following values: `code11, code39, code93, code128, codabar, ean2, ean5, ean8, ean13, interleaved2of5, msi, patchCode, pharmacode, plessey, telepen, upca, upce`
-    - Note that not every printer support every barcode symbology. Refer to manufacturer manual for details.
-- `xPosition` and `yPosition`: The position of the barcode.
-- `data`: The data encoded in the barcode.
-- `height:` The height of the barcode.
+Command `barcode` prints a barcode.
+
+| Parameter   | Description                                  | Possible Values             | Hanin CPCL                                                                       | Hanin TSPL                                                                                  |
+|-------------|----------------------------------------------|-----------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| `type`      | The barcode symbology of the barcode.        | Different for each printer. | :star: `upca`, `upce`, `ean13`, `ean8`, `code39`, `code93`, `code128`, `codabar` | :star: `code128`, `code128m`, `ean128`, `code39`, `code93`, `upca`, `msi`, `itf14`, `ean13` |
+| `xPosition` | The x position of the barcode in the canvas. | Number                      | :star:                                                                           | :star:                                                                                      |
+| `yPosition` | The y position of the barcode in the canvas. | Number                      | :star:                                                                           | :star:                                                                                      |
+| `data`      | Data encoded in the barcode.                 | Text                        | :star:                                                                           | :star:                                                                                      |
+| `height`    | The height of the barcode.                   | Number                      | :star:                                                                           | :star:                                                                                      |
 
 #### QR Code
-Command `qrcode` prints a QR Code. Support following parameters:
-- `xPosition` and `yPosition`: The position of the QR Code.
-- `data`: The data encoded in the QR Code.
-- `unitSize`: The size of each unit (square) of the QR Code.
+Command `qrcode` prints a QR Code. 
+
+| Parameter   | Description                                    | Possible Values | Hanin CPCL | Hanin TSPL |
+|-------------|------------------------------------------------|-----------------|------------|------------|
+| `xPosition` | The x position of the barcode in the canvas.   | Number          | :star:     | :star:     |
+| `yPosition` | The y position of the barcode in the canvas.   | Number          | :star:     | :star:     |
+| `data`      | Data encoded in the barcode.                   | Text            | :star:     | :star:     |
+| `unitSize`  | The size of each unit (square) of the QR Code. | Number          | :star:     | :star:     |
 
 #### Line
-Command `line` draws a line. Support following parameters:
-- `left`, `top`, `right`, `bottom`: The start and end points of the line.
-- `strokeWidth`: Stroke width of the line.
+Command `line` draws a line.
+
+| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL |
+|---------------|---------------------------|-----------------|------------|------------|
+| `left`        | x0                        | Number          | :star:     | :star:     |
+| `top`         | y0                        | Number          | :star:     | :star:     |
+| `right`       | x1                        | Number          | :star:     | :star:     |
+| `bottom`      | y1                        | Number          | :star:     | :star:     |
+| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :x:        |
 
 #### Rectangle
-Command `rectangle` draws a rectangle. Support following parameters:
-- `left`, `top`, `right`, `bottom`: The points of the rectangle.
-- `strokeWidth`: Stroke width of the rectangle.
+Command `rectangle` draws a rectangle. 
+
+| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL |
+|---------------|---------------------------|-----------------|------------|------------|
+| `left`        | x0                        | Number          | :star:     | :star:     |
+| `top`         | y0                        | Number          | :star:     | :star:     |
+| `right`       | x1                        | Number          | :star:     | :star:     |
+| `bottom`      | y1                        | Number          | :star:     | :star:     |
+| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :o:        |
 
 #### Image
-Command `image` prints an image. Support following parameters:
-- `path`: The file path to the image. Due to different paths in different OSes, **avoid hardcoding a path**. Use String Replacement (see below) instead.
-- `xPosition` and `yPosition`: The position of the image.
+Command `image` prints an image.
+
+| Parameter   | Description                                                                                                                                    | Possible Values | Hanin CPCL | Hanin TSPL |
+|-------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|------------|------------|
+| `path`      | The file path to the image. Due to different paths in different OSes, **avoid hardcoding a path**. Use String Replacement (see below) instead. | Text            | :star:     | :star:     |
+| `xPosition` | The x position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     |
+| `yPosition` | The y position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     |
 
 ### Template String Replacement
 
@@ -201,7 +240,7 @@ String replacement is supported on all fields that takes a String:
 
 # Known Issues
 
-## HM-A300L
+## Hanin CPCL
 - Currently in iOS it can only print very small images, otherwise the printer will be stuck and unable to do anything, and can only be fixed by restarting the printer.
 
 # Contributing

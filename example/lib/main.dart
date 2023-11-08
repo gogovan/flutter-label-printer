@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_printer.dart';
+import 'package:flutter_label_printer/printer/hanin_tspl_printer.dart';
 import 'dart:async';
 
-import 'package:flutter_label_printer/printer/hm_a300l_printer.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
-import 'package:flutter_label_printer/printer_searcher/hm_a300l_searcher.dart';
+import 'package:flutter_label_printer/printer_searcher/bluetooth_printer_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
-import 'package:flutter_label_printer/templating/printer_template/hm_a300l_printer_template.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
+import 'package:flutter_label_printer/templating/printer_template/hanin_cpcl_printer_template.dart';
+import 'package:flutter_label_printer/templating/printer_template/hanin_tspl_printer_template.dart';
+import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 import 'package:flutter_label_printer/templating/template_printer.dart';
 import 'package:flutter_label_printer_example/add_barcode.dart';
@@ -15,30 +18,31 @@ import 'package:flutter_label_printer_example/add_line.dart';
 import 'package:flutter_label_printer_example/add_qrcode.dart';
 import 'package:flutter_label_printer_example/add_rectangle.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
-import 'package:flutter_label_printer_example/prefeed.dart';
-import 'package:flutter_label_printer_example/set_page_width.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
-import 'package:flutter_label_printer_example/set_text_size.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
+enum PrinterModel { cpcl, tspl }
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static HMA300LPrinterInterface? printer;
+  static TemplatablePrinterInterface? printer;
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final HMA300LSearcher _searcher = HMA300LSearcher();
+  final BluetoothPrinterSearcher _searcher = BluetoothPrinterSearcher();
 
   List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
   bool _connected = false;
+
+  PrinterModel _printerModel = PrinterModel.cpcl;
 
   final connectIndexController = TextEditingController();
 
@@ -79,7 +83,16 @@ class _MyAppState extends State<MyApp> {
     try {
       PrinterSearchResult? result =
           _searchResults[int.parse(connectIndexController.text)];
-      MyApp.printer = HMA300LPrinterInterface(result);
+
+      switch (_printerModel) {
+        case PrinterModel.cpcl:
+          MyApp.printer = HaninCPCLPrinterTemplate(result);
+          break;
+        case PrinterModel.tspl:
+          MyApp.printer = HaninTSPLPrinterTemplate(result);
+          break;
+      }
+
       await MyApp.printer?.connect();
       setState(() {
         _connected = true;
@@ -112,89 +125,16 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _print() async {
-    try {
-      await MyApp.printer?.print();
-    } catch (ex, st) {
-      print('Exception: $ex\n$st');
-    }
+    await MyApp.printer?.print();
   }
 
   Future<void> _printTemplate() async {
     try {
       final yml = await rootBundle.loadString('assets/template.yaml');
       final template = Template.fromYaml(yml);
-      final printer = TemplatePrinter(MyApp.printer!, template, replaceStrings: {'world': 'Earth'});
-      await printer.printTemplate();
-    } catch (ex, st) {
-      print('Exception: $ex\n$st');
-    }
-  }
 
-  Future<void> _setPaperType(BuildContext context) async {
-    try {
-      final answer = await showDialog<HMA300LPaperType>(
-              context: context,
-              builder: (BuildContext context) {
-                return SimpleDialog(
-                    title: const Text('Set Paper Type'),
-                    children: [
-                      SimpleDialogOption(
-                        child: const Text('Continuous'),
-                        onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.continuous);
-                        },
-                      ),
-                      SimpleDialogOption(
-                        child: const Text('Label'),
-                        onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.label);
-                        },
-                      ),
-                      SimpleDialogOption(
-                        child: const Text('2 Inch Black Mark'),
-                        onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.blackMark2Inch);
-                        },
-                      ),
-                      SimpleDialogOption(
-                        child: const Text('3 Inch Black Mark'),
-                        onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.blackMark3Inch);
-                        },
-                      ),
-                      SimpleDialogOption(
-                        child: const Text('4 Inch Black Mark'),
-                        onPressed: () {
-                          Navigator.pop(context, HMA300LPaperType.blackMark4Inch);
-                        },
-                      ),
-                    ]);
-              }) ??
-          HMA300LPaperType.continuous;
-      await MyApp.printer?.setPaperType(answer);
-    } catch (ex, st) {
-      print('Exception: $ex\n$st');
-    }
-  }
-
-  Future<void> _setBold(BuildContext context) async {
-    try {
-      final answer = await showDialog<int>(
-              context: context,
-              builder: (BuildContext context) {
-                return SimpleDialog(
-                    title: const Text('Set Bold'),
-                    children: List.generate(
-                        6,
-                        (index) => SimpleDialogOption(
-                              child: Text(index.toString()),
-                              onPressed: () {
-                                Navigator.pop(context, index);
-                              },
-                            )));
-              }) ??
-          0;
-      await MyApp.printer?.setBold(answer);
+      await TemplatePrinter(MyApp.printer!, template,
+          replaceStrings: {'world': 'Earth'}).printTemplate();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -202,47 +142,21 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _getStatus(BuildContext context) async {
     try {
-      final result = await MyApp.printer?.getStatus();
+      dynamic result;
+      switch (_printerModel) {
+        case PrinterModel.cpcl:
+          result = await (MyApp.printer as HaninCPCLPrinter).getStatus();
+          break;
+        case PrinterModel.tspl:
+          result = await (MyApp.printer as HaninTSPLPrinter).getStatus();
+          break;
+      }
+
       await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(title: Text('Status = $result'));
           });
-    } catch (ex, st) {
-      print('Exception: $ex\n$st');
-    }
-  }
-
-  Future<void> _setAlign(BuildContext context) async {
-    try {
-      final answer = await showDialog<HMA300LPrinterTextAlign>(
-          context: context,
-          builder: (BuildContext context) {
-            return SimpleDialog(
-                title: const Text('Set Align'),
-                children: [
-                  SimpleDialogOption(
-                    child: const Text('Left'),
-                    onPressed: () {
-                      Navigator.pop(context, HMA300LPrinterTextAlign.left);
-                    },
-                  ),
-                  SimpleDialogOption(
-                    child: const Text('Center'),
-                    onPressed: () {
-                      Navigator.pop(context, HMA300LPrinterTextAlign.center);
-                    },
-                  ),
-                  SimpleDialogOption(
-                    child: const Text('Right'),
-                    onPressed: () {
-                      Navigator.pop(context, HMA300LPrinterTextAlign.right);
-                    },
-                  ),
-                ]);
-          }) ??
-          HMA300LPrinterTextAlign.left;
-      await MyApp.printer?.setAlign(answer);
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -281,6 +195,23 @@ class _MyAppState extends State<MyApp> {
                         keyboardType: TextInputType.number,
                         controller: connectIndexController,
                       ),
+                      DropdownButton<PrinterModel>(
+                          items: const [
+                            DropdownMenuItem(
+                              value: PrinterModel.cpcl,
+                              child: Text('Hanin CPCL (e.g. HM-A300L)'),
+                            ),
+                            DropdownMenuItem(
+                              value: PrinterModel.tspl,
+                              child: Text('Hanin TSPL (e.g. N31)'),
+                            ),
+                          ],
+                          value: _printerModel,
+                          onChanged: (value) {
+                            setState(() {
+                              _printerModel = value ?? PrinterModel.cpcl;
+                            });
+                          }),
                       ElevatedButton(
                           onPressed: _connect, child: const Text('Connect')),
                       Text('Connected = $_connected\n'),
@@ -291,9 +222,6 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () => _printTestPage(context),
                           child: const Text('Print Test Page')),
                       ElevatedButton(
-                          onPressed: () => _setPaperType(context),
-                          child: const Text('Set Paper Type')),
-                      ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -302,36 +230,6 @@ class _MyAppState extends State<MyApp> {
                                         const SetPrintAreaSize()));
                           },
                           child: const Text('Set Print Area Size')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SetPageWidth()));
-                          },
-                          child: const Text('Set Page Width')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Prefeed()));
-                          },
-                          child: const Text('Prefeed')),
-                      ElevatedButton(
-                          onPressed: () => _setBold(context),
-                          child: const Text('Set Bold')),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SetTextSize()));
-                          },
-                          child: const Text('Set Text Size')),
-                      ElevatedButton(
-                          onPressed: () => _setAlign(context),
-                          child: const Text('Set Align')),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -361,7 +259,8 @@ class _MyAppState extends State<MyApp> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const AddRectangle()));
+                                    builder: (context) =>
+                                        const AddRectangle()));
                           },
                           child: const Text('Add Rectangle')),
                       ElevatedButton(
@@ -383,7 +282,8 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                           onPressed: _print, child: const Text('Print')),
                       ElevatedButton(
-                          onPressed: _printTemplate, child: const Text('Print Template')),
+                          onPressed: _printTemplate,
+                          child: const Text('Print Template')),
                       ElevatedButton(
                           onPressed: _disconnect,
                           child: const Text('Disconnect')),

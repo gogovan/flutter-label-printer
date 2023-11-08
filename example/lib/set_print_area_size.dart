@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer_example/main.dart';
 
 class SetPrintAreaSize extends StatefulWidget {
@@ -10,18 +10,24 @@ class SetPrintAreaSize extends StatefulWidget {
 }
 
 class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
-  final offsetController = TextEditingController();
+  var printPaperType = PrintPaperType.label;
+  final originXController = TextEditingController();
+  final originYController = TextEditingController();
+  final widthController = TextEditingController();
   final heightController = TextEditingController();
   final quantityController = TextEditingController();
 
   Future<void> _onPressed(context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      await MyApp.printer?.setPrintAreaSizeParams(HMA300LPrintAreaSizeParams(
-        offset: int.parse(offsetController.text),
-        height: int.parse(heightController.text),
-        quantity: int.parse(quantityController.text),
+      MyApp.printer?.setPrintAreaSize(PrintAreaSize(
+        paperType: printPaperType,
+        originX: double.tryParse(originXController.text),
+        originY: double.tryParse(originYController.text),
+        width: double.tryParse(widthController.text),
+        height: double.tryParse(heightController.text),
       ));
+
       scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text("Print Area Size Parameters Set")));
     } catch (ex, st) {
@@ -43,12 +49,42 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
                     minHeight: viewportConstraints.maxHeight,
                   ),
                   child: Column(children: [
+                    const Text('Model'),
+                    DropdownButton<PrintPaperType>(
+                      items: const [
+                        DropdownMenuItem(
+                            value: PrintPaperType.label,
+                            child: Text('label paper')),
+                        DropdownMenuItem(
+                            value: PrintPaperType.continuous,
+                            child: Text('continuous paper (e.g. Receipts)')),
+                      ],
+                      onChanged: (item) {
+                        printPaperType = item!;
+                        setState(() {});
+                      },
+                      value: printPaperType,
+                    ),
                     TextField(
                       decoration: const InputDecoration(
-                        hintText: 'Offset',
+                        hintText: 'Origin X',
                       ),
                       keyboardType: TextInputType.number,
-                      controller: offsetController,
+                      controller: originXController,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Origin Y',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: originYController,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Width',
+                      ),
+                      keyboardType: TextInputType.number,
+                      controller: widthController,
                     ),
                     TextField(
                       decoration: const InputDecoration(
@@ -56,13 +92,6 @@ class _SetPrintAreaSizeState extends State<SetPrintAreaSize> {
                       ),
                       keyboardType: TextInputType.number,
                       controller: heightController,
-                    ),
-                    TextField(
-                      decoration: const InputDecoration(
-                        hintText: 'Quantity',
-                      ),
-                      keyboardType: TextInputType.number,
-                      controller: quantityController,
                     ),
                     ElevatedButton(
                         onPressed: () => _onPressed(context),

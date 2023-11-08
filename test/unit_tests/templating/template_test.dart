@@ -84,6 +84,7 @@ commands:
           xPosition: 300,
           yPosition: 100,
           style: PrintTextStyle(
+            bold: 0,
             width: 2,
             height: 3,
             align: PrintTextAlign.right,

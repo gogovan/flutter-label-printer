@@ -26,7 +26,7 @@ class BluetoothScanStreamHandler: NSObject, FlutterStreamHandler {
             self.foundPrinters = filtered
             
             let result = filtered.map({ item in
-                return item.mac
+                return "\(item.mac ?? "");\(item.name ?? "")"
             })
 
             events(result)

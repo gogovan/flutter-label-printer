@@ -54,6 +54,7 @@ android {
 
 dependencies {
     implementation files('libs/CPCL_SDK_V1.13.jar')
+    implementation files('libs/TSPL_V1.22.jar')
 
     testImplementation "junit:junit:4.13.2"
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"

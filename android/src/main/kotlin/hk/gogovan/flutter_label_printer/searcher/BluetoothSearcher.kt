@@ -162,8 +162,9 @@ class BluetoothSearcher @VisibleForTesting constructor(
 
             coroutineScope.launch {
                 foundDevice.collect {
-                    val result = it.address
-                    if (result != null) {
+                    val address = it.address
+                    if (address != null) {
+                        val result = "${address};${it.name}"
                         discoveredBluetoothDevices.add(result)
                         val toSend = discoveredBluetoothDevices.toList()
                         resultFlow.emit(ResultOr(toSend))

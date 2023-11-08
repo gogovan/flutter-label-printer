@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_label_printer/flutter_label_printer_method_channel.dart';
-import 'package:flutter_label_printer/printer/hm_a300l_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_cpcl_classes.dart';
+import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
@@ -27,119 +28,197 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Stream<List<String>> searchHMA300L() {
-    throw UnimplementedError('searchHMA300L() has not been implemented.');
-  }
-
-  Future<bool> stopSearchHMA300L() {
-    throw UnimplementedError('stopSearchHMA300L() has not been implemented.');
-  }
-
-  Future<bool> connectHMA300L(String address) {
-    throw UnimplementedError('connectHMA300L() has not been implemented.');
-  }
-
-  Future<bool> disconnectHMA300L() {
-    throw UnimplementedError('disconnectHMA300L() has not been implemented.');
-  }
-
-  Future<bool> printTestPageHMA300L() {
-    throw UnimplementedError(
-      'printTestPageHMA300L() has not been implemented.',
-    );
-  }
-
   Future<void> setLogLevel(int level) {
     throw UnimplementedError(
       'setLogLevel() has not been implemented.',
     );
   }
 
-  Future<bool> setPrintAreaSizeHMA300L(HMA300LPrintAreaSizeParams params) {
+  Stream<List<String>> searchBluetooth() {
+    throw UnimplementedError('searchBluetooth() has not been implemented.');
+  }
+
+  Future<bool> stopSearchBluetooth() {
+    throw UnimplementedError('stopSearchBluetooth() has not been implemented.');
+  }
+
+  Future<bool> connectHaninCPCL(String address) {
+    throw UnimplementedError('connectHaninCPCL() has not been implemented.');
+  }
+
+  Future<bool> connectHaninTSPL(String address) {
+    throw UnimplementedError('connectHaninTSPL() has not been implemented.');
+  }
+
+  Future<bool> disconnectHaninTSPL() {
+    throw UnimplementedError('disconnectHaninTSPL() has not been implemented.');
+  }
+
+  Future<bool> disconnectHaninCPCL() {
+    throw UnimplementedError('disconnectHaninCPCL() has not been implemented.');
+  }
+
+  Future<bool> clearHaninTSPL() {
+    throw UnimplementedError('clearHaninTSPL() has not been implemented.');
+  }
+
+  Future<bool> printTestPageHaninTSPL() {
     throw UnimplementedError(
-      'setPrintAreaSizeHMA300L() has not been implemented.',
+      'printTestPageHaninTSPL() has not been implemented.',
     );
   }
 
-  Future<bool> addTextHMA300L(HMA300LTextParams params) {
+  Future<bool> printTestPageHaninCPCL() {
     throw UnimplementedError(
-      'addTextHMA300L() has not been implemented.',
+      'printTestPageHaninCPCL() has not been implemented.',
     );
   }
 
-  Future<bool> printHMA300L() {
+  Future<bool> setPrintAreaHaninTSPL(HaninTSPLPrintAreaSizeParams params) {
     throw UnimplementedError(
-      'printHMA300L() has not been implemented.',
+      'setPrintAreaHaninTSPL() has not been implemented.',
     );
   }
 
-  Future<bool> setPaperTypeHMA300L(HMA300LPaperType type) {
+  Future<bool> setPrintAreaHaninCPCL(HaninCPCLPrintAreaSizeParams params) {
     throw UnimplementedError(
-      'setPaperTypeHMA300L() has not been implemented.',
+      'setPrintAreaHaninCPCL() has not been implemented.',
     );
   }
 
-  Future<bool> setBoldHMA300L(int size) {
+  Future<bool> addTextHaninTSPL(HaninTSPLTextParams params) {
     throw UnimplementedError(
-      'setBoldHMA300L() has not been implemented.',
+      'addTextHaninTSPL() has not been implemented.',
     );
   }
 
-  Future<bool> setTextSizeHMA300L(int width, int height) {
+  Future<bool> addTextHaninCPCL(HaninCPCLTextParams params) {
     throw UnimplementedError(
-      'setTextSizeHMA300L() has not been implemented.',
+      'addTextHaninCPCL() has not been implemented.',
     );
   }
 
-  Future<int> getStatusHMA300L() {
+  Future<bool> printHaninTSPL() {
     throw UnimplementedError(
-      'getStatusHMA300L() has not been implemented.',
+      'printHaninTSPL() has not been implemented.',
     );
   }
 
-  Future<bool> prefeedHMA300L(int dot) {
+  Future<bool> printHaninCPCL() {
     throw UnimplementedError(
-      'prefeedHMA300L() has not been implemented.',
+      'printHaninCPCL() has not been implemented.',
     );
   }
 
-  Future<bool> setPageWidthHMA300L(int width) {
+  Future<bool> setPaperTypeHaninCPCL(HaninCPCLPaperType type) {
     throw UnimplementedError(
-      'setPageWidthHMA300L() has not been implemented.',
+      'setPaperTypeHaninCPCL() has not been implemented.',
     );
   }
 
-  Future<bool> setAlignHMA300L(int align) {
+  Future<bool> setBoldHaninCPCL(int size) {
     throw UnimplementedError(
-      'setAlignHMA300L() has not been implemented.',
+      'setBoldHaninCPCL() has not been implemented.',
     );
   }
 
-  Future<bool> addBarcode(HMA300LBarcodeParams params) {
+  Future<bool> setHaninCPCLTextSize(int width, int height) {
     throw UnimplementedError(
-      'addBarcode() has not been implemented.',
+      'setHaninCPCLTextSize() has not been implemented.',
     );
   }
 
-  Future<bool> addQRCode(HMA300LQRCodeParams params) {
+  Future<int> getStatusHaninTSPL() {
     throw UnimplementedError(
-      'addQRCode() has not been implemented.',
+      'getStatusHaninTSPL() has not been implemented.',
     );
   }
 
-  Future<bool> addRectangle(Rect rect, int strokeWidth) {
+  Future<int> getStatusHaninCPCL() {
+    throw UnimplementedError(
+      'getStatusHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addSpaceHaninTSPL(int dot) {
+    throw UnimplementedError(
+      'addSpaceHaninTSPL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addSpaceHaninCPCL(int dot) {
+    throw UnimplementedError(
+      'addSpaceHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> setPageWidthHaninCPCL(int width) {
+    throw UnimplementedError(
+      'setPageWidthHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> setAlignHaninCPCL(HaninCPCLTextAlign align) {
+    throw UnimplementedError(
+      'setAlignHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addBarcodeHaninTSPL(HaninTSPLBarcodeParams params) {
+    throw UnimplementedError(
+      'addBarcodeHaninTSPL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addBarcodeHaninCPCL(HaninCPCLBarcodeParams params) {
+    throw UnimplementedError(
+      'addBarcodeHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addQRCodeHaninTSPL(HaninTSPLQRCodeParams params) {
+    throw UnimplementedError(
+      'addQRCodeHaninTSPL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addQRCodeHaninCPCL(HaninCPCLQRCodeParams params) {
+    throw UnimplementedError(
+      'addQRCodeHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addRectangleHaninTSPL(Rect rect, int strokeWidth) {
     throw UnimplementedError(
       'addRectangle() has not been implemented.',
     );
   }
 
-  Future<bool> addLine(Rect rect, int strokeWidth) {
+  Future<bool> addRectangleHaninCPCL(Rect rect, int strokeWidth) {
     throw UnimplementedError(
-      'addLine() has not been implemented.',
+      'addRectangleHaninCPCL() has not been implemented.',
     );
   }
 
-  Future<bool> addImage(HMA300LPrintImageParams params) {
+  Future<bool> addLineHaninTSPL(Rect rect) {
+    throw UnimplementedError(
+      'addLineHaninTSPL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addLineHaninCPCL(Rect rect, int strokeWidth) {
+    throw UnimplementedError(
+      'addLineHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> addImageHaninTSPL(HaninTSPLImageParams params) {
+    throw UnimplementedError(
+      'addImage() has not been implemented.',
+    );
+  }
+
+  Future<bool> addImageHaninCPCL(HaninCPCLImageParams params) {
     throw UnimplementedError(
       'addImage() has not been implemented.',
     );
