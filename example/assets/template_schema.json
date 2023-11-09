@@ -207,6 +207,9 @@
                         "description": "Adds an image.",
                         "type": "object",
                         "properties": {
+                            "command": {
+                                "const": "rectangle"
+                            },
                             "path": {
                                 "type": "string",
                                 "description": " The file path to the image."
