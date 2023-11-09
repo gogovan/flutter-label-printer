@@ -22,58 +22,56 @@ import 'template_printer_test.mocks.dart';
 ])
 void main() {
   group('test printTemplate', () {
-    const template = Template([
-      Command(
-        CommandType.size,
+    const template = Template(
         PrintAreaSize(
           paperType: PrintPaperType.continuous,
           width: 300,
           height: 500,
         ),
-      ),
-      Command(
-        CommandType.text,
-        PrintText(
-          text: 'Hello World!',
-          xPosition: 80,
-          yPosition: 20,
-        ),
-      ),
-      Command(
-        CommandType.barcode,
-        PrintBarcode(
-          type: PrintBarcodeType.code39,
-          xPosition: 40,
-          yPosition: 20,
-          data: 'VP93751',
-          height: 100,
-        ),
-      ),
-      Command(
-        CommandType.qrcode,
-        PrintQRCode(
-          xPosition: 60,
-          yPosition: 30,
-          data: 'https://example.com',
-        ),
-      ),
-      Command(
-        CommandType.line,
-        PrintRect(rect: Rect.fromLTRB(10, 20, 30, 40)),
-      ),
-      Command(
-        CommandType.rectangle,
-        PrintRect(rect: Rect.fromLTRB(10, 20, 30, 40)),
-      ),
-      Command(
-        CommandType.image,
-        PrintImage(
-          path: '/sdcard/1.jpg',
-          xPosition: 50,
-          yPosition: 30,
-        ),
-      ),
-    ]);
+        [
+          Command(
+            CommandType.text,
+            PrintText(
+              text: 'Hello World!',
+              xPosition: 80,
+              yPosition: 20,
+            ),
+          ),
+          Command(
+            CommandType.barcode,
+            PrintBarcode(
+              type: PrintBarcodeType.code39,
+              xPosition: 40,
+              yPosition: 20,
+              data: 'VP93751',
+              height: 100,
+            ),
+          ),
+          Command(
+            CommandType.qrcode,
+            PrintQRCode(
+              xPosition: 60,
+              yPosition: 30,
+              data: 'https://example.com',
+            ),
+          ),
+          Command(
+            CommandType.line,
+            PrintRect(rect: Rect.fromLTRB(10, 20, 30, 40)),
+          ),
+          Command(
+            CommandType.rectangle,
+            PrintRect(rect: Rect.fromLTRB(10, 20, 30, 40)),
+          ),
+          Command(
+            CommandType.image,
+            PrintImage(
+              path: '/sdcard/1.jpg',
+              xPosition: 50,
+              yPosition: 30,
+            ),
+          ),
+        ]);
 
     test('printTemplate failure', () async {
       final printer = MockTemplatablePrinterInterface();
@@ -151,34 +149,40 @@ void main() {
   });
 
   group('test template with string replacement', () {
-    const template = Template([
-      Command(
-        CommandType.text,
-        PrintText(
-          text: 'Hello {{name}}!',
-          xPosition: 80,
-          yPosition: 20,
+    const template = Template(
+        PrintAreaSize(
+          paperType: PrintPaperType.continuous,
+          width: 300,
+          height: 500,
         ),
-      ),
-      Command(
-        CommandType.barcode,
-        PrintBarcode(
-          type: PrintBarcodeType.code39,
-          xPosition: 40,
-          yPosition: 20,
-          data: '{{barcode}}',
-          height: 100,
-        ),
-      ),
-      Command(
-        CommandType.qrcode,
-        PrintQRCode(
-          xPosition: 60,
-          yPosition: 30,
-          data: 'https://{{site}}',
-        ),
-      ),
-    ]);
+        [
+          Command(
+            CommandType.text,
+            PrintText(
+              text: 'Hello {{name}}!',
+              xPosition: 80,
+              yPosition: 20,
+            ),
+          ),
+          Command(
+            CommandType.barcode,
+            PrintBarcode(
+              type: PrintBarcodeType.code39,
+              xPosition: 40,
+              yPosition: 20,
+              data: '{{barcode}}',
+              height: 100,
+            ),
+          ),
+          Command(
+            CommandType.qrcode,
+            PrintQRCode(
+              xPosition: 60,
+              yPosition: 30,
+              data: 'https://{{site}}',
+            ),
+          ),
+        ]);
 
     test('printTemplate success', () async {
       final printer = MockTemplatablePrinterInterface();
@@ -193,6 +197,7 @@ void main() {
       );
 
       when(printer.print()).thenAnswer((realInvocation) async => true);
+      when(printer.setPrintAreaSize(any)).thenAnswer((realInvocation) async => true);
       when(printer.addText(any)).thenAnswer((realInvocation) async => true);
       when(printer.addBarcode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addQRCode(any)).thenAnswer((realInvocation) async => true);

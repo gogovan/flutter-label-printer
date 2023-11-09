@@ -1,12 +1,11 @@
 # yaml-language-server: $schema=template_schema.json
+size:
+  paperType: label
+  originX: 0
+  originY: 0
+  width: 300
+  height: 300
 commands:
-  - command: size
-    parameters:
-      paperType: label
-      originX: 0
-      originY: 0
-      width: 300
-      height: 300
   - command: text
     parameters:
       text: Hello {{world}}!

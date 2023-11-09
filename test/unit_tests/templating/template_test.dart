@@ -15,14 +15,13 @@ void main() {
   test('fromYaml', () {
     const yaml = r'''
 # yaml-language-server: $schema=template_schema.json
+size:
+  paperType: label
+  originX: 0
+  originY: 0
+  width: 300
+  height: 400
 commands:
-  - command: size
-    parameters:
-      paperType: label
-      originX: 0
-      originY: 0
-      width: 300
-      height: 400
   - command: text
     parameters:
       text: Hello {{world}}!
@@ -66,17 +65,18 @@ commands:
       yPosition: 150
     ''';
 
-    expect(Template.fromYaml(yaml).commands, [
-      const Command(
-        CommandType.size,
-        PrintAreaSize(
-          paperType: PrintPaperType.label,
-          width: 300,
-          height: 400,
-          originX: 0,
-          originY: 0,
-        ),
+    final template = Template.fromYaml(yaml);
+    expect(
+      template.size,
+      const PrintAreaSize(
+        paperType: PrintPaperType.label,
+        width: 300,
+        height: 400,
+        originX: 0,
+        originY: 0,
       ),
+    );
+    expect(template.commands, [
       const Command(
         CommandType.text,
         PrintText(

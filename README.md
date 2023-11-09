@@ -137,15 +137,15 @@ await printer.printTemplate();
 ```
 and edit your YAML with [VSCode](https://code.visualstudio.com/) that has [YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) installed.
 
-### Supported commands
+There are two properties at root, `size` and `commands`, taking an object and an array of object repsectively. Both are required. 
 
 For each command, a table is provided listing support for each printing SDK. Legends is as follows:
 :x: Not supported. These parameters will be ignored if sent to unsupported printers.
 :o: Supported.
 :star: Required.
 
-#### Size
-Command `size` set the printing area. _Note that this command is required and should be the first command, otherwise unexpected behavior may occur._
+### Size command
+The `size` object set the printing area.
 This command create a canvas for drawing items to be printed. Call `print` to perform the actual printing.
 
 | Parameter   | Description                                        | Possible Values                                            | Hanin CPCL | Hanin TSPL |
@@ -155,6 +155,10 @@ This command create a canvas for drawing items to be printed. Call `print` to pe
 | `originY`   | Starting vertical position of the printing area.   | Number                                                     | :o:        | :x:        |
 | `width`     | Width of the printing area.                        | Number                                                     | :star:     | :star:     |
 | `height`    | Height of the printing area.                       | Number                                                     | :star:     | :star:     |
+
+### Printing commands
+
+Put all printing commands in the `commands` object. They will be sent to the printer in order.
 
 #### Text
 Command `text` adds text with styling.

@@ -29,13 +29,10 @@ class TemplatePrinter {
     final rStrings = replaceStrings ?? {};
 
     var result = true;
+    final cmdResult = await printer.setPrintAreaSize(template.size);
+    result = result && cmdResult;
     for (final cmd in template.commands) {
       switch (cmd.type) {
-        case CommandType.size:
-          final cmdResult =
-              await printer.setPrintAreaSize(cmd.params as PrintAreaSize);
-          result = result && cmdResult;
-          break;
         case CommandType.text:
           final cmdResult = await printer
               .addText((cmd.params as PrintText).replaceString(rStrings));

@@ -5,6 +5,11 @@
     "description": "A template for printing in flutter_label_printer Flutter plugin.",
     "type": "object",
     "properties": {
+        "size": {
+            "parameters": {
+                "type": "object"
+            }
+        },
         "commands": {
             "description": "List of commands for printing",
             "type": "array",
@@ -13,7 +18,7 @@
                 "properties": {
                     "command": {
                         "type": "string",
-                        "enum": ["size", "text", "barcode", "qrcode", "line", "rectangle", "image"]
+                        "enum": ["text", "barcode", "qrcode", "line", "rectangle", "image"]
                     },
                     "parameters": {
                         "type": "object"

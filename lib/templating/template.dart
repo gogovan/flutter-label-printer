@@ -26,14 +26,16 @@ double _toDouble(x, {double? defValue}) {
 /// Template represents a parsed template.
 @immutable
 class Template {
-  const Template(this.commands);
+  const Template(this.size, this.commands);
 
   /// Create a Template from YAML data.
   factory Template.fromYaml(String data) {
-    final obj = loadYamlNode(data);
-    final cmds = (obj.value as YamlMap)['commands'] as YamlList;
-
+    final obj = loadYamlNode(data).value as YamlMap;
     final result = <Command>[];
+
+    final size = _getPrintAreaSize(obj['size'] as YamlMap);
+
+    final cmds = obj['commands'] as YamlList;
     for (final rawCmd in cmds) {
       final cmdMap = rawCmd as YamlMap;
       final type = CommandType.values.byName(cmdMap['command']);
@@ -42,9 +44,6 @@ class Template {
       final CommandParameter params;
 
       switch (type) {
-        case CommandType.size:
-          params = _getPrintAreaSize(paramMap);
-          break;
         case CommandType.text:
           final styleN = paramMap['style'];
           final style = styleN is YamlMap ? styleN : null;
@@ -75,7 +74,7 @@ class Template {
       result.add(Command(type, params));
     }
 
-    return Template(result);
+    return Template(size, result);
   }
 
   static PrintImage _getPrintImage(YamlMap paramMap) => PrintImage(
@@ -138,20 +137,22 @@ class Template {
         height: _toDouble(paramMap['height']),
       );
 
+  final PrintAreaSize size;
   final List<Command> commands;
 
   @override
-  String toString() => 'Template{commands: $commands}';
+  String toString() => 'Template{size: $size, commands: $commands}';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Template &&
           runtimeType == other.runtimeType &&
+          size == other.size &&
           commands == other.commands;
 
   @override
-  int get hashCode => commands.hashCode;
+  int get hashCode => size.hashCode ^ commands.hashCode;
 }
 
 @immutable
@@ -176,7 +177,7 @@ class Command {
   int get hashCode => type.hashCode ^ params.hashCode;
 }
 
-enum CommandType { size, text, barcode, qrcode, rectangle, line, image }
+enum CommandType { text, barcode, qrcode, rectangle, line, image }
 
 /// Marker interface to indicate that the class is a CommandParameter.
 abstract class CommandParameter {}
