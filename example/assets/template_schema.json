@@ -6,25 +6,31 @@
     "type": "object",
     "properties": {
         "size": {
+            "description": "Set the printing area. Creates a canvas for drawing items to be printed",
             "type": "object",
             "properties": {
                 "paperType": {
                     "type": "string",
-                    "enum": ["continuous", "label"]
+                    "enum": ["continuous", "label"],
+                    "description": "Type of paper. `continuous` for receipt papers. `label` for label papers. Not supported by Hanin TSPL."
                 },
                 "originX": {
                     "type": "number",
-                    "default": 0
+                    "default": 0,
+                    "description": "Starting horizontal position of the printing area. Not supported by Hanin TSPL."
                 },
                 "originY": {
                     "type": "number",
-                    "default": 0
+                    "default": 0,
+                    "description": "Starting vertical position of the printing area. Not supported by Hanin TSPL."
                 },
                 "width": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "Width of the printing area."
                 },
                 "height": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "Height of the printing area."
                 }
             },
             "required": ["width", "height"]
@@ -34,53 +40,54 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "properties": {
-                    "command": {
-                        "type": "string",
-                        "enum": ["text", "barcode", "qrcode", "line", "rectangle", "image"]
-                    },
-                    "parameters": {
-                        "type": "object"
-                    }
-                },
                 "anyOf": [
                     {
+                        "description": "Adds text with styling.",
                         "type": "object",
                         "properties": {
                             "command": {
                                 "const": "text"
                             },
                             "text": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "The text to print."
                             },
                             "xPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The x position of the text in the canvas."
                             },
                             "yPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The y position of the text in the canvas."
                             },
                             "rotation": {
                                 "type": "number",
-                                "default": 0
+                                "default": 0,
+                                "description": "Rotation of the text. Only in 90 degree increments are supported."
                             },
                             "style": {
+                                "description": "The style of the text.",
                                 "type": "object",
                                 "properties": {
                                     "bold": {
                                         "type": "number",
-                                        "default": 0
+                                        "default": 0,
+                                        "description": "Bold text and degree of boldness."
                                     },
                                     "width": {
                                         "type": "number",
-                                        "default": 1
+                                        "default": 1,
+                                        "description": "Width of each character in text, as a multiplier."
                                     },
                                     "height": {
                                         "type": "number",
-                                        "default": 1
+                                        "default": 1,
+                                        "description": "Height of each character in text, as a multiplier."
                                     },
                                     "align": {
                                         "type": "string",
-                                        "enum": ["left", "center", "right"]
+                                        "enum": ["left", "center", "right"],
+                                        "description": "Alignment of text. Either left, center or right."
                                     }
                                 }
                             }
@@ -88,6 +95,7 @@
                         "required": ["text", "xPosition", "yPosition"]
                     },
                     {
+                        "description": "Adds a barcode.",
                         "type": "object",
                         "properties": {
                             "command": {
@@ -95,45 +103,56 @@
                             },
                             "type": {
                                 "type": "string",
-                                "enum": ["codabar", "code39", "code93", "code128", "code128m", "ean8", "ean13", "ean128", "msi", "itf14", "upca", "upce"]
+                                "enum": ["codabar", "code39", "code93", "code128", "code128m", "ean8", "ean13", "ean128", "msi", "itf14", "upca", "upce"],
+                                "description": "The barcode symbology of the barcode.\nHanin CPCL: upca, upce, ean13, ean8, code39, code93, code128, codabar.\nHanin TSPL: code128, code128m, ean128, code39, code93, upca, msi, itf14, ean13"
                             },
                             "xPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The x position of the barcode in the canvas."
                             },
                             "yPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The y position of the barcode in the canvas."
                             },
                             "data": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Data encoded in the barcode."
                             },
                             "height": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The height of the barcode."
                             }
                         },
                         "required": ["type", "xPosition", "yPosition", "data", "height"]
                     },
                     {
+                        "description": "Adds a QR Code",
                         "type": "object",
                         "properties": {
                             "command": {
                                 "const": "qrcode"
                             },
                             "xPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The x position of the barcode in the canvas."
                             },
                             "yPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The y position of the barcode in the canvas."
                             },
                             "data": {
-                                "type": "string"
+                                "type": "string",
+                                "description": "Data encoded in the barcode."
                             },
                             "unitSize": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The size of each unit (square) of the QR Code."
                             }
                         },
                         "required": ["xPosition", "yPosition", "data", "unitSize"]
                     },
                     {
+                        "description": "Draws a line.",
                         "type": "object",
                         "properties": {
                             "command": {
@@ -159,6 +178,7 @@
                         "required": ["left", "top", "right", "bottom"]
                     },
                     {
+                        "description": "Draws a rectangle.",
                         "type": "object",
                         "properties": {
                             "command": {
@@ -184,16 +204,20 @@
                         "required": ["left", "top", "right", "bottom"]
                     },
                     {
+                        "description": "Adds an image.",
                         "type": "object",
                         "properties": {
                             "path": {
-                                "type": "string"
+                                "type": "string",
+                                "description": " The file path to the image."
                             },
                             "xPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The x position of the image in the canvas."
                             },
                             "yPosition": {
-                                "type": "number"
+                                "type": "number",
+                                "description": "The y position of the image in the canvas."
                             }
                         },
                         "required": ["path", "xPosition", "yPosition"]

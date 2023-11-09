@@ -170,7 +170,7 @@ Command `text` adds text with styling.
 
 | Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
 |----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|
-| `text`         | The text to print                                  | Text                         | :star:                       | :star:                       |
+| `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       |
 | `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
 | `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
 | `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
