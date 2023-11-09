@@ -40,34 +40,33 @@ class Template {
       final cmdMap = rawCmd as YamlMap;
       final type = CommandType.values.byName(cmdMap['command']);
 
-      final paramMap = cmdMap['parameters'] as YamlMap;
       final CommandParameter params;
 
       switch (type) {
         case CommandType.text:
-          final styleN = paramMap['style'];
+          final styleN = cmdMap['style'];
           final style = styleN is YamlMap ? styleN : null;
-          params = _getPrintText(paramMap, style);
+          params = _getPrintText(cmdMap, style);
           break;
         case CommandType.barcode:
           final type =
-              PrintBarcodeType.values.asNameMap()[paramMap['type'].toString()];
+              PrintBarcodeType.values.asNameMap()[cmdMap['type'].toString()];
           if (type == null) {
             throw ArgumentError('Barcode type cannot be null');
           }
-          params = _getPrintBarcode(type, paramMap);
+          params = _getPrintBarcode(type, cmdMap);
           break;
         case CommandType.qrcode:
-          params = _getPrintQRCode(paramMap);
+          params = _getPrintQRCode(cmdMap);
           break;
         case CommandType.line:
-          params = _getPrintRect(paramMap);
+          params = _getPrintRect(cmdMap);
           break;
         case CommandType.rectangle:
-          params = _getPrintRect(paramMap);
+          params = _getPrintRect(cmdMap);
           break;
         case CommandType.image:
-          params = _getPrintImage(paramMap);
+          params = _getPrintImage(cmdMap);
           break;
       }
 
@@ -129,8 +128,9 @@ class Template {
       );
 
   static PrintAreaSize _getPrintAreaSize(YamlMap paramMap) => PrintAreaSize(
-        paperType:
-            PrintPaperType.values.byName(paramMap['paperType'].toString()),
+        paperType: PrintPaperType.values
+                .asNameMap()[paramMap['paperType'].toString()] ??
+            PrintPaperType.unsupported,
         originX: _toDouble(paramMap['originX'], defValue: 0),
         originY: _toDouble(paramMap['originY'], defValue: 0),
         width: _toDouble(paramMap['width']),

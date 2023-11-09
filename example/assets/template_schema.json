@@ -6,9 +6,28 @@
     "type": "object",
     "properties": {
         "size": {
-            "parameters": {
-                "type": "object"
-            }
+            "type": "object",
+            "properties": {
+                "paperType": {
+                    "type": "string",
+                    "enum": ["continuous", "label"]
+                },
+                "originX": {
+                    "type": "number",
+                    "default": 0
+                },
+                "originY": {
+                    "type": "number",
+                    "default": 0
+                },
+                "width": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                }
+            },
+            "required": ["width", "height"]
         },
         "commands": {
             "description": "List of commands for printing",
@@ -23,9 +42,165 @@
                     "parameters": {
                         "type": "object"
                     }
-                }
+                },
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "const": "text"
+                            },
+                            "text": {
+                                "type": "string"
+                            },
+                            "xPosition": {
+                                "type": "number"
+                            },
+                            "yPosition": {
+                                "type": "number"
+                            },
+                            "rotation": {
+                                "type": "number",
+                                "default": 0
+                            },
+                            "style": {
+                                "type": "object",
+                                "properties": {
+                                    "bold": {
+                                        "type": "number",
+                                        "default": 0
+                                    },
+                                    "width": {
+                                        "type": "number",
+                                        "default": 1
+                                    },
+                                    "height": {
+                                        "type": "number",
+                                        "default": 1
+                                    },
+                                    "align": {
+                                        "type": "string",
+                                        "enum": ["left", "center", "right"]
+                                    }
+                                }
+                            }
+                        },
+                        "required": ["text", "xPosition", "yPosition"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "const": "barcode"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": ["codabar", "code39", "code93", "code128", "code128m", "ean8", "ean13", "ean128", "msi", "itf14", "upca", "upce"]
+                            },
+                            "xPosition": {
+                                "type": "number"
+                            },
+                            "yPosition": {
+                                "type": "number"
+                            },
+                            "data": {
+                                "type": "string"
+                            },
+                            "height": {
+                                "type": "number"
+                            }
+                        },
+                        "required": ["type", "xPosition", "yPosition", "data", "height"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "const": "qrcode"
+                            },
+                            "xPosition": {
+                                "type": "number"
+                            },
+                            "yPosition": {
+                                "type": "number"
+                            },
+                            "data": {
+                                "type": "string"
+                            },
+                            "unitSize": {
+                                "type": "number"
+                            }
+                        },
+                        "required": ["xPosition", "yPosition", "data", "unitSize"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "const": "line"
+                            },
+                            "left": {
+                                "type": "number"
+                            },
+                            "top": {
+                                "type": "number"
+                            },
+                            "right": {
+                                "type": "number"
+                            },
+                            "bottom": {
+                                "type": "number"
+                            },
+                            "strokeWidth": {
+                                "type": "number",
+                                "default": 0
+                            }
+                        },
+                        "required": ["left", "top", "right", "bottom"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "const": "rectangle"
+                            },
+                            "left": {
+                                "type": "number"
+                            },
+                            "top": {
+                                "type": "number"
+                            },
+                            "right": {
+                                "type": "number"
+                            },
+                            "bottom": {
+                                "type": "number"
+                            },
+                            "strokeWidth": {
+                                "type": "number",
+                                "default": 0
+                            }
+                        },
+                        "required": ["left", "top", "right", "bottom"]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "path": {
+                                "type": "string"
+                            },
+                            "xPosition": {
+                                "type": "number"
+                            },
+                            "yPosition": {
+                                "type": "number"
+                            }
+                        },
+                        "required": ["path", "xPosition", "yPosition"]
+                    }
+                ]
             }
         }
     },
-    "required": ["commands"]
+    "required": ["size", "commands"]
 }

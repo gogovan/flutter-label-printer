@@ -131,13 +131,18 @@ await printer.printTemplate();
 
 ### Template YAML
 
-`example/assets/template_schema.json` is a JSON Schema for YAML format supported by `Template` constructor. [Refer to JSON Schema webpage](https://json-schema-everywhere.github.io/yaml) for details. Start your YAML with
+`example/assets/template_schema.json` is a JSON Schema for YAML format supported by `Template` constructor. [Refer to JSON Schema webpage](https://json-schema-everywhere.github.io/yaml) for details.
+
+#### VSCode Integration
+
+Start your YAML with
 ```yaml
 # yaml-language-server: $schema=template_schema.json
 ```
 and edit your YAML with [VSCode](https://code.visualstudio.com/) that has [YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) installed.
 
-There are two properties at root, `size` and `commands`, taking an object and an array of object repsectively. Both are required. 
+### Template YAML root
+There are two properties at root, `size` and `commands`, taking an object and an array of object respectively. Both are required. 
 
 For each command, a table is provided listing support for each printing SDK. Legends is as follows:
 :x: Not supported. These parameters will be ignored if sent to unsupported printers.
@@ -163,17 +168,17 @@ Put all printing commands in the `commands` object. They will be sent to the pri
 #### Text
 Command `text` adds text with styling.
 
-| Parameter      | Description                                       | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
-|----------------|---------------------------------------------------|------------------------------|------------------------------|------------------------------|
-| `text`         | The text to print                                 | Text                         | :star:                       | :star:                       |
-| `xPosition`    | The x position of the text in the canvas.         | Number                       | :star:                       | :star:                       |
-| `yPosition`    | The y position of the text in the canvas.         | Number                       | :star:                       | :star:                       |
-| `rotation`     | Rotation of the text.                             | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
-| `style`        | The style of the text. Accept an object.          |                              | :o:                          | :o:                          |
-| `style.bold`   | Bold text and degree of boldness.                 | Number                       | :o:                          | :x:                          |
-| `style.width`  | Width of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          |
-| `style.height` | Height of each character in text, as a multipler. | Number                       | :o:                          | :o:                          |
-| `style.align`  | Alignment of text.                                | `left`, `center` or `right`. | :o:                          | :o:                          |
+| Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
+|----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|
+| `text`         | The text to print                                  | Text                         | :star:                       | :star:                       |
+| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
+| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
+| `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
+| `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          |
+| `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :x:                          |
+| `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          |
+| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          |
+| `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          |
 
 #### Barcode
 Command `barcode` prints a barcode.
