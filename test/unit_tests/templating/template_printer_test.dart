@@ -197,7 +197,8 @@ void main() {
       );
 
       when(printer.print()).thenAnswer((realInvocation) async => true);
-      when(printer.setPrintAreaSize(any)).thenAnswer((realInvocation) async => true);
+      when(printer.setPrintAreaSize(any))
+          .thenAnswer((realInvocation) async => true);
       when(printer.addText(any)).thenAnswer((realInvocation) async => true);
       when(printer.addBarcode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addQRCode(any)).thenAnswer((realInvocation) async => true);
