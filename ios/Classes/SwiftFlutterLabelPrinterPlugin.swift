@@ -122,6 +122,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 if let args = call.arguments as? [String:Any],
                    let width = args["width"] as? Int,
@@ -162,6 +163,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 if let args = call.arguments as? [String:Any],
                    let rotateValue = args["rotate"] as? Int,
@@ -214,6 +216,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 if let cmd = currentTSPLCommand {
                     let args = call.arguments as? [String:Any]
@@ -227,6 +230,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     PTDispatcher.share().send(Data(cmd.cmdData))
                     
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                     areaSizeSet = false
                     
                     result(true)
@@ -365,6 +369,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 if let args = call.arguments as? [String:Any],
                    let mm = args["mm"] as? Int,
@@ -479,6 +484,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 
                 if let args = call.arguments as? [String:Any],
@@ -568,6 +574,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 
                 if let args = call.arguments as? [String:Any],
@@ -636,6 +643,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 
                 if let args = call.arguments as? [String:Any],
@@ -679,6 +687,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 
                 if let args = call.arguments as? [String:Any],
@@ -732,6 +741,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
             } else {
                 if (currentTSPLCommand == nil) {
                     currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
                 }
                 
                 if let args = call.arguments as? [String:Any],
