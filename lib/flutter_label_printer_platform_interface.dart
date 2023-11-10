@@ -58,10 +58,6 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('disconnectHaninCPCL() has not been implemented.');
   }
 
-  Future<bool> clearHaninTSPL() {
-    throw UnimplementedError('clearHaninTSPL() has not been implemented.');
-  }
-
   Future<bool> printTestPageHaninTSPL() {
     throw UnimplementedError(
       'printTestPageHaninTSPL() has not been implemented.',

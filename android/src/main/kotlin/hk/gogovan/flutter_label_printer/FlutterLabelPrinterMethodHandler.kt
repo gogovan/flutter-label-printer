@@ -73,6 +73,7 @@ class FlutterLabelPrinterMethodHandler(
                             )
                         } else {
                             if (HPRTPrinterHelper.PortOpen("Bluetooth,$address") == 0) {
+                                HPRTPrinterHelper.CLS()
                                 result.success(true)
                             } else {
                                 result.error(
@@ -155,19 +156,6 @@ class FlutterLabelPrinterMethodHandler(
                         )
                     } else {
                         result.success(PrinterHelper.portClose())
-                    }
-                }
-
-                "hk.gogovan.label_printer.hanin.tspl.clear" -> {
-                    if (!HPRTPrinterHelper.IsOpened()) {
-                        result.error(
-                            "1005",
-                            "Printer not connected.",
-                            Throwable().stackTraceToString()
-                        )
-                    } else {
-                        val returnCode = HPRTPrinterHelper.CLS()
-                        result.success(returnCode > 0)
                     }
                 }
 
@@ -361,10 +349,10 @@ class FlutterLabelPrinterMethodHandler(
                             }
 
                             val count = (call.argument<Int>("count") ?: 1).toString()
-
                             val returnCode = HPRTPrinterHelper.Print(count, "1")
 
                             areaSizeSet = false
+                            HPRTPrinterHelper.CLS()
 
                             result.success(returnCode >= 0)
                         } catch (e: ClassCastException) {
