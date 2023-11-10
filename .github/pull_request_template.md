@@ -8,4 +8,5 @@ Describe your changes.
 Post any screenshots for your feature, if any.
 
 #### Checklist
-- [ ] Run the `pre_pr.sh` script to ensure code quality.
+- [ ] Run the `pre_pr.command` script to ensure code quality.
+- [ ] Ensure tests are written and up-to-date.

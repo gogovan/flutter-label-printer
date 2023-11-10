@@ -15,68 +15,62 @@ void main() {
   test('fromYaml', () {
     const yaml = r'''
 # yaml-language-server: $schema=template_schema.json
+size:
+  paperType: label
+  originX: 0
+  originY: 0
+  width: 300
+  height: 400
 commands:
-  - command: size
-    parameters:
-      paperType: label
-      originX: 0
-      originY: 0
-      width: 300
-      height: 400
   - command: text
-    parameters:
-      text: Hello {{world}}!
-      xPosition: 300
-      yPosition: 100
-      style:
-        width: 2
-        height: 3
-        align: right
+    text: Hello {{world}}!
+    xPosition: 300
+    yPosition: 100
+    style:
+      width: 2
+      height: 3
+      align: right
   - command: barcode
-    parameters:
-      type: code128
-      xPosition: 0
-      yPosition: 50
-      data: ABC-123-456789
-      height: 50
+    type: code128
+    xPosition: 0
+    yPosition: 50
+    data: ABC-123-456789
+    height: 50
   - command: qrcode
-    parameters:
-      xPosition: 0
-      yPosition: 100
-      unitSize: 4
-      data: https://www.example.com
+    xPosition: 0
+    yPosition: 100
+    unitSize: 4
+    data: https://www.example.com
   - command: line
-    parameters:
-      left: 160
-      right: 290
-      top: 210
-      bottom: 260
-      strokeWidth: 4
+    left: 160
+    right: 290
+    top: 210
+    bottom: 260
+    strokeWidth: 4
   - command: rectangle
-    parameters:
-      left: 170
-      right: 300
-      top: 220
-      bottom: 270
-      strokeWidth: 2
+    left: 170
+    right: 300
+    top: 220
+    bottom: 270
+    strokeWidth: 2
   - command: image
-    parameters:
-      path: /sdcard/one.jpg
-      xPosition: 200
-      yPosition: 150
+    path: /sdcard/one.jpg
+    xPosition: 200
+    yPosition: 150
     ''';
 
-    expect(Template.fromYaml(yaml).commands, [
-      const Command(
-        CommandType.size,
-        PrintAreaSize(
-          paperType: PrintPaperType.label,
-          width: 300,
-          height: 400,
-          originX: 0,
-          originY: 0,
-        ),
+    final template = Template.fromYaml(yaml);
+    expect(
+      template.size,
+      const PrintAreaSize(
+        paperType: PrintPaperType.label,
+        width: 300,
+        height: 400,
+        originX: 0,
+        originY: 0,
       ),
+    );
+    expect(template.commands, [
       const Command(
         CommandType.text,
         PrintText(

@@ -38,8 +38,10 @@ class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
         paperType = HaninCPCLPaperType.label;
         break;
       default:
-        paperType = HaninCPCLPaperType.continuous;
-        break;
+        throw InvalidArgumentException(
+          'Found unsupported paper type ${printAreaSize.paperType}',
+          StackTrace.current.toString(),
+        );
     }
 
     final typeResult = await setPaperType(paperType);

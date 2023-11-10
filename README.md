@@ -32,10 +32,7 @@ android {
 }
 ```
 
-2. Depending on your printer, you may need to include SDKs for the printer in order for your project to build. Refer to manufacturer manual for installation details.
-   1. In particular for iOS, you may need to include the SDK Framework in your project and set the Target to the `flutter_label_printer` pod.  
-
-3. Depending on the connection technology your printer device requires, do the following steps:
+2. Depending on the connection technology your printer device requires, do the following steps:
 
 ## Bluetooth
 
@@ -131,21 +128,26 @@ await printer.printTemplate();
 
 ### Template YAML
 
-`example/assets/template_schema.json` is a JSON Schema for YAML format supported by `Template` constructor. [Refer to JSON Schema webpage](https://json-schema-everywhere.github.io/yaml) for details. Start your YAML with
+`example/assets/template_schema.json` is a JSON Schema for YAML format supported by `Template` constructor. [Refer to JSON Schema webpage](https://json-schema-everywhere.github.io/yaml) for details.
+
+#### VSCode Integration
+
+Start your YAML with
 ```yaml
 # yaml-language-server: $schema=template_schema.json
 ```
 and edit your YAML with [VSCode](https://code.visualstudio.com/) that has [YAML plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) installed.
 
-### Supported commands
+### Template YAML root
+There are two properties at root, `size` and `commands`, taking an object and an array of object respectively. Both are required. 
 
 For each command, a table is provided listing support for each printing SDK. Legends is as follows:
 :x: Not supported. These parameters will be ignored if sent to unsupported printers.
 :o: Supported.
 :star: Required.
 
-#### Size
-Command `size` set the printing area. _Note that this command is required and should be the first command, otherwise unexpected behavior may occur._
+### Size command
+The `size` object set the printing area.
 This command create a canvas for drawing items to be printed. Call `print` to perform the actual printing.
 
 | Parameter   | Description                                        | Possible Values                                            | Hanin CPCL | Hanin TSPL |
@@ -156,20 +158,24 @@ This command create a canvas for drawing items to be printed. Call `print` to pe
 | `width`     | Width of the printing area.                        | Number                                                     | :star:     | :star:     |
 | `height`    | Height of the printing area.                       | Number                                                     | :star:     | :star:     |
 
+### Printing commands
+
+Put all printing commands in the `commands` object. They will be sent to the printer in order.
+
 #### Text
 Command `text` adds text with styling.
 
-| Parameter      | Description                                       | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
-|----------------|---------------------------------------------------|------------------------------|------------------------------|------------------------------|
-| `text`         | The text to print                                 | Text                         | :star:                       | :star:                       |
-| `xPosition`    | The x position of the text in the canvas.         | Number                       | :star:                       | :star:                       |
-| `yPosition`    | The y position of the text in the canvas.         | Number                       | :star:                       | :star:                       |
-| `rotation`     | Rotation of the text.                             | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
-| `style`        | The style of the text. Accept an object.          |                              | :o:                          | :o:                          |
-| `style.bold`   | Bold text and degree of boldness.                 | Number                       | :o:                          | :x:                          |
-| `style.width`  | Width of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          |
-| `style.height` | Height of each character in text, as a multipler. | Number                       | :o:                          | :o:                          |
-| `style.align`  | Alignment of text.                                | `left`, `center` or `right`. | :o:                          | :o:                          |
+| Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
+|----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|
+| `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       |
+| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
+| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
+| `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
+| `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          |
+| `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :x:                          |
+| `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          |
+| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          |
+| `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          |
 
 #### Barcode
 Command `barcode` prints a barcode.

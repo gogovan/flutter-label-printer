@@ -26,56 +26,54 @@ double _toDouble(x, {double? defValue}) {
 /// Template represents a parsed template.
 @immutable
 class Template {
-  const Template(this.commands);
+  const Template(this.size, this.commands);
 
   /// Create a Template from YAML data.
   factory Template.fromYaml(String data) {
-    final obj = loadYamlNode(data);
-    final cmds = (obj.value as YamlMap)['commands'] as YamlList;
-
+    final obj = loadYamlNode(data).value as YamlMap;
     final result = <Command>[];
+
+    final size = _getPrintAreaSize(obj['size'] as YamlMap);
+
+    final cmds = obj['commands'] as YamlList;
     for (final rawCmd in cmds) {
       final cmdMap = rawCmd as YamlMap;
       final type = CommandType.values.byName(cmdMap['command']);
 
-      final paramMap = cmdMap['parameters'] as YamlMap;
       final CommandParameter params;
 
       switch (type) {
-        case CommandType.size:
-          params = _getPrintAreaSize(paramMap);
-          break;
         case CommandType.text:
-          final styleN = paramMap['style'];
+          final styleN = cmdMap['style'];
           final style = styleN is YamlMap ? styleN : null;
-          params = _getPrintText(paramMap, style);
+          params = _getPrintText(cmdMap, style);
           break;
         case CommandType.barcode:
           final type =
-              PrintBarcodeType.values.asNameMap()[paramMap['type'].toString()];
+              PrintBarcodeType.values.asNameMap()[cmdMap['type'].toString()];
           if (type == null) {
             throw ArgumentError('Barcode type cannot be null');
           }
-          params = _getPrintBarcode(type, paramMap);
+          params = _getPrintBarcode(type, cmdMap);
           break;
         case CommandType.qrcode:
-          params = _getPrintQRCode(paramMap);
+          params = _getPrintQRCode(cmdMap);
           break;
         case CommandType.line:
-          params = _getPrintRect(paramMap);
+          params = _getPrintRect(cmdMap);
           break;
         case CommandType.rectangle:
-          params = _getPrintRect(paramMap);
+          params = _getPrintRect(cmdMap);
           break;
         case CommandType.image:
-          params = _getPrintImage(paramMap);
+          params = _getPrintImage(cmdMap);
           break;
       }
 
       result.add(Command(type, params));
     }
 
-    return Template(result);
+    return Template(size, result);
   }
 
   static PrintImage _getPrintImage(YamlMap paramMap) => PrintImage(
@@ -130,28 +128,31 @@ class Template {
       );
 
   static PrintAreaSize _getPrintAreaSize(YamlMap paramMap) => PrintAreaSize(
-        paperType:
-            PrintPaperType.values.byName(paramMap['paperType'].toString()),
+        paperType: PrintPaperType.values
+                .asNameMap()[paramMap['paperType'].toString()] ??
+            PrintPaperType.unsupported,
         originX: _toDouble(paramMap['originX'], defValue: 0),
         originY: _toDouble(paramMap['originY'], defValue: 0),
         width: _toDouble(paramMap['width']),
         height: _toDouble(paramMap['height']),
       );
 
+  final PrintAreaSize size;
   final List<Command> commands;
 
   @override
-  String toString() => 'Template{commands: $commands}';
+  String toString() => 'Template{size: $size, commands: $commands}';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Template &&
           runtimeType == other.runtimeType &&
+          size == other.size &&
           commands == other.commands;
 
   @override
-  int get hashCode => commands.hashCode;
+  int get hashCode => size.hashCode ^ commands.hashCode;
 }
 
 @immutable
@@ -176,7 +177,7 @@ class Command {
   int get hashCode => type.hashCode ^ params.hashCode;
 }
 
-enum CommandType { size, text, barcode, qrcode, rectangle, line, image }
+enum CommandType { text, barcode, qrcode, rectangle, line, image }
 
 /// Marker interface to indicate that the class is a CommandParameter.
 abstract class CommandParameter {}

@@ -41,4 +41,4 @@ class PrintAreaSize implements CommandParameter {
       height.hashCode;
 }
 
-enum PrintPaperType { continuous, label }
+enum PrintPaperType { unsupported, continuous, label }

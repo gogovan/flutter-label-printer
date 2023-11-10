@@ -1,4 +1,3 @@
-import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_barcode.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_qr_code.dart';
@@ -29,13 +28,10 @@ class TemplatePrinter {
     final rStrings = replaceStrings ?? {};
 
     var result = true;
+    final cmdResult = await printer.setPrintAreaSize(template.size);
+    result = result && cmdResult;
     for (final cmd in template.commands) {
       switch (cmd.type) {
-        case CommandType.size:
-          final cmdResult =
-              await printer.setPrintAreaSize(cmd.params as PrintAreaSize);
-          result = result && cmdResult;
-          break;
         case CommandType.text:
           final cmdResult = await printer
               .addText((cmd.params as PrintText).replaceString(rStrings));
