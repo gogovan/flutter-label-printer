@@ -87,7 +87,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             { PrinterHelper.IsOpened() }),
         ConnectTestEntry(
             "hk.gogovan.label_printer.hanin.tspl.connect",
-            { HPRTPrinterHelper.PortOpen("abcd1234") },
+            { HPRTPrinterHelper.PortOpen("Bluetooth,abcd1234") },
             { HPRTPrinterHelper.IsOpened() }),
     )
 
@@ -95,6 +95,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         connectTests.forEach { entry ->
             it("success ${entry.methodName}") {
                 every { entry.sdkMethod() }.returns(0)
+                every { HPRTPrinterHelper.CLS() } returns(0)
                 val methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
 
                 val result = mockk<MethodChannel.Result>(relaxed = true)
@@ -337,10 +338,6 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             null, { HPRTPrinterHelper.Print("1", "1") }, 1
         ),
         SuccessCaseEntry(
-            "hk.gogovan.label_printer.hanin.tspl.clear",
-            null, { HPRTPrinterHelper.CLS() }, 1
-        ),
-        SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.space",
             mapOf("mm" to 30), { HPRTPrinterHelper.Offset("30") }, 1
         ),
@@ -373,7 +370,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         ),
         SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addLine",
-            mapOf("x0" to 10, "y0" to 20, "x1" to 30, "y1" to 40),
+            mapOf("x" to 10, "y" to 20, "width" to 30, "height" to 40),
             { HPRTPrinterHelper.Bar("10", "20", "30", "40") },
             1
         ),
@@ -384,6 +381,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
             it("method success ${entry.methodName}") {
                 every { PrinterHelper.IsOpened() }.returns(true)
                 every { HPRTPrinterHelper.IsOpened() }.returns(true)
+                every { HPRTPrinterHelper.CLS() } returns(0)
                 every { entry.sdkCall() }.returns(entry.sdkCallReturn)
 
                 val log = mockk<Log>()
@@ -430,18 +428,15 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
     describe("getStatus") {
         lateinit var methodHandler: FlutterLabelPrinterMethodHandler
         lateinit var result: MethodChannel.Result
-        beforeEach {
+
+        it("cpcl success") {
             every { PrinterHelper.IsOpened() }.returns(true)
             every { PrinterHelper.getstatus() }.returns(6)
-            every { HPRTPrinterHelper.IsOpened() }.returns(true)
-            every { HPRTPrinterHelper.getPrinterStatus() }.returns(6)
 
             methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
 
-            result = mockk<MethodChannel.Result>(relaxed = true)
-        }
+            result = mockk(relaxed = true)
 
-        it("cpcl success") {
             methodHandler.onMethodCall(
                 MethodCall(
                     "hk.gogovan.label_printer.hanin.cpcl.getStatus", null,
@@ -451,12 +446,19 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         }
 
         it("tspl success") {
+            every { HPRTPrinterHelper.IsOpened() }.returns(true)
+            every { HPRTPrinterHelper.getPrinterStatus() }.returns(HPRTPrinterHelper.STATUS_PRINTING)
+
+            methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+
+            result = mockk(relaxed = true)
+
             methodHandler.onMethodCall(
                 MethodCall(
                     "hk.gogovan.label_printer.hanin.tspl.getStatus", null,
                 ), result
             )
-            verify { result.success(6) }
+            verify { result.success(32) }
         }
     }
 
