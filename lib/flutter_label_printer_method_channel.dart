@@ -92,15 +92,6 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
-  Future<bool> clearHaninTSPL() async {
-    final result = await methodChannel.invokeMethod<bool>(
-      'hk.gogovan.label_printer.hanin.tspl.clear',
-    );
-
-    return result ?? false;
-  }
-
-  @override
   Future<bool> printTestPageHaninTSPL() async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.tspl.printTestPage',
