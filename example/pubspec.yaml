@@ -57,3 +57,4 @@ flutter:
 
   assets:
     - assets/template.yaml
+    - assets/test.png
