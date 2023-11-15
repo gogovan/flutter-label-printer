@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/printer/hanin_cpcl_printer.dart';
 import 'package:flutter_label_printer/printer/hanin_tspl_printer.dart';
 import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_label_printer/printer_searcher/bluetooth_printer_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
-import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
-import 'package:flutter_label_printer/templating/printer_template/hanin_cpcl_printer_template.dart';
-import 'package:flutter_label_printer/templating/printer_template/hanin_tspl_printer_template.dart';
+import 'package:flutter_label_printer/templating/printer_template/hanin_cpcl_template_printer.dart';
+import 'package:flutter_label_printer/templating/printer_template/hanin_tspl_template_printer.dart';
+import 'package:flutter_label_printer/templating/printer_template/image_template_printer.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 import 'package:flutter_label_printer/templating/template_printer.dart';
@@ -24,7 +25,7 @@ void main() {
   runApp(const MyApp());
 }
 
-enum PrinterModel { cpcl, tspl }
+enum PrinterModel { cpcl, tspl, image }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -42,9 +43,11 @@ class _MyAppState extends State<MyApp> {
   bool _searching = false;
   bool _connected = false;
 
-  PrinterModel _printerModel = PrinterModel.cpcl;
+  PrinterModel _printerModel = PrinterModel.image;
 
   final connectIndexController = TextEditingController();
+
+  String? _filePath;
 
   @override
   void dispose() {
@@ -81,15 +84,22 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _connect() async {
     try {
-      PrinterSearchResult? result =
-          _searchResults[int.parse(connectIndexController.text)];
-
       switch (_printerModel) {
         case PrinterModel.cpcl:
-          MyApp.printer = HaninCPCLPrinterTemplate(result);
+          PrinterSearchResult? result =
+              _searchResults[int.parse(connectIndexController.text)];
+
+          MyApp.printer = HaninCPCLTemplatePrinter(result);
           break;
         case PrinterModel.tspl:
-          MyApp.printer = HaninTSPLPrinterTemplate(result);
+          PrinterSearchResult? result =
+              _searchResults[int.parse(connectIndexController.text)];
+
+          MyApp.printer = HaninTSPLTemplatePrinter(result);
+          break;
+        case PrinterModel.image:
+          _filePath = (await getDownloadsDirectory())?.path;
+          MyApp.printer = ImageTemplatePrinter("$_filePath/output.png");
           break;
       }
 
@@ -124,8 +134,21 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> _print() async {
+  Future<void> _print(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     await MyApp.printer?.print();
+
+    if (_printerModel == PrinterModel.image) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content:
+              Text('Print successful. Image saved to $_filePath/output.png.'),
+        ),
+      );
+    } else {
+      scaffoldMessenger
+          .showSnackBar(const SnackBar(content: Text('Print successful.')));
+    }
   }
 
   Future<void> _printTemplate() async {
@@ -205,6 +228,10 @@ class _MyAppState extends State<MyApp> {
                               value: PrinterModel.tspl,
                               child: Text('Hanin TSPL (e.g. N31)'),
                             ),
+                            DropdownMenuItem(
+                              value: PrinterModel.image,
+                              child: Text('Image'),
+                            ),
                           ],
                           value: _printerModel,
                           onChanged: (value) {
@@ -280,7 +307,8 @@ class _MyAppState extends State<MyApp> {
                           },
                           child: const Text('Add Image')),
                       ElevatedButton(
-                          onPressed: _print, child: const Text('Print')),
+                          onPressed: () => _print(context),
+                          child: const Text('Print')),
                       ElevatedButton(
                           onPressed: _printTemplate,
                           child: const Text('Print Template')),

@@ -13,6 +13,9 @@ Integrate printers with Flutter apps.
   - HM-A300L is tested
 - Hanin (HPRT) TSPL Printers
   - N41BT is tested
+- A special "printer" that print to an image instead of a hardware printer. Useful for:
+  - Send the image to printer instead of using printer commands for consistency and working around missing printer features.
+  - Print to an image for preliminary testing and verification during development.
 
 # Setup
 
@@ -150,13 +153,13 @@ For each command, a table is provided listing support for each printing SDK. Leg
 The `size` object set the printing area.
 This command create a canvas for drawing items to be printed. Call `print` to perform the actual printing.
 
-| Parameter   | Description                                        | Possible Values                                            | Hanin CPCL | Hanin TSPL |
-|-------------|----------------------------------------------------|------------------------------------------------------------|------------|------------|
-| `paperType` | Type of paper.                                     | `continuous` for receipt papers. `label` for label papers. | :star:     | :x:        |
-| `originX`   | Starting horizontal position of the printing area. | Number                                                     | :o:        | :x:        |
-| `originY`   | Starting vertical position of the printing area.   | Number                                                     | :o:        | :x:        |
-| `width`     | Width of the printing area.                        | Number                                                     | :star:     | :star:     |
-| `height`    | Height of the printing area.                       | Number                                                     | :star:     | :star:     |
+| Parameter   | Description                                        | Possible Values                                            | Hanin CPCL | Hanin TSPL | Image  |
+|-------------|----------------------------------------------------|------------------------------------------------------------|------------|------------|--------|
+| `paperType` | Type of paper.                                     | `continuous` for receipt papers. `label` for label papers. | :star:     | :x:        | :x:    |
+| `originX`   | Starting horizontal position of the printing area. | Number                                                     | :o:        | :x:        | :x:    |
+| `originY`   | Starting vertical position of the printing area.   | Number                                                     | :o:        | :x:        | :x:    |
+| `width`     | Width of the printing area.                        | Number                                                     | :star:     | :star:     | :star: |
+| `height`    | Height of the printing area.                       | Number                                                     | :star:     | :star:     | :star: |
 
 ### Printing commands
 
@@ -165,17 +168,17 @@ Put all printing commands in the `commands` object. They will be sent to the pri
 #### Text
 Command `text` adds text with styling.
 
-| Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
-|----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|
-| `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       |
-| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
-| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
-| `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
-| `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          |
-| `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :x:                          |
-| `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          |
-| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          |
-| `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          |
+| Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   | Image  |
+|----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|--------|
+| `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       | :star: |
+| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :o:    |
+| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :o:    |
+| `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
+| `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          | :o:    |
+| `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :x:                          | :o:    |
+| `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          | :o:    |
+| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          | :o:    |
+| `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
 
 #### Barcode
 Command `barcode` prints a barcode.
