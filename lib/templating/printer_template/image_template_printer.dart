@@ -51,8 +51,16 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addLine(PrintRect rect) {
-    // TODO: implement addLine
-    throw UnimplementedError();
+    final canvas = checkCanvas();
+
+    final paint = Paint()
+      ..color = const Color.fromARGB(255, 0, 0, 0)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = rect.strokeWidth;
+
+    canvas.drawLine(rect.rect.topLeft, rect.rect.bottomRight, paint);
+
+    return Future.value(true);
   }
 
   @override
@@ -63,8 +71,16 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addRectangle(PrintRect rect) {
-    // TODO: implement addRectangle
-    throw UnimplementedError();
+    final canvas = checkCanvas();
+
+    final paint = Paint()
+      ..color = const Color.fromARGB(255, 0, 0, 0)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = rect.strokeWidth;
+
+    canvas.drawRect(rect.rect, paint);
+
+    return Future.value(true);
   }
 
   @override
@@ -163,6 +179,10 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     final recorder = PictureRecorder();
     _recorder = recorder;
     _canvas = Canvas(recorder);
+    _canvas?.drawColor(
+      const Color.fromARGB(255, 255, 255, 255),
+      BlendMode.srcOver,
+    );
     width = printAreaSize.width ?? 0;
     height = printAreaSize.height ?? 0;
 
