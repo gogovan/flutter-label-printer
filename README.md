@@ -213,12 +213,12 @@ Command `barcode` prints a barcode.
 #### QR Code
 Command `qrcode` prints a QR Code. 
 
-| Parameter   | Description                                    | Possible Values | Hanin CPCL | Hanin TSPL |
-|-------------|------------------------------------------------|-----------------|------------|------------|
-| `xPosition` | The x position of the barcode in the canvas.   | Number          | :star:     | :star:     |
-| `yPosition` | The y position of the barcode in the canvas.   | Number          | :star:     | :star:     |
-| `data`      | Data encoded in the barcode.                   | Text            | :star:     | :star:     |
-| `unitSize`  | The size of each unit (square) of the QR Code. | Number          | :star:     | :star:     |
+| Parameter   | Description                                    | Possible Values | Hanin CPCL | Hanin TSPL | Image |
+|-------------|------------------------------------------------|-----------------|------------|------------|-------|
+| `xPosition` | The x position of the barcode in the canvas.   | Number          | :star:     | :star:     | :o:   |
+| `yPosition` | The y position of the barcode in the canvas.   | Number          | :star:     | :star:     | :o:   |
+| `data`      | Data encoded in the barcode.                   | Text            | :star:     | :star:     | :o:   |
+| `unitSize`  | The size of each unit (square) of the QR Code. | Number          | :star:     | :star:     | :o:   |
 
 #### Line
 Command `line` draws a line.
@@ -245,11 +245,11 @@ Command `rectangle` draws a rectangle.
 #### Image
 Command `image` prints an image.
 
-| Parameter   | Description                                                                                                                                    | Possible Values | Hanin CPCL | Hanin TSPL |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|------------|------------|
-| `path`      | The file path to the image. Due to different paths in different OSes, **avoid hardcoding a path**. Use String Replacement (see below) instead. | Text            | :star:     | :star:     |
-| `xPosition` | The x position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     |
-| `yPosition` | The y position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     |
+| Parameter   | Description                                                                                                                                    | Possible Values | Hanin CPCL | Hanin TSPL | Image |
+|-------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|------------|------------|-------|
+| `path`      | The file path to the image. Due to different paths in different OSes, **avoid hardcoding a path**. Use String Replacement (see below) instead. | Text            | :star:     | :star:     | :o:   |
+| `xPosition` | The x position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     | :o:   |
+| `yPosition` | The y position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     | :o:   |
 
 ### Template String Replacement
 

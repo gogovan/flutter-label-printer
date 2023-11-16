@@ -130,9 +130,36 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
   }
 
   @override
-  Future<bool> addImage(PrintImage printImage) {
-    // TODO: implement addImage
-    throw UnimplementedError();
+  Future<bool> addImage(PrintImage printImage) async {
+    final image = checkImageCommand();
+
+    final srcImage = await img.decodeImageFile(printImage.path);
+    if (srcImage == null) {
+      throw img.ImageException(
+          'Unable to load source image ${printImage.path}');
+    }
+    switch (printImage.monochromizationAlgorithm) {
+      case MonochromizationAlgorithm.binary:
+        img.luminanceThreshold(srcImage);
+        break;
+      case MonochromizationAlgorithm.cluster:
+        img.dotScreen(srcImage);
+        break;
+      default:
+        throw InvalidArgumentException(
+          'Unsupported algorithm: ${printImage.monochromizationAlgorithm}',
+          '',
+        );
+    }
+
+    img.compositeImage(
+      image,
+      srcImage,
+      dstX: printImage.xPosition.toInt(),
+      dstY: printImage.yPosition.toInt(),
+    );
+
+    return true;
   }
 
   @override
