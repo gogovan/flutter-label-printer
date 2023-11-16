@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:barcode_image/barcode_image.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_qr_cod
 import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 import 'package:image/image.dart' as img;
 
@@ -136,7 +136,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     final srcImage = await img.decodeImageFile(printImage.path);
     if (srcImage == null) {
       throw img.ImageException(
-          'Unable to load source image ${printImage.path}');
+        'Unable to load source image ${printImage.path}',
+      );
     }
     switch (printImage.monochromizationAlgorithm) {
       case MonochromizationAlgorithm.binary:
@@ -279,9 +280,41 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
   }
 
   @override
-  Future<bool> printTestPage() {
-    // TODO: implement printTestPage
-    throw UnimplementedError();
+  Future<bool> printTestPage() async {
+    await setPrintAreaSize(const PrintAreaSize(width: 800, height: 800));
+    await addText(
+      const PrintText(
+        text: 'Test Page',
+        xPosition: 50,
+        yPosition: 5,
+        style: PrintTextStyle(width: 3, height: 100, bold: 2),
+      ),
+    );
+    await addText(
+      const PrintText(text: 'CODE128', xPosition: 0, yPosition: 66),
+    );
+    await addBarcode(
+      const PrintBarcode(
+        type: PrintBarcodeType.code128,
+        xPosition: 0,
+        yPosition: 100,
+        data: '123456789',
+        height: 50,
+      ),
+    );
+    await addQRCode(
+      const PrintQRCode(
+        xPosition: 0,
+        yPosition: 160,
+        data: 'https://example.com',
+        unitSize: 5,
+      ),
+    );
+    await addRectangle(const PrintRect(rect: Rect.fromLTRB(10, 540, 110, 640)));
+    await addLine(const PrintRect(rect: Rect.fromLTRB(10, 540, 110, 640)));
+    await print();
+
+    return true;
   }
 
   @override
