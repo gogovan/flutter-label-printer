@@ -97,15 +97,36 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     }
     drawBarcode(barcodeImage, bc, barcode.data);
 
-    img.compositeImage(image, barcodeImage);
+    img.compositeImage(
+      image,
+      barcodeImage,
+      dstX: barcode.xPosition.toInt(),
+      dstY: barcode.yPosition.toInt(),
+    );
 
     return Future.value(true);
   }
 
   @override
   Future<bool> addQRCode(PrintQRCode qrCode) {
-    // TODO: implement addQRCode
-    throw UnimplementedError();
+    final image = checkImageCommand();
+
+    final qrImage = img.Image(
+      width: (qrCode.unitSize * 50).toInt(),
+      height: (qrCode.unitSize * 50).toInt(),
+    );
+    img.fill(qrImage, color: white);
+
+    drawBarcode(qrImage, Barcode.qrCode(), qrCode.data);
+
+    img.compositeImage(
+      image,
+      qrImage,
+      dstX: qrCode.xPosition.toInt(),
+      dstY: qrCode.yPosition.toInt(),
+    );
+
+    return Future.value(true);
   }
 
   @override
