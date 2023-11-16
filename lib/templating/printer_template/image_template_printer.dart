@@ -23,20 +23,20 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
   @override
   PrinterSearchResult device = EmptyResult();
 
-  image2.Command? _imageCommand;
+  image2.Image? _image;
   final image2.ColorRgb8 black = image2.ColorRgb8(0, 0, 0);
 
   double width = 0, height = 0;
 
-  image2.Command checkImageCommand() {
-    final command = _imageCommand;
-    if (command == null) {
+  image2.Image checkImageCommand() {
+    final img = _image;
+    if (img == null) {
       throw const InvalidArgumentException(
         'setPrintAreaSize has not been called.',
         '',
       );
     }
-    return command;
+    return img;
   }
 
   @override
@@ -59,7 +59,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addLine(PrintRect rect) {
-    checkImageCommand().drawLine(
+    image2.drawLine(
+      checkImageCommand(),
       x1: rect.rect.left.toInt(),
       y1: rect.rect.top.toInt(),
       x2: rect.rect.right.toInt(),
@@ -73,7 +74,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addRectangle(PrintRect rect) {
-    checkImageCommand().drawRect(
+    image2.drawRect(
+      checkImageCommand(),
       x1: rect.rect.left.toInt(),
       y1: rect.rect.top.toInt(),
       x2: rect.rect.right.toInt(),
@@ -87,7 +89,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addText(PrintText printText) async {
-    final command = checkImageCommand();
+    final image = checkImageCommand();
 
     TextAlign textAlign;
     switch (printText.style?.align) {
@@ -129,17 +131,15 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     if (byteData == null) {
       throw const FormatException('Unable to convert canvas text image');
     }
-    final image = image2.Image.fromBytes(
+    final textImage = image2.Image.fromBytes(
       width: width.toInt(),
       height: height.toInt(),
       bytes: byteData.buffer,
       numChannels: 4,
     );
-    command.compositeImage(
-      image2.Command()..image(image),
+    image2.compositeImage(image, textImage,
       dstX: printText.xPosition.toInt(),
       dstY: printText.yPosition.toInt(),
-      blend: image2.BlendMode.overlay,
     );
 
     return true;
@@ -165,10 +165,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> print() async {
-    final command = checkImageCommand()
-      ..encodePngFile(outputPath)
-      ..writeToFile(outputPath);
-    await command.execute();
+    final image = checkImageCommand();
+    await image2.encodePngFile(outputPath, image);
 
     return true;
   }
@@ -197,12 +195,9 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       );
     }
 
-    _imageCommand = image2.Command()
-      ..createImage(
-        width: width.toInt(),
-        height: height.toInt(),
-      )
-      ..fill(color: image2.ColorRgb8(255, 255, 255));
+    final image = image2.Image(width: width.toInt(), height: height.toInt());
+    image2.fill(image, color: image2.ColorRgb8(255, 255, 255));
+    _image = image;
 
     return Future.value(true);
   }
