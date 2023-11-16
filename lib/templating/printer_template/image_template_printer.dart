@@ -46,11 +46,56 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     final image = checkImageCommand();
 
     final barcodeImage = img.Image(
-      width: (barcode.barLineWidth * 100 * barcode.data.length).toInt(),
+      width: (barcode.barLineWidth * 50 * barcode.data.length).toInt(),
       height: barcode.height.toInt(),
     );
     img.fill(barcodeImage, color: white);
-    drawBarcode(barcodeImage, Barcode.code39(), barcode.data);
+
+    Barcode bc;
+    switch (barcode.type) {
+      case PrintBarcodeType.code39:
+        bc = Barcode.code39();
+        break;
+      case PrintBarcodeType.code93:
+        bc = Barcode.code93();
+        break;
+      case PrintBarcodeType.code128:
+        bc = Barcode.code128();
+        break;
+      case PrintBarcodeType.codabar:
+        bc = Barcode.codabar();
+        break;
+      case PrintBarcodeType.ean2:
+        bc = Barcode.ean2();
+        break;
+      case PrintBarcodeType.ean5:
+        bc = Barcode.ean5();
+        break;
+      case PrintBarcodeType.ean8:
+        bc = Barcode.ean8();
+        break;
+      case PrintBarcodeType.ean13:
+        bc = Barcode.ean13();
+        break;
+      case PrintBarcodeType.itf14:
+        bc = Barcode.itf14();
+        break;
+      case PrintBarcodeType.telepen:
+        bc = Barcode.telepen();
+        break;
+      case PrintBarcodeType.upca:
+        bc = Barcode.upcA();
+        break;
+      case PrintBarcodeType.upce:
+        bc = Barcode.upcE();
+        break;
+      default:
+        throw InvalidArgumentException(
+          'Unsupported Barcode type: ${barcode.type}',
+          '',
+        );
+    }
+    drawBarcode(barcodeImage, bc, barcode.data);
 
     img.compositeImage(image, barcodeImage);
 

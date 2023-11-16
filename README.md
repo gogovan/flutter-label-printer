@@ -144,10 +144,10 @@ and edit your YAML with [VSCode](https://code.visualstudio.com/) that has [YAML 
 ### Template YAML root
 There are two properties at root, `size` and `commands`, taking an object and an array of object respectively. Both are required. 
 
-For each command, a table is provided listing support for each printing SDK. Legends is as follows:
-:x: Not supported. These parameters will be ignored if sent to unsupported printers.
-:o: Supported.
-:star: Required.
+For each command, a table is provided listing support for each printing SDK. Legends is as follows: 
+:x: Not supported. These parameters will be ignored if sent to unsupported printers. 
+:o: Supported. 
+:star: Required. 
 
 ### Size command
 The `size` object set the printing area.
@@ -183,13 +183,32 @@ Command `text` adds text with styling.
 #### Barcode
 Command `barcode` prints a barcode.
 
-| Parameter   | Description                                  | Possible Values             | Hanin CPCL                                                                       | Hanin TSPL                                                                                  |
-|-------------|----------------------------------------------|-----------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| `type`      | The barcode symbology of the barcode.        | Different for each printer. | :star: `upca`, `upce`, `ean13`, `ean8`, `code39`, `code93`, `code128`, `codabar` | :star: `code128`, `code128m`, `ean128`, `code39`, `code93`, `upca`, `msi`, `itf14`, `ean13` |
-| `xPosition` | The x position of the barcode in the canvas. | Number                      | :star:                                                                           | :star:                                                                                      |
-| `yPosition` | The y position of the barcode in the canvas. | Number                      | :star:                                                                           | :star:                                                                                      |
-| `data`      | Data encoded in the barcode.                 | Text                        | :star:                                                                           | :star:                                                                                      |
-| `height`    | The height of the barcode.                   | Number                      | :star:                                                                           | :star:                                                                                      |
+| Parameter   | Description                                  | Possible Values             | Hanin CPCL | Hanin TSPL | Image  |
+|-------------|----------------------------------------------|-----------------------------|------------|------------|--------|
+| `type`      | The barcode symbology of the barcode.        | Different for each printer. | :star:     | :star:     | :star: |
+| `xPosition` | The x position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
+| `yPosition` | The y position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
+| `data`      | Data encoded in the barcode.                 | Text                        | :star:     | :star:     | :star: |
+| `height`    | The height of the barcode.                   | Number                      | :star:     | :star:     | :star: |
+
+##### Supported barcodes:
+| Symbology  | Hanin CPCL | Hanin TSPL | Image |
+|------------|------------|------------|-------|
+| `code39`   | :o:        | :o:        | :o:   |
+| `code93`   | :o:        | :o:        | :o:   |
+| `code128`  | :o:        | :o:        | :o:   |
+| `code128m` | :x:        | :o:        | :x:   |
+| `codabar`  | :o:        | :x:        | :o:   |
+| `ean2`     | :x:        | :x:        | :o:   |
+| `ean5`     | :x:        | :x:        | :o:   |
+| `ean8`     | :o:        | :x:        | :o:   |
+| `ean13`    | :o:        | :o:        | :o:   |
+| `ean128`   | :x:        | :o:        | :x:   |
+| `msi`      | :x:        | :o:        | :x:   |
+| `itf14`    | :x:        | :o:        | :x:   |
+| `telepen`  | :x:        | :x:        | :o:   |
+| `upca`     | :o:        | :o:        | :o:   |
+| `upce`     | :o:        | :x:        | :o:   |
 
 #### QR Code
 Command `qrcode` prints a QR Code. 
