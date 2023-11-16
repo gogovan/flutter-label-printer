@@ -12,6 +12,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_rect.d
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
+import 'package:image/image.dart' as image2;
 
 /// A "printer" that print the template to an output PNG image instead of printer hardware.
 class ImageTemplatePrinter implements TemplatablePrinterInterface {
@@ -22,24 +23,31 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
   @override
   PrinterSearchResult device = EmptyResult();
 
-  Canvas? _canvas;
-  PictureRecorder? _recorder;
+  image2.Command? _imageCommand;
+  final image2.ColorRgb8 black = image2.ColorRgb8(0, 0, 0);
+
   double width = 0, height = 0;
 
-  Canvas checkCanvas() {
-    final canvas = _canvas;
-    if (canvas == null) {
+  image2.Command checkImageCommand() {
+    final command = _imageCommand;
+    if (command == null) {
       throw const InvalidArgumentException(
         'setPrintAreaSize has not been called.',
         '',
       );
     }
-    return canvas;
+    return command;
   }
 
   @override
   Future<bool> addBarcode(PrintBarcode barcode) {
     // TODO: implement addBarcode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> addQRCode(PrintQRCode qrCode) {
+    // TODO: implement addQRCode
     throw UnimplementedError();
   }
 
@@ -51,41 +59,35 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addLine(PrintRect rect) {
-    final canvas = checkCanvas();
-
-    final paint = Paint()
-      ..color = const Color.fromARGB(255, 0, 0, 0)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = rect.strokeWidth;
-
-    canvas.drawLine(rect.rect.topLeft, rect.rect.bottomRight, paint);
+    checkImageCommand().drawLine(
+      x1: rect.rect.left.toInt(),
+      y1: rect.rect.top.toInt(),
+      x2: rect.rect.right.toInt(),
+      y2: rect.rect.bottom.toInt(),
+      thickness: rect.strokeWidth,
+      color: black,
+    );
 
     return Future.value(true);
-  }
-
-  @override
-  Future<bool> addQRCode(PrintQRCode qrCode) {
-    // TODO: implement addQRCode
-    throw UnimplementedError();
   }
 
   @override
   Future<bool> addRectangle(PrintRect rect) {
-    final canvas = checkCanvas();
-
-    final paint = Paint()
-      ..color = const Color.fromARGB(255, 0, 0, 0)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = rect.strokeWidth;
-
-    canvas.drawRect(rect.rect, paint);
+    checkImageCommand().drawRect(
+      x1: rect.rect.left.toInt(),
+      y1: rect.rect.top.toInt(),
+      x2: rect.rect.right.toInt(),
+      y2: rect.rect.bottom.toInt(),
+      thickness: rect.strokeWidth,
+      color: black,
+    );
 
     return Future.value(true);
   }
 
   @override
-  Future<bool> addText(PrintText printText) {
-    final canvas = checkCanvas();
+  Future<bool> addText(PrintText printText) async {
+    final command = checkImageCommand();
 
     TextAlign textAlign;
     switch (printText.style?.align) {
@@ -119,12 +121,28 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     final paragraph = paragraphBuilder.build()
       ..layout(ParagraphConstraints(width: width - printText.xPosition));
 
-    canvas.drawParagraph(
-      paragraph,
-      Offset(printText.xPosition, printText.yPosition),
+    final recorder = PictureRecorder();
+    Canvas(recorder).drawParagraph(paragraph, Offset.zero);
+    final picture = recorder.endRecording();
+    final uiImage = await picture.toImage(width.toInt(), height.toInt());
+    final byteData = await uiImage.toByteData();
+    if (byteData == null) {
+      throw const FormatException('Unable to convert canvas text image');
+    }
+    final image = image2.Image.fromBytes(
+      width: width.toInt(),
+      height: height.toInt(),
+      bytes: byteData.buffer,
+      numChannels: 4,
+    );
+    command.compositeImage(
+      image2.Command()..image(image),
+      dstX: printText.xPosition.toInt(),
+      dstY: printText.yPosition.toInt(),
+      blend: image2.BlendMode.overlay,
     );
 
-    return Future.value(true);
+    return true;
   }
 
   @override
@@ -147,24 +165,10 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> print() async {
-    final recorder = _recorder;
-    if (recorder == null) {
-      throw const InvalidArgumentException(
-        'setPrintAreaSize has not been called.',
-        '',
-      );
-    }
-
-    final picture = recorder.endRecording();
-    final image = await picture.toImage(width.toInt(), height.toInt());
-    final byteData = await image.toByteData(format: ImageByteFormat.png);
-    if (byteData == null) {
-      throw const FormatException('Unable to convert canvas image to PNG');
-    }
-
-    final buffer = byteData.buffer
-        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    await File(outputPath).writeAsBytes(buffer);
+    final command = checkImageCommand()
+      ..encodePngFile(outputPath)
+      ..writeToFile(outputPath);
+    await command.execute();
 
     return true;
   }
@@ -177,13 +181,6 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) {
-    final recorder = PictureRecorder();
-    _recorder = recorder;
-    _canvas = Canvas(recorder);
-    _canvas?.drawColor(
-      const Color.fromARGB(255, 255, 255, 255),
-      BlendMode.srcOver,
-    );
     width = printAreaSize.width ?? 0;
     height = printAreaSize.height ?? 0;
 
@@ -199,6 +196,13 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         '',
       );
     }
+
+    _imageCommand = image2.Command()
+      ..createImage(
+        width: width.toInt(),
+        height: height.toInt(),
+      )
+      ..fill(color: image2.ColorRgb8(255, 255, 255));
 
     return Future.value(true);
   }
