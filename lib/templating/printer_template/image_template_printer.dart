@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:barcode_image/barcode_image.dart';
 import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/printer_search_result/empty_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
@@ -12,7 +13,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_rect.d
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
-import 'package:image/image.dart' as image2;
+import 'package:image/image.dart' as img;
 
 /// A "printer" that print the template to an output PNG image instead of printer hardware.
 class ImageTemplatePrinter implements TemplatablePrinterInterface {
@@ -23,12 +24,13 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
   @override
   PrinterSearchResult device = EmptyResult();
 
-  image2.Image? _image;
-  final image2.ColorRgb8 black = image2.ColorRgb8(0, 0, 0);
+  img.Image? _image;
+  final img.ColorRgb8 black = img.ColorRgb8(0, 0, 0);
+  final img.ColorRgb8 white = img.ColorRgb8(255, 255, 255);
 
   double width = 0, height = 0;
 
-  image2.Image checkImageCommand() {
+  img.Image checkImageCommand() {
     final img = _image;
     if (img == null) {
       throw const InvalidArgumentException(
@@ -41,8 +43,18 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addBarcode(PrintBarcode barcode) {
-    // TODO: implement addBarcode
-    throw UnimplementedError();
+    final image = checkImageCommand();
+
+    final barcodeImage = img.Image(
+      width: (barcode.barLineWidth * 100 * barcode.data.length).toInt(),
+      height: barcode.height.toInt(),
+    );
+    img.fill(barcodeImage, color: white);
+    drawBarcode(barcodeImage, Barcode.code39(), barcode.data);
+
+    img.compositeImage(image, barcodeImage);
+
+    return Future.value(true);
   }
 
   @override
@@ -59,7 +71,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addLine(PrintRect rect) {
-    image2.drawLine(
+    img.drawLine(
       checkImageCommand(),
       x1: rect.rect.left.toInt(),
       y1: rect.rect.top.toInt(),
@@ -74,7 +86,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
   @override
   Future<bool> addRectangle(PrintRect rect) {
-    image2.drawRect(
+    img.drawRect(
       checkImageCommand(),
       x1: rect.rect.left.toInt(),
       y1: rect.rect.top.toInt(),
@@ -131,13 +143,15 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     if (byteData == null) {
       throw const FormatException('Unable to convert canvas text image');
     }
-    final textImage = image2.Image.fromBytes(
+    final textImage = img.Image.fromBytes(
       width: width.toInt(),
       height: height.toInt(),
       bytes: byteData.buffer,
       numChannels: 4,
     );
-    image2.compositeImage(image, textImage,
+    img.compositeImage(
+      image,
+      textImage,
       dstX: printText.xPosition.toInt(),
       dstY: printText.yPosition.toInt(),
     );
@@ -166,7 +180,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
   @override
   Future<bool> print() async {
     final image = checkImageCommand();
-    await image2.encodePngFile(outputPath, image);
+    await img.encodePngFile(outputPath, image);
 
     return true;
   }
@@ -195,8 +209,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       );
     }
 
-    final image = image2.Image(width: width.toInt(), height: height.toInt());
-    image2.fill(image, color: image2.ColorRgb8(255, 255, 255));
+    final image = img.Image(width: width.toInt(), height: height.toInt());
+    img.fill(image, color: white);
     _image = image;
 
     return Future.value(true);
