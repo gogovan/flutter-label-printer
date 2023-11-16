@@ -103,18 +103,19 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         break;
     }
 
-    final textWidth = (printText.style?.width ?? 1) * 16;
-    final textHeight = (printText.style?.height ?? 1) * 16;
+    final textWidth = (printText.style?.width ?? 0) + 16;
     final boldWeight = (printText.style?.bold ?? 0) / 10.0;
     final paragraphBuilder = ParagraphBuilder(
       ParagraphStyle(
         textAlign: textAlign,
         fontSize: textWidth,
-        height: textHeight,
         fontWeight:
-            FontWeight.lerp(FontWeight.w100, FontWeight.w900, boldWeight),
+            FontWeight.lerp(FontWeight.w400, FontWeight.w900, boldWeight),
       ),
-    );
+    )
+      ..pushStyle(TextStyle(color: const Color.fromARGB(255, 0, 0, 0)))
+      ..addText(printText.text)
+      ..pop();
     final paragraph = paragraphBuilder.build()
       ..layout(ParagraphConstraints(width: width - printText.xPosition));
 

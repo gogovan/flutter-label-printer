@@ -171,13 +171,13 @@ Command `text` adds text with styling.
 | Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   | Image  |
 |----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|--------|
 | `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       | :star: |
-| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :o:    |
-| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :o:    |
+| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
+| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
 | `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
 | `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          | :o:    |
 | `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :x:                          | :o:    |
 | `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          | :o:    |
-| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          | :o:    |
+| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          | :x:    |
 | `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
 
 #### Barcode
@@ -204,24 +204,24 @@ Command `qrcode` prints a QR Code.
 #### Line
 Command `line` draws a line.
 
-| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL |
-|---------------|---------------------------|-----------------|------------|------------|
-| `left`        | x0                        | Number          | :star:     | :star:     |
-| `top`         | y0                        | Number          | :star:     | :star:     |
-| `right`       | x1                        | Number          | :star:     | :star:     |
-| `bottom`      | y1                        | Number          | :star:     | :star:     |
-| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :x:        |
+| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL | Image  |
+|---------------|---------------------------|-----------------|------------|------------|--------|
+| `left`        | x0                        | Number          | :star:     | :star:     | :star: |
+| `top`         | y0                        | Number          | :star:     | :star:     | :star: |
+| `right`       | x1                        | Number          | :star:     | :star:     | :star: |
+| `bottom`      | y1                        | Number          | :star:     | :star:     | :star: |
+| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :x:        | :o:    |
 
 #### Rectangle
 Command `rectangle` draws a rectangle. 
 
-| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL |
-|---------------|---------------------------|-----------------|------------|------------|
-| `left`        | x0                        | Number          | :star:     | :star:     |
-| `top`         | y0                        | Number          | :star:     | :star:     |
-| `right`       | x1                        | Number          | :star:     | :star:     |
-| `bottom`      | y1                        | Number          | :star:     | :star:     |
-| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :o:        |
+| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL | Image  |
+|---------------|---------------------------|-----------------|------------|------------|--------|
+| `left`        | x0                        | Number          | :star:     | :star:     | :star: |
+| `top`         | y0                        | Number          | :star:     | :star:     | :star: |
+| `right`       | x1                        | Number          | :star:     | :star:     | :star: |
+| `bottom`      | y1                        | Number          | :star:     | :star:     | :star: |
+| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :o:        | :o:    |
 
 #### Image
 Command `image` prints an image.
