@@ -19,7 +19,7 @@ class _AddRectangleState extends State<AddRectangle> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      MyApp.printer?.addLine(PrintRect(
+      MyApp.printer?.addRectangle(PrintRect(
           rect: Rect.fromLTRB(
               double.parse(_x0Controller.text),
               double.parse(_y0Controller.text),

@@ -12,10 +12,10 @@ import 'package:flutter_label_printer/templating/command_parameters/print_text_a
 import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
-/// Interface for Templating for the Hanin (HPRT) HM-A300L Printer.
-class HaninCPCLPrinterTemplate extends HaninCPCLPrinter
+/// Interface for Templating for the Hanin Printers using CPCL.
+class HaninCPCLTemplatePrinter extends HaninCPCLPrinter
     implements TemplatablePrinterInterface {
-  HaninCPCLPrinterTemplate(super.device);
+  HaninCPCLTemplatePrinter(super.device);
 
   @override
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {

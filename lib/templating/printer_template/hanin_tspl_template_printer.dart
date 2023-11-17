@@ -12,9 +12,10 @@ import 'package:flutter_label_printer/templating/command_parameters/print_text_a
 import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
-class HaninTSPLPrinterTemplate extends HaninTSPLPrinter
+/// Interface for Templating for the Hanin Printers using TSPL.
+class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
     implements TemplatablePrinterInterface {
-  HaninTSPLPrinterTemplate(super.device);
+  HaninTSPLTemplatePrinter(super.device);
 
   @override
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {

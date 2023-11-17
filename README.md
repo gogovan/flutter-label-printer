@@ -13,6 +13,9 @@ Integrate printers with Flutter apps.
   - HM-A300L is tested
 - Hanin (HPRT) TSPL Printers
   - N41BT is tested
+- A special "printer" that print to an image instead of a hardware printer. Useful for:
+  - Send the image to printer instead of using printer commands for consistency and working around missing printer features.
+  - Print to an image for preliminary testing and verification during development.
 
 # Setup
 
@@ -141,22 +144,22 @@ and edit your YAML with [VSCode](https://code.visualstudio.com/) that has [YAML 
 ### Template YAML root
 There are two properties at root, `size` and `commands`, taking an object and an array of object respectively. Both are required. 
 
-For each command, a table is provided listing support for each printing SDK. Legends is as follows:
-:x: Not supported. These parameters will be ignored if sent to unsupported printers.
-:o: Supported.
-:star: Required.
+For each command, a table is provided listing support for each printing SDK. Legends is as follows: 
+:x: Not supported. These parameters will be ignored if sent to unsupported printers. 
+:o: Supported. 
+:star: Required. 
 
 ### Size command
 The `size` object set the printing area.
 This command create a canvas for drawing items to be printed. Call `print` to perform the actual printing.
 
-| Parameter   | Description                                        | Possible Values                                            | Hanin CPCL | Hanin TSPL |
-|-------------|----------------------------------------------------|------------------------------------------------------------|------------|------------|
-| `paperType` | Type of paper.                                     | `continuous` for receipt papers. `label` for label papers. | :star:     | :x:        |
-| `originX`   | Starting horizontal position of the printing area. | Number                                                     | :o:        | :x:        |
-| `originY`   | Starting vertical position of the printing area.   | Number                                                     | :o:        | :x:        |
-| `width`     | Width of the printing area.                        | Number                                                     | :star:     | :star:     |
-| `height`    | Height of the printing area.                       | Number                                                     | :star:     | :star:     |
+| Parameter   | Description                                        | Possible Values                                            | Hanin CPCL | Hanin TSPL | Image  |
+|-------------|----------------------------------------------------|------------------------------------------------------------|------------|------------|--------|
+| `paperType` | Type of paper.                                     | `continuous` for receipt papers. `label` for label papers. | :star:     | :x:        | :x:    |
+| `originX`   | Starting horizontal position of the printing area. | Number                                                     | :o:        | :x:        | :x:    |
+| `originY`   | Starting vertical position of the printing area.   | Number                                                     | :o:        | :x:        | :x:    |
+| `width`     | Width of the printing area.                        | Number                                                     | :star:     | :star:     | :star: |
+| `height`    | Height of the printing area.                       | Number                                                     | :star:     | :star:     | :star: |
 
 ### Printing commands
 
@@ -165,69 +168,88 @@ Put all printing commands in the `commands` object. They will be sent to the pri
 #### Text
 Command `text` adds text with styling.
 
-| Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   |
-|----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|
-| `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       |
-| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
-| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       |
-| `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments |
-| `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          |
-| `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :x:                          |
-| `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          |
-| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          |
-| `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          |
+| Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   | Image  |
+|----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|--------|
+| `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       | :star: |
+| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
+| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
+| `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
+| `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          | :o:    |
+| `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :x:                          | :o:    |
+| `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          | :o:    |
+| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          | :x:    |
+| `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
 
 #### Barcode
 Command `barcode` prints a barcode.
 
-| Parameter   | Description                                  | Possible Values             | Hanin CPCL                                                                       | Hanin TSPL                                                                                  |
-|-------------|----------------------------------------------|-----------------------------|----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| `type`      | The barcode symbology of the barcode.        | Different for each printer. | :star: `upca`, `upce`, `ean13`, `ean8`, `code39`, `code93`, `code128`, `codabar` | :star: `code128`, `code128m`, `ean128`, `code39`, `code93`, `upca`, `msi`, `itf14`, `ean13` |
-| `xPosition` | The x position of the barcode in the canvas. | Number                      | :star:                                                                           | :star:                                                                                      |
-| `yPosition` | The y position of the barcode in the canvas. | Number                      | :star:                                                                           | :star:                                                                                      |
-| `data`      | Data encoded in the barcode.                 | Text                        | :star:                                                                           | :star:                                                                                      |
-| `height`    | The height of the barcode.                   | Number                      | :star:                                                                           | :star:                                                                                      |
+| Parameter   | Description                                  | Possible Values             | Hanin CPCL | Hanin TSPL | Image  |
+|-------------|----------------------------------------------|-----------------------------|------------|------------|--------|
+| `type`      | The barcode symbology of the barcode.        | Different for each printer. | :star:     | :star:     | :star: |
+| `xPosition` | The x position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
+| `yPosition` | The y position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
+| `data`      | Data encoded in the barcode.                 | Text                        | :star:     | :star:     | :star: |
+| `height`    | The height of the barcode.                   | Number                      | :star:     | :star:     | :star: |
+
+##### Supported barcodes:
+| Symbology  | Hanin CPCL | Hanin TSPL | Image |
+|------------|------------|------------|-------|
+| `code39`   | :o:        | :o:        | :o:   |
+| `code93`   | :o:        | :o:        | :o:   |
+| `code128`  | :o:        | :o:        | :o:   |
+| `code128m` | :x:        | :o:        | :x:   |
+| `codabar`  | :o:        | :x:        | :o:   |
+| `ean2`     | :x:        | :x:        | :o:   |
+| `ean5`     | :x:        | :x:        | :o:   |
+| `ean8`     | :o:        | :x:        | :o:   |
+| `ean13`    | :o:        | :o:        | :o:   |
+| `ean128`   | :x:        | :o:        | :x:   |
+| `msi`      | :x:        | :o:        | :x:   |
+| `itf14`    | :x:        | :o:        | :x:   |
+| `telepen`  | :x:        | :x:        | :o:   |
+| `upca`     | :o:        | :o:        | :o:   |
+| `upce`     | :o:        | :x:        | :o:   |
 
 #### QR Code
 Command `qrcode` prints a QR Code. 
 
-| Parameter   | Description                                    | Possible Values | Hanin CPCL | Hanin TSPL |
-|-------------|------------------------------------------------|-----------------|------------|------------|
-| `xPosition` | The x position of the barcode in the canvas.   | Number          | :star:     | :star:     |
-| `yPosition` | The y position of the barcode in the canvas.   | Number          | :star:     | :star:     |
-| `data`      | Data encoded in the barcode.                   | Text            | :star:     | :star:     |
-| `unitSize`  | The size of each unit (square) of the QR Code. | Number          | :star:     | :star:     |
+| Parameter   | Description                                    | Possible Values | Hanin CPCL | Hanin TSPL | Image |
+|-------------|------------------------------------------------|-----------------|------------|------------|-------|
+| `xPosition` | The x position of the barcode in the canvas.   | Number          | :star:     | :star:     | :o:   |
+| `yPosition` | The y position of the barcode in the canvas.   | Number          | :star:     | :star:     | :o:   |
+| `data`      | Data encoded in the barcode.                   | Text            | :star:     | :star:     | :o:   |
+| `unitSize`  | The size of each unit (square) of the QR Code. | Number          | :star:     | :star:     | :o:   |
 
 #### Line
 Command `line` draws a line.
 
-| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL |
-|---------------|---------------------------|-----------------|------------|------------|
-| `left`        | x0                        | Number          | :star:     | :star:     |
-| `top`         | y0                        | Number          | :star:     | :star:     |
-| `right`       | x1                        | Number          | :star:     | :star:     |
-| `bottom`      | y1                        | Number          | :star:     | :star:     |
-| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :x:        |
+| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL | Image  |
+|---------------|---------------------------|-----------------|------------|------------|--------|
+| `left`        | x0                        | Number          | :star:     | :star:     | :star: |
+| `top`         | y0                        | Number          | :star:     | :star:     | :star: |
+| `right`       | x1                        | Number          | :star:     | :star:     | :star: |
+| `bottom`      | y1                        | Number          | :star:     | :star:     | :star: |
+| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :x:        | :o:    |
 
 #### Rectangle
 Command `rectangle` draws a rectangle. 
 
-| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL |
-|---------------|---------------------------|-----------------|------------|------------|
-| `left`        | x0                        | Number          | :star:     | :star:     |
-| `top`         | y0                        | Number          | :star:     | :star:     |
-| `right`       | x1                        | Number          | :star:     | :star:     |
-| `bottom`      | y1                        | Number          | :star:     | :star:     |
-| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :o:        |
+| Parameter     | Description               | Possible Values | Hanin CPCL | Hanin TSPL | Image  |
+|---------------|---------------------------|-----------------|------------|------------|--------|
+| `left`        | x0                        | Number          | :star:     | :star:     | :star: |
+| `top`         | y0                        | Number          | :star:     | :star:     | :star: |
+| `right`       | x1                        | Number          | :star:     | :star:     | :star: |
+| `bottom`      | y1                        | Number          | :star:     | :star:     | :star: |
+| `strokeWidth` | Stroke width of the line. | Number          | :o:        | :o:        | :o:    |
 
 #### Image
 Command `image` prints an image.
 
-| Parameter   | Description                                                                                                                                    | Possible Values | Hanin CPCL | Hanin TSPL |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|------------|------------|
-| `path`      | The file path to the image. Due to different paths in different OSes, **avoid hardcoding a path**. Use String Replacement (see below) instead. | Text            | :star:     | :star:     |
-| `xPosition` | The x position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     |
-| `yPosition` | The y position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     |
+| Parameter   | Description                                                                                                                                    | Possible Values | Hanin CPCL | Hanin TSPL | Image |
+|-------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|------------|------------|-------|
+| `path`      | The file path to the image. Due to different paths in different OSes, **avoid hardcoding a path**. Use String Replacement (see below) instead. | Text            | :star:     | :star:     | :o:   |
+| `xPosition` | The x position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     | :o:   |
+| `yPosition` | The y position of the image in the canvas.                                                                                                     | Number          | :star:     | :star:     | :o:   |
 
 ### Template String Replacement
 
