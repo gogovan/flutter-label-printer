@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/printer/hanin_cpcl_printer.dart';
 import 'package:flutter_label_printer/printer/hanin_tspl_printer.dart';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_label_printer/printer_searcher/bluetooth_printer_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
 import 'package:flutter_label_printer/templating/printer_template/hanin_cpcl_printer_template.dart';
 import 'package:flutter_label_printer/templating/printer_template/hanin_tspl_printer_template.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
@@ -19,6 +21,7 @@ import 'package:flutter_label_printer_example/add_qrcode.dart';
 import 'package:flutter_label_printer_example/add_rectangle.dart';
 import 'package:flutter_label_printer_example/add_text.dart';
 import 'package:flutter_label_printer_example/set_print_area_size.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -135,6 +138,32 @@ class _MyAppState extends State<MyApp> {
 
       await TemplatePrinter(MyApp.printer!, template,
           replaceStrings: {'world': 'Earth'}).printTemplate();
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _printImage() async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final path = '${dir.path}/test.png';
+      final data = await rootBundle.load('assets/test.png');
+      final bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      final file = File(path);
+      try {
+        await file.delete();
+      } catch (_) {}
+      await file.writeAsBytes(bytes);
+
+      MyApp.printer!.setPrintAreaSize(PrintAreaSize(
+        paperType: PrintPaperType.label,
+        originX: 0,
+        originY: 0,
+        width: 80,
+        height: 30,
+      ));
+      await MyApp.printer!.addImage(PrintImage(path: path, xPosition: 0, yPosition: 0));
+      await MyApp.printer!.print();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
     }
@@ -284,6 +313,9 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                           onPressed: _printTemplate,
                           child: const Text('Print Template')),
+                      ElevatedButton(
+                          onPressed: _printImage,
+                          child: const Text('Print Image')),
                       ElevatedButton(
                           onPressed: _disconnect,
                           child: const Text('Disconnect')),

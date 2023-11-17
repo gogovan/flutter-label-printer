@@ -3,8 +3,8 @@ size:
   paperType: label
   originX: 0
   originY: 0
-  width: 300
-  height: 300
+  width: 80
+  height: 30
 commands:
   - command: text
     text: Hello {{world}}!

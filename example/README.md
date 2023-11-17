@@ -2,15 +2,12 @@
 
 Demonstrates how to use the flutter_label_printer plugin.
 
-## Getting Started
+## Printing templates
 
-This project is a starting point for a Flutter application.
+Update the file `template.yaml` and rebuild for printing.
 
-A few resources to get you started if this is your first Flutter project:
+`template_schema.json` is the JSON Schema for all printer templates. You can copy this file to your project to aid writing templates.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Printing images
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Update the image `assets/test.png` and rebuild for printing.
