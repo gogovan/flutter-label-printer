@@ -213,7 +213,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         break;
     }
 
-    final textWidth = (printText.style?.width ?? 0) + 16;
+    final textWidth = (printText.style?.width ?? 0) * 16;
     final boldWeight = (printText.style?.bold ?? 0) / 10.0;
     final paragraphBuilder = ParagraphBuilder(
       ParagraphStyle(

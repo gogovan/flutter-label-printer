@@ -263,6 +263,7 @@ class FlutterLabelPrinterMethodHandler(
                             val x = call.argument<Int>("x").toString()
                             val y = call.argument<Int>("y").toString()
                             val text = call.argument<String>("text")
+                            val align = call.argument<Int>("align")
                             val charWidth = (call.argument<Int>("characterWidth") ?: 0).toString()
                             val charHeight = (call.argument<Int>("characterHeight") ?: 0).toString()
 
@@ -273,7 +274,7 @@ class FlutterLabelPrinterMethodHandler(
                                 rotate,
                                 charWidth,
                                 charHeight,
-                                1,
+                                align ?: 1,
                                 text
                             )
 
