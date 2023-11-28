@@ -109,6 +109,7 @@ class Template {
         yPosition: _toDouble(paramMap['yPosition']),
         data: paramMap['data'].toString(),
         height: _toDouble(paramMap['height']),
+        barLineWidth: _toDouble(paramMap['barLineWidth']),
       );
 
   static PrintText _getPrintText(YamlMap paramMap, YamlMap? style) => PrintText(

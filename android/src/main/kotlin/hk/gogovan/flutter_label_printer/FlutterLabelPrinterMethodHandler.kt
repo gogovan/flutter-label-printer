@@ -617,6 +617,7 @@ class FlutterLabelPrinterMethodHandler(
                             val y = (call.argument<Int>("y") ?: 0).toString()
                             val type = call.argument<String>("type")
                             val height = (call.argument<Int>("height") ?: 0).toString()
+                            val width = (call.argument<Int>("barLineWidth") ?: 1)
                             val showData =
                                 if (call.argument<Boolean>("showData") == true) "1" else "0"
                             val rotate = (call.argument<Int>("rotate") ?: 0).toString()
@@ -644,8 +645,8 @@ class FlutterLabelPrinterMethodHandler(
                                 height,
                                 showData,
                                 rotate,
-                                "1",
-                                "1",
+                                width.toString(),
+                                (width * 2).toString(),
                                 data
                             )
                             result.success(returnCode >= 0)

@@ -161,6 +161,7 @@ class HaninTSPLBarcodeParams {
     required this.yPosition,
     required this.barcodeType,
     required this.height,
+    required this.barLineWidth,
     this.showData = false,
     this.rotate = Rotation90.text,
     required this.data,
@@ -170,13 +171,14 @@ class HaninTSPLBarcodeParams {
   final int yPosition;
   final HaninTSPLBarcodeType barcodeType;
   final int height;
+  final int barLineWidth;
   final bool showData;
   final Rotation90 rotate;
   final String data;
 
   @override
   String toString() =>
-      'HaninTSPLBarcodeParams{xPos: $xPosition, yPos: $yPosition, barcodeType: $barcodeType, height: $height, showData: $showData, rotate: $rotate, data: $data}';
+      'HaninTSPLBarcodeParams{xPosition: $xPosition, yPosition: $yPosition, barcodeType: $barcodeType, height: $height, barLineWidth: $barLineWidth, showData: $showData, rotate: $rotate, data: $data}';
 
   @override
   bool operator ==(Object other) =>
@@ -187,6 +189,7 @@ class HaninTSPLBarcodeParams {
           yPosition == other.yPosition &&
           barcodeType == other.barcodeType &&
           height == other.height &&
+          barLineWidth == other.barLineWidth &&
           showData == other.showData &&
           rotate == other.rotate &&
           data == other.data;
@@ -197,6 +200,7 @@ class HaninTSPLBarcodeParams {
       yPosition.hashCode ^
       barcodeType.hashCode ^
       height.hashCode ^
+      barLineWidth.hashCode ^
       showData.hashCode ^
       rotate.hashCode ^
       data.hashCode;

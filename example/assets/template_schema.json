@@ -121,6 +121,10 @@
                             "height": {
                                 "type": "number",
                                 "description": "The height of the barcode."
+                            },
+                            "barLineWidth": {
+                                "type": "number",
+                                "description": "The width of each narrow bar of the barcode."
                             }
                         },
                         "required": ["type", "xPosition", "yPosition", "data", "height"]

@@ -157,6 +157,7 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
       yPosition: barcode.yPosition.toInt(),
       barcodeType: barcodeType,
       height: barcode.height.toInt(),
+      barLineWidth: barcode.barLineWidth.toInt(),
       data: barcode.data,
       rotate: Rotation90.fromAngle(barcode.rotation),
     );

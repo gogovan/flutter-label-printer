@@ -183,13 +183,14 @@ Command `text` adds text with styling.
 #### Barcode
 Command `barcode` prints a barcode.
 
-| Parameter   | Description                                  | Possible Values             | Hanin CPCL | Hanin TSPL | Image  |
-|-------------|----------------------------------------------|-----------------------------|------------|------------|--------|
-| `type`      | The barcode symbology of the barcode.        | Different for each printer. | :star:     | :star:     | :star: |
-| `xPosition` | The x position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
-| `yPosition` | The y position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
-| `data`      | Data encoded in the barcode.                 | Text                        | :star:     | :star:     | :star: |
-| `height`    | The height of the barcode.                   | Number                      | :star:     | :star:     | :star: |
+| Parameter      | Description                                  | Possible Values             | Hanin CPCL | Hanin TSPL | Image  |
+|----------------|----------------------------------------------|-----------------------------|------------|------------|--------|
+| `type`         | The barcode symbology of the barcode.        | Different for each printer. | :star:     | :star:     | :star: |
+| `xPosition`    | The x position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
+| `yPosition`    | The y position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
+| `data`         | Data encoded in the barcode.                 | Text                        | :star:     | :star:     | :star: |
+| `height`       | The height of the barcode.                   | Number                      | :star:     | :star:     | :star: |
+| `barLineWidth` | The width of each narrow bar of the barcode. | Number                      | :o:        | :o:        | :o:    |
 
 ##### Supported barcodes:
 | Symbology  | Hanin CPCL | Hanin TSPL | Image |

@@ -301,6 +301,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
         'y': params.yPosition,
         'type': params.barcodeType.code,
         'height': params.height,
+        'barLineWidth': params.barLineWidth,
         'showData': params.showData,
         'rotate': params.rotate.rot,
         'data': params.data,
