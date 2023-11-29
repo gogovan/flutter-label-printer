@@ -1,0 +1,160 @@
+# yaml-language-server: $schema=template_schema.json
+size:
+  paperType: label
+  originX: 0
+  originY: 0
+  width: 80
+  height: 90
+commands:
+  - command: text
+    text: small測
+    xPosition: 0
+    yPosition: 0
+    style:
+      font: small
+  - command: text
+    text: medium測
+    xPosition: 0
+    yPosition: 50
+    style:
+      font: medium
+  - command: text
+    text: large測
+    xPosition: 0
+    yPosition: 100
+    style:
+      font: large
+  - command: text
+    text: vlarge測
+    xPosition: 0
+    yPosition: 150
+    style:
+      font: vlarge
+  - command: text
+    text: vvlarge測
+    xPosition: 0
+    yPosition: 200
+    style:
+      font: vvlarge
+  - command: text
+    text: chinese測
+    xPosition: 0
+    yPosition: 250
+    style:
+      font: chinese
+  - command: text
+    text: chineseLarge測
+    xPosition: 0
+    yPosition: 300
+    style:
+      font: chineseLarge
+  - command: text
+    text: ocrSmall測
+    xPosition: 0
+    yPosition: 350
+    style:
+      font: ocrSmall
+  - command: text
+    text: ocrLarge測
+    xPosition: 0
+    yPosition: 400
+    style:
+      font: ocrLarge
+  - command: text
+    text: square測
+    xPosition: 0
+    yPosition: 450
+    style:
+      font: square
+  - command: text
+    text: triumvirate測
+    xPosition: 0
+    yPosition: 500
+    style:
+      font: triumvirate
+  - command: text
+    text: small測
+    xPosition: 200
+    yPosition: 0
+    style:
+      font: small
+      width: 2
+      height: 2
+  - command: text
+    text: medium測
+    xPosition: 200
+    yPosition: 50
+    style:
+      font: medium
+      width: 2
+      height: 2
+  - command: text
+    text: large測
+    xPosition: 200
+    yPosition: 100
+    style:
+      font: large
+      width: 2
+      height: 2
+  - command: text
+    text: vlarge測
+    xPosition: 200
+    yPosition: 150
+    style:
+      font: vlarge
+      width: 2
+      height: 2
+  - command: text
+    text: vvlarge測
+    xPosition: 200
+    yPosition: 200
+    style:
+      font: vvlarge
+      width: 2
+      height: 2
+  - command: text
+    text: chinese測
+    xPosition: 200
+    yPosition: 250
+    style:
+      font: chinese
+      width: 2
+      height: 2
+  - command: text
+    text: chineseLarge測
+    xPosition: 200
+    yPosition: 300
+    style:
+      font: chineseLarge
+      width: 2
+      height: 2
+  - command: text
+    text: ocrSmall測
+    xPosition: 200
+    yPosition: 350
+    style:
+      font: ocrSmall
+      width: 2
+      height: 2
+  - command: text
+    text: ocrLarge測
+    xPosition: 200
+    yPosition: 400
+    style:
+      font: ocrLarge
+  - command: text
+    text: square測
+    xPosition: 200
+    yPosition: 450
+    width: 2
+    height: 2
+    style:
+      font: square
+  - command: text
+    text: triumvirate測
+    xPosition: 200
+    yPosition: 500
+    style:
+      font: triumvirate
+      width: 2
+      height: 2

@@ -158,9 +158,9 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> _printTemplate() async {
+  Future<void> _printTemplate(String templateName) async {
     try {
-      final yml = await rootBundle.loadString('assets/template.yaml');
+      final yml = await rootBundle.loadString('assets/$templateName.yaml');
       final template = Template.fromYaml(yml);
 
       await TemplatePrinter(MyApp.printer!, template,
@@ -345,8 +345,11 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () => _print(context),
                           child: const Text('Print')),
                       ElevatedButton(
-                          onPressed: _printTemplate,
+                          onPressed: () => _printTemplate('template'),
                           child: const Text('Print Template')),
+                      ElevatedButton(
+                          onPressed: () => _printTemplate('fonts'),
+                          child: const Text('Print Font test')),
                       ElevatedButton(
                           onPressed: _printImage,
                           child: const Text('Print Image')),
