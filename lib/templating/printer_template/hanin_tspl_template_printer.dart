@@ -108,6 +108,7 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
       alignment: align,
       charWidth: printText.style?.width?.toInt() ?? 1,
       charHeight: printText.style?.height?.toInt() ?? 1,
+      bold: printText.style?.bold?.toInt() ?? 0
     );
 
     return addTextParams(params);

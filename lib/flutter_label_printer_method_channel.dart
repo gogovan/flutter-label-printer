@@ -216,6 +216,18 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
+  Future<bool> setBoldHaninTSPL(int size) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.tspl.setBold',
+      <String, dynamic>{
+        'size': size,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
   Future<bool> setHaninCPCLTextSize(int width, int height) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.setTextSize',

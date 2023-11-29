@@ -118,6 +118,12 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
+  Future<bool> setBoldHaninTSPL(int size) {
+    throw UnimplementedError(
+      'setBoldHaninTSPL() has not been implemented.',
+    );
+  }
+
   Future<bool> setHaninCPCLTextSize(int width, int height) {
     throw UnimplementedError(
       'setHaninCPCLTextSize() has not been implemented.',

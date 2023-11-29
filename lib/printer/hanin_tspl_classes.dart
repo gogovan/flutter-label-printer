@@ -113,6 +113,7 @@ class HaninTSPLTextParams {
     this.alignment = HaninTSPLTextAlign.left,
     this.charWidth = 1,
     this.charHeight = 1,
+    this.bold = 1,
   });
 
   final int xPosition;
@@ -123,10 +124,11 @@ class HaninTSPLTextParams {
   final HaninTSPLTextAlign alignment;
   final int charWidth;
   final int charHeight;
+  final int bold;
 
   @override
   String toString() =>
-      'N31TextParams{xPos: $xPosition, yPos: $yPosition, text: $text, rotate: $rotate, font: $font, alignment: $alignment, charWidth: $charWidth, charHeight: $charHeight}';
+      'HaninTSPLTextParams{xPosition: $xPosition, yPosition: $yPosition, text: $text, rotate: $rotate, font: $font, alignment: $alignment, charWidth: $charWidth, charHeight: $charHeight, bold: $bold}';
 
   @override
   bool operator ==(Object other) =>
@@ -140,7 +142,8 @@ class HaninTSPLTextParams {
           font == other.font &&
           alignment == other.alignment &&
           charWidth == other.charWidth &&
-          charHeight == other.charHeight;
+          charHeight == other.charHeight &&
+          bold == other.bold;
 
   @override
   int get hashCode =>
@@ -151,7 +154,8 @@ class HaninTSPLTextParams {
       font.hashCode ^
       alignment.hashCode ^
       charWidth.hashCode ^
-      charHeight.hashCode;
+      charHeight.hashCode ^
+      bold.hashCode;
 }
 
 @immutable

@@ -445,6 +445,29 @@ class FlutterLabelPrinterMethodHandler(
                     }
                 }
 
+                "hk.gogovan.label_printer.hanin.tspl.setBold" -> {
+                    if (!HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val size = max(0, min(1, call.argument<Int>("size") ?: 0))
+                            val returnCode = HPRTPrinterHelper.Bold(size)
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments $e",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+
                 "hk.gogovan.label_printer.hanin.cpcl.setTextSize" -> {
                     if (!PrinterHelper.IsOpened()) {
                         result.error(
