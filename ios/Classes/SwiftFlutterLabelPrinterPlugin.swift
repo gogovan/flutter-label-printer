@@ -284,6 +284,23 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
+        } else if (call.method == "hk.gogovan.label_printer.hanin.tspl.setBold") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentTSPLCommand == nil) {
+                    currentTSPLCommand = PTCommandCPCL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let sizeId = args["size"] as? Int,
+                   let cmd = currentTSPLCommand {
+                    let sizeBool = sizeId > 0
+                    cmd.setFontBold(sizeBool)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
         } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.setTextSize") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
@@ -495,9 +512,10 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let showData = args["showData"] as? UInt,
                    let rotate = args["rotate"] as? UInt,
                    let data = args["data"] as? String,
+                   let barLineWidth = args["barLineWidth"] as? UInt,
                    let readableN = PTTSCBarcodeReadbleStyle(rawValue: showData),
                    let rotateN = PTTSCStyleRotation(rawValue: rotate),
-                   let ratioN = PTTSCBarcodeRatio(rawValue: 1),
+                   let ratioN = PTTSCBarcodeRatio(rawValue: barLineWidth),
                    let cmd = currentTSPLCommand {
                     let typeN: PTTSCBarcodeStyle?
                     switch (type) {
