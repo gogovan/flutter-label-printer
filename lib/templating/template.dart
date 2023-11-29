@@ -8,6 +8,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_qr_cod
 import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
 import 'package:yaml/yaml.dart';
 
@@ -125,6 +126,8 @@ class Template {
                 height: _toDouble(style['height'], defValue: 1),
                 align: PrintTextAlign.values
                     .asNameMap()[style['align'].toString()],
+                font:
+                    PrintTextFont.values.asNameMap()[style['font'].toString()],
               ),
       );
 

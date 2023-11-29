@@ -88,6 +88,11 @@
                                         "type": "string",
                                         "enum": ["left", "center", "right"],
                                         "description": "Alignment of text. Either left, center or right."
+                                    },
+                                    "font": {
+                                        "type": "string",
+                                        "enum": ["small", "medium", "large", "vlarge", "vvlarge", "chinese", "chineseLarge", "ocrSmall", "ocrLarge", "square", "triumvirate"],
+                                        "description": "Font of text."
                                     }
                                 }
                             }
