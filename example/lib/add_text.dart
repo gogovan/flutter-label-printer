@@ -28,19 +28,22 @@ class _AddTextState extends State<AddText> {
   Future<void> _onPressed(context) async {
     final navigator = Navigator.of(context);
     try {
-      MyApp.printer?.addText(PrintText(
-        xPosition: double.parse(xController.text),
-        yPosition: double.parse(yController.text),
-        text: textController.text,
-        rotation: rotation.rot.toDouble(),
-        style: PrintTextStyle(
-          font: font,
-          width: double.tryParse(widthController.text),
-          height: double.tryParse(heightController.text),
-          bold: double.tryParse(boldController.text),
-          align: align,
+      MyApp.printer?.addText(
+        PrintText(
+          xPosition: double.parse(xController.text),
+          yPosition: double.parse(yController.text),
+          text: textController.text,
+          rotation: rotation.rot.toDouble(),
+          style: PrintTextStyle(
+            font: font,
+            width: double.tryParse(widthController.text),
+            height: double.tryParse(heightController.text),
+            bold: double.tryParse(boldController.text),
+            align: align,
+          ),
         ),
-      ));
+        null,
+      );
 
       navigator.pop();
     } catch (ex, st) {
@@ -162,8 +165,7 @@ class _AddTextState extends State<AddText> {
                   DropdownMenuItem(
                       value: PrintTextAlign.left, child: Text('Left')),
                   DropdownMenuItem(
-                      value: PrintTextAlign.center,
-                      child: Text('Center')),
+                      value: PrintTextAlign.center, child: Text('Center')),
                   DropdownMenuItem(
                       value: PrintTextAlign.right, child: Text('Right')),
                 ],

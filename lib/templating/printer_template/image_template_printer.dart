@@ -12,6 +12,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_rect.d
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
+import 'package:flutter_label_printer/templating/printer_hints/text_align_hint.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 import 'package:image/image.dart' as img;
 
@@ -194,7 +195,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
   }
 
   @override
-  Future<bool> addText(PrintText printText) async {
+  Future<bool> addText(PrintText printText, TextAlignHint? textAlignHint) async {
     final image = checkImageCommand();
 
     TextAlign textAlign;
@@ -295,9 +296,10 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         yPosition: 5,
         style: PrintTextStyle(width: 3, height: 100, bold: 2),
       ),
+      null,
     );
     await addText(
-      const PrintText(text: 'CODE128', xPosition: 0, yPosition: 66),
+      const PrintText(text: 'CODE128', xPosition: 0, yPosition: 66), null,
     );
     await addBarcode(
       const PrintBarcode(

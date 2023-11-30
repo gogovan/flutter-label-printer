@@ -3,6 +3,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_image.
 import 'package:flutter_label_printer/templating/command_parameters/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
+import 'package:flutter_label_printer/templating/printer_hints/text_align_hint.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 import 'package:flutter_label_printer/templating/template.dart';
 
@@ -33,8 +34,10 @@ class TemplatePrinter {
     for (final cmd in template.commands) {
       switch (cmd.type) {
         case CommandType.text:
-          final cmdResult = await printer
-              .addText((cmd.params as PrintText).replaceString(rStrings));
+          final cmdResult = await printer.addText(
+            (cmd.params as PrintText).replaceString(rStrings),
+            template.printerHints[TextAlignHint] as TextAlignHint?,
+          );
           result = result && cmdResult;
           break;
         case CommandType.barcode:

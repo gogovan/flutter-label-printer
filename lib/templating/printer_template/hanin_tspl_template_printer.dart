@@ -10,6 +10,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_rect.d
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
+import 'package:flutter_label_printer/templating/printer_hints/text_align_hint.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 
 /// Interface for Templating for the Hanin Printers using TSPL.
@@ -40,7 +41,7 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
   }
 
   @override
-  Future<bool> addText(PrintText printText) {
+  Future<bool> addText(PrintText printText, TextAlignHint? textAlignHint) {
     checkConnected();
 
     final HaninTSPLFont font;

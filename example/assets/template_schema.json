@@ -35,6 +35,27 @@
             },
             "required": ["width", "height"]
         },
+        "printer_hints": {
+            "description": "Hint parameters used for layout if the printer does not support certain features.",
+            "type": "object",
+            "properties": {
+                "text_align": {
+                    "description": "For aligning text on left/right/center. Currently only support monospaced fonts.",
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "description": "Enable hinting of aligning text. Use if your printer does not support it.",
+                            "type": "boolean"
+                        },
+                        "charWidth": {
+                            "description": "Base width of each character.",
+                            "type": "number"
+                        }
+                    },
+                    "required": ["enabled", "charWidth"]
+                }
+            }
+        },
         "commands": {
             "description": "List of commands for printing",
             "type": "array",
