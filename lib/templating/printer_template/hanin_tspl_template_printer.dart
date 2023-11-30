@@ -107,12 +107,17 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
         if (align == HaninTSPLTextAlign.center) {
           xPosition = (xPosition +
                   printText.width / 2 -
-                  printText.text.length * textAlignHint.charWidth / 2)
+                  printText.text.length *
+                      textAlignHint.charWidth *
+                      (printText.style?.width ?? 1) /
+                      2)
               .toInt();
         } else if (align == HaninTSPLTextAlign.right) {
           xPosition = (xPosition +
                   printText.width -
-                  printText.text.length * textAlignHint.charWidth)
+                  printText.text.length *
+                      textAlignHint.charWidth *
+                      (printText.style?.width ?? 1))
               .toInt();
         }
         usedAlign = HaninTSPLTextAlign.left;
