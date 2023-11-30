@@ -227,7 +227,13 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       ..addText(printText.text)
       ..pop();
     final paragraph = paragraphBuilder.build()
-      ..layout(ParagraphConstraints(width: width - printText.xPosition));
+      ..layout(
+        ParagraphConstraints(
+          width: printText.width > 0
+              ? printText.width
+              : width - printText.xPosition,
+        ),
+      );
 
     final recorder = PictureRecorder();
     Canvas(recorder).drawParagraph(paragraph, Offset.zero);

@@ -60,6 +60,14 @@
                                 "type": "number",
                                 "description": "The y position of the text in the canvas."
                             },
+                            "width": {
+                                "type": "number",
+                                "description": "Width of the text area. Not compatible with style.font."
+                            },
+                            "height": {
+                                "type": "number",
+                                "description": "Height of the text area."
+                            },
                             "rotation": {
                                 "type": "number",
                                 "default": 0,
@@ -87,7 +95,7 @@
                                     "align": {
                                         "type": "string",
                                         "enum": ["left", "center", "right"],
-                                        "description": "Alignment of text. Either left, center or right."
+                                        "description": "Alignment of text. Either left, center or right. Should be used in conjunction with width (not style.width)."
                                     },
                                     "font": {
                                         "type": "string",

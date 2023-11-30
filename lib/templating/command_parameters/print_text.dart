@@ -10,6 +10,8 @@ class PrintText implements CommandParameter {
     required this.xPosition,
     required this.yPosition,
     this.rotation = 0,
+    this.width = 0,
+    this.height = 0,
     this.style,
   });
 
@@ -17,6 +19,8 @@ class PrintText implements CommandParameter {
   final double xPosition;
   final double yPosition;
   final double rotation;
+  final double width;
+  final double height;
   final PrintTextStyle? style;
 
   PrintText replaceString(Map<String, String> replace) => PrintText(

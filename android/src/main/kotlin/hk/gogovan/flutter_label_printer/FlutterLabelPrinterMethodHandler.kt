@@ -289,6 +289,50 @@ class FlutterLabelPrinterMethodHandler(
                     }
                 }
 
+                "hk.gogovan.label_printer.hanin.tspl.addTextBlock" -> {
+                    if (!HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val rotate = (call.argument<Int>("rotate") ?: 0)
+                            val x = call.argument<Int>("x") ?: 0
+                            val y = call.argument<Int>("y") ?: 0
+                            val text = call.argument<String>("text")
+                            val width = call.argument<Int>("width") ?: 0
+                            val height = call.argument<Int>("height") ?: 0
+                            val align = call.argument<Int>("align") ?: 1
+                            val charWidth = (call.argument<Int>("characterWidth") ?: 0)
+                            val charHeight = (call.argument<Int>("characterHeight") ?: 0)
+
+                            val returnCode = HPRTPrinterHelper.printBlock(
+                                x,
+                                y,
+                                width,
+                                height,
+                                0,
+                                rotate,
+                                charWidth,
+                                charHeight,
+                                0,
+                                align,
+                                text
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments $e",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+
                 "hk.gogovan.label_printer.hanin.cpcl.addText" -> {
                     if (!PrinterHelper.IsOpened()) {
                         result.error(

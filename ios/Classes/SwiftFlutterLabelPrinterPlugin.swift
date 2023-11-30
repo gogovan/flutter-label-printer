@@ -182,6 +182,31 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
+        } else if (call.method == "hk.gogovan.label_printer.hanin.tspl.addTextBlock") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentTSPLCommand == nil) {
+                    currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let rotateValue = args["rotate"] as? Int,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let text = args["text"] as? String,
+                   let width = args["width"] as? Int,
+                   let height = args["height"] as? Int,
+                   let charWidth = args["characterWidth"] as? Int,
+                   let charHeight = args["characterHeight"] as? Int,
+                   let rotate = PTTSCStyleRotation(rawValue: UInt(rotateValue)),
+                   let cmd = currentTSPLCommand {
+                    cmd.printAutoTextWith(withXPos: x, yPos: y, rotation: rotateValue, x_multiplication: charWidth, y_multiplication: charHeight, safeHeight: height, width: width, lineSpacing: 0, text: text)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
         } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.print") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))

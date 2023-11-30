@@ -118,6 +118,8 @@ class Template {
         xPosition: _toDouble(paramMap['xPosition']),
         yPosition: _toDouble(paramMap['yPosition']),
         rotation: _toDouble(paramMap['rotation'], defValue: 0),
+        width: _toDouble(paramMap['width'], defValue: 0),
+        height: _toDouble(paramMap['height'], defValue: 0),
         style: style == null
             ? null
             : PrintTextStyle(

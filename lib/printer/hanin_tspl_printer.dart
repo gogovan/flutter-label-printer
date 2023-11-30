@@ -77,6 +77,28 @@ class HaninTSPLPrinter extends PrinterInterface {
     }
   }
 
+  Future<bool> addTextBlockParams(HaninTSPLTextBlockParams params) async {
+    checkConnected();
+
+    try {
+      var result = true;
+      if (params.bold > 0) {
+        result = result && await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(params.bold);
+      }
+      result = result && await FlutterLabelPrinterPlatform.instance.addTextBlockHaninTSPL(params);
+      if (params.bold > 0) {
+        result = result && await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(0);
+      }
+
+      return result;
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
   Future<bool> addTextParams(HaninTSPLTextParams params) async {
     checkConnected();
 

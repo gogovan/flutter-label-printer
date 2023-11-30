@@ -212,6 +212,8 @@ Command `text` adds text with styling.
 | `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
 | `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
 | `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
+| `width`        | Width of the text area.                            | Number                       | :x:                          | :o:                          | :o:    |
+| `height`       | Height of the text area.                           | Number                       | :x:                          | :o:                          | :x:    |
 | `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          | :o:    |
 | `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :o:                          | :o:    |
 | `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          | :o:    |
@@ -219,7 +221,8 @@ Command `text` adds text with styling.
 | `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
 | `style.font`   | Font of text.                                      | *1                           | :o:                          | :o:                          | :x:    |
 
-*1: Either one of `small, medium, large, vlarge, vvlarge, chinese, chineseLarge, ocrSmall, ocrLarge, square, triumvirate` 
+*1: Either one
+of `small, medium, large, vlarge, vvlarge, chinese, chineseLarge, ocrSmall, ocrLarge, square, triumvirate`
 
 #### Barcode
 

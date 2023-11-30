@@ -113,7 +113,7 @@ class HaninTSPLTextParams {
     this.alignment = HaninTSPLTextAlign.left,
     this.charWidth = 1,
     this.charHeight = 1,
-    this.bold = 1,
+    this.bold = 0,
   });
 
   final int xPosition;
@@ -152,6 +152,64 @@ class HaninTSPLTextParams {
       text.hashCode ^
       rotate.hashCode ^
       font.hashCode ^
+      alignment.hashCode ^
+      charWidth.hashCode ^
+      charHeight.hashCode ^
+      bold.hashCode;
+}
+
+@immutable
+class HaninTSPLTextBlockParams {
+  const HaninTSPLTextBlockParams({
+    required this.xPosition,
+    required this.yPosition,
+    required this.text,
+    required this.width,
+    this.height = 0,
+    this.rotate = Rotation90.text,
+    this.alignment = HaninTSPLTextAlign.left,
+    this.charWidth = 1,
+    this.charHeight = 1,
+    this.bold = 0,
+  });
+
+  final int xPosition;
+  final int yPosition;
+  final String text;
+  final int width;
+  final int height;
+  final Rotation90 rotate;
+  final HaninTSPLTextAlign alignment;
+  final int charWidth;
+  final int charHeight;
+  final int bold;
+
+  @override
+  String toString() =>
+      'HaninTSPLTextBlockParams{xPosition: $xPosition, yPosition: $yPosition, text: $text, width: $width, height: $height, alignment: $alignment, charWidth: $charWidth, charHeight: $charHeight, bold: $bold}';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HaninTSPLTextBlockParams &&
+          runtimeType == other.runtimeType &&
+          xPosition == other.xPosition &&
+          yPosition == other.yPosition &&
+          text == other.text &&
+          width == other.width &&
+          height == other.height &&
+          alignment == other.alignment &&
+          charWidth == other.charWidth &&
+          charHeight == other.charHeight &&
+          bold == other.bold;
+
+  @override
+  int get hashCode =>
+      xPosition.hashCode ^
+      yPosition.hashCode ^
+      text.hashCode ^
+      width.hashCode ^
+      height.hashCode ^
       alignment.hashCode ^
       charWidth.hashCode ^
       charHeight.hashCode ^

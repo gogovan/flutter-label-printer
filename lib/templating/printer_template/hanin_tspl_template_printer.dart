@@ -99,19 +99,36 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
         break;
     }
 
-    final params = HaninTSPLTextParams(
-      xPosition: printText.xPosition.toInt(),
-      yPosition: printText.yPosition.toInt(),
-      text: printText.text,
-      font: font,
-      rotate: Rotation90.fromAngle(printText.rotation),
-      alignment: align,
-      charWidth: printText.style?.width?.toInt() ?? 1,
-      charHeight: printText.style?.height?.toInt() ?? 1,
-      bold: printText.style?.bold?.toInt() ?? 0
-    );
+    if (printText.width > 0) {
+      final params = HaninTSPLTextBlockParams(
+        xPosition: printText.xPosition.toInt(),
+        yPosition: printText.yPosition.toInt(),
+        text: printText.text,
+        width: printText.width.toInt(),
+        height: printText.height.toInt(),
+        rotate: Rotation90.fromAngle(printText.rotation),
+        alignment: align,
+        charWidth: printText.style?.width?.toInt() ?? 1,
+        charHeight: printText.style?.height?.toInt() ?? 1,
+        bold: printText.style?.bold?.toInt() ?? 0,
+      );
 
-    return addTextParams(params);
+      return addTextBlockParams(params);
+    } else {
+      final params = HaninTSPLTextParams(
+        xPosition: printText.xPosition.toInt(),
+        yPosition: printText.yPosition.toInt(),
+        text: printText.text,
+        font: font,
+        rotate: Rotation90.fromAngle(printText.rotation),
+        alignment: align,
+        charWidth: printText.style?.width?.toInt() ?? 1,
+        charHeight: printText.style?.height?.toInt() ?? 1,
+        bold: printText.style?.bold?.toInt() ?? 0,
+      );
+
+      return addTextParams(params);
+    }
   }
 
   @override

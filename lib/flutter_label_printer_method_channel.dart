@@ -160,6 +160,26 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
+  Future<bool> addTextBlockHaninTSPL(HaninTSPLTextBlockParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.tspl.addTextBlock',
+      <String, dynamic>{
+        'rotate': params.rotate.rot,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'text': params.text,
+        'width': params.width,
+        'height': params.height,
+        'alignment': params.alignment.code,
+        'characterWidth': params.charWidth,
+        'characterHeight': params.charHeight,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
   Future<bool> addTextHaninCPCL(HaninCPCLTextParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.addText',
