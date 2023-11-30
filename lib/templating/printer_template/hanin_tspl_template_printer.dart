@@ -78,7 +78,7 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
       case PrintTextFont.triumvirate:
         font = HaninTSPLFont.fontTriumvirate;
         break;
-      case null:
+      default:
         font = HaninTSPLFont.fontChinese;
         break;
     }
@@ -94,7 +94,7 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
       case PrintTextAlign.right:
         align = HaninTSPLTextAlign.right;
         break;
-      case null:
+      default:
         align = HaninTSPLTextAlign.left;
         break;
     }

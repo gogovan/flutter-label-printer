@@ -137,7 +137,7 @@ class HaninCPCLTemplatePrinter extends HaninCPCLPrinter
       case PrintTextFont.triumvirate:
         font = HaninCPCLFont.font0;
         break;
-      case null:
+      default:
         font = HaninCPCLFont.font0;
         break;
     }

@@ -208,7 +208,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       case PrintTextAlign.right:
         textAlign = TextAlign.right;
         break;
-      case null:
+      default:
         textAlign = TextAlign.left;
         break;
     }
