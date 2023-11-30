@@ -5,6 +5,10 @@ size:
   originY: 0
   width: 400
   height: 90
+printer_hints:
+  text_align:
+    enabled: true
+    charWidth: 8
 commands:
   - command: text
     text: small測
@@ -142,14 +146,16 @@ commands:
     yPosition: 400
     style:
       font: ocrLarge
+      width: 2
+      height: 2
   - command: text
     text: square測
     xPosition: 200
     yPosition: 450
-    width: 2
-    height: 2
     style:
       font: square
+      width: 2
+      height: 2
   - command: text
     text: triumvirate測
     xPosition: 200

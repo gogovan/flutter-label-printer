@@ -36,7 +36,7 @@ class TemplatePrinter {
         case CommandType.text:
           final cmdResult = await printer.addText(
             (cmd.params as PrintText).replaceString(rStrings),
-            template.printerHints[TextAlignHint] as TextAlignHint?,
+            template.printerHints[PrinterHintType.textAlign] as TextAlignHint?,
           );
           result = result && cmdResult;
           break;

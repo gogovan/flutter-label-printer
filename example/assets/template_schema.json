@@ -44,7 +44,7 @@
                     "type": "object",
                     "properties": {
                         "enabled": {
-                            "description": "Enable hinting of aligning text. Use if your printer does not support it.",
+                            "description": "Enable hinting for aligning text. Use if your printer does not support it. Only properly supported if the text fits in one line.",
                             "type": "boolean"
                         },
                         "charWidth": {

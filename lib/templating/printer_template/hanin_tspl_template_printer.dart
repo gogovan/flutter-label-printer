@@ -101,14 +101,31 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
     }
 
     if (printText.width > 0) {
+      var xPosition = printText.xPosition.toInt();
+      var usedAlign = align;
+      if (textAlignHint != null && textAlignHint.enabled) {
+        if (align == HaninTSPLTextAlign.center) {
+          xPosition = (xPosition +
+                  printText.width / 2 -
+                  printText.text.length * textAlignHint.charWidth / 2)
+              .toInt();
+        } else if (align == HaninTSPLTextAlign.right) {
+          xPosition = (xPosition +
+                  printText.width -
+                  printText.text.length * textAlignHint.charWidth)
+              .toInt();
+        }
+        usedAlign = HaninTSPLTextAlign.left;
+      }
+
       final params = HaninTSPLTextBlockParams(
-        xPosition: printText.xPosition.toInt(),
+        xPosition: xPosition,
         yPosition: printText.yPosition.toInt(),
         text: printText.text,
         width: printText.width.toInt(),
         height: printText.height.toInt(),
         rotate: Rotation90.fromAngle(printText.rotation),
-        alignment: align,
+        alignment: usedAlign,
         charWidth: printText.style?.width?.toInt() ?? 1,
         charHeight: printText.style?.height?.toInt() ?? 1,
         bold: printText.style?.bold?.toInt() ?? 0,

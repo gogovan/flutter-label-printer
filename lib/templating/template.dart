@@ -38,7 +38,7 @@ class Template {
     final size = _getPrintAreaSize(obj['size'] as YamlMap);
     final hints = obj.containsKey('printer_hints')
         ? _getPrinterHints(obj['printer_hints'] as YamlMap)
-        : <Type, PrinterHint>{};
+        : <PrinterHintType, PrinterHint>{};
 
     final cmds = obj['commands'] as YamlList;
     for (final rawCmd in cmds) {
@@ -147,10 +147,10 @@ class Template {
         height: _toDouble(paramMap['height']),
       );
 
-  static Map<Type, PrinterHint> _getPrinterHints(YamlMap paramMap) {
-    final result = <Type, PrinterHint>{};
+  static Map<PrinterHintType, PrinterHint> _getPrinterHints(YamlMap paramMap) {
+    final result = <PrinterHintType, PrinterHint>{};
     if (paramMap.containsKey('text_align')) {
-      result[PrinterHint] = TextAlignHint(
+      result[PrinterHintType.textAlign] = TextAlignHint(
         enabled: paramMap['text_align']['enabled'],
         charWidth: paramMap['text_align']['charWidth'],
       );
@@ -159,7 +159,7 @@ class Template {
   }
 
   final PrintAreaSize size;
-  final Map<Type, PrinterHint> printerHints;
+  final Map<PrinterHintType, PrinterHint> printerHints;
   final List<Command> commands;
 
   @override
@@ -207,7 +207,10 @@ abstract class CommandParameter {}
 
 @immutable
 abstract class PrinterHint {
-  const PrinterHint({required this.enabled});
+  const PrinterHint(this.hintType, {required this.enabled});
 
+  final PrinterHintType hintType;
   final bool enabled;
 }
+
+enum PrinterHintType { textAlign }
