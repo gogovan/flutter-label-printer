@@ -28,8 +28,14 @@ class PrintText implements CommandParameter {
         xPosition: xPosition,
         yPosition: yPosition,
         rotation: rotation,
+        width: width,
+        height: height,
         style: style,
       );
+
+  @override
+  String toString() =>
+      'PrintText{text: $text, xPosition: $xPosition, yPosition: $yPosition, rotation: $rotation, width: $width, height: $height, style: $style}';
 
   @override
   bool operator ==(Object other) =>
@@ -39,13 +45,18 @@ class PrintText implements CommandParameter {
           text == other.text &&
           xPosition == other.xPosition &&
           yPosition == other.yPosition &&
+          rotation == other.rotation &&
+          width == other.width &&
+          height == other.height &&
           style == other.style;
 
   @override
   int get hashCode =>
-      text.hashCode ^ xPosition.hashCode ^ yPosition.hashCode ^ style.hashCode;
-
-  @override
-  String toString() =>
-      'PrintText{text: $text, xPosition: $xPosition, yPosition: $yPosition, style: $style}';
+      text.hashCode ^
+      xPosition.hashCode ^
+      yPosition.hashCode ^
+      rotation.hashCode ^
+      width.hashCode ^
+      height.hashCode ^
+      style.hashCode;
 }
