@@ -206,38 +206,46 @@ Put all printing commands in the `commands` object. They will be sent to the pri
 
 Command `text` adds text with styling.
 
-| Parameter      | Description                                        | Possible Values              | Hanin CPCL                   | Hanin TSPL                   | Image  |
-|----------------|----------------------------------------------------|------------------------------|------------------------------|------------------------------|--------|
-| `text`         | The text to print.                                 | Text                         | :star:                       | :star:                       | :star: |
-| `xPosition`    | The x position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
-| `yPosition`    | The y position of the text in the canvas.          | Number                       | :star:                       | :star:                       | :star: |
-| `rotation`     | Rotation of the text.                              | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
-| `width`        | Width of the text area.                            | Number                       | :x:                          | :o:                          | :o:    |
-| `height`       | Height of the text area.                           | Number                       | :x:                          | :o:                          | :x:    |
-| `style`        | The style of the text. Accept an object.           |                              | :o:                          | :o:                          | :o:    |
-| `style.bold`   | Bold text and degree of boldness.                  | Number                       | :o:                          | :o:                          | :o:    |
-| `style.width`  | Width of each character in text, as a multiplier.  | Number                       | :o:                          | :o:                          | :o:    |
-| `style.height` | Height of each character in text, as a multiplier. | Number                       | :o:                          | :o:                          | :x:    |
-| `style.align`  | Alignment of text.                                 | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
-| `style.font`   | Font of text.                                      | *1                           | :o:                          | :o:                          | :x:    |
+| Parameter      | Description                                                                         | Possible Values              | Hanin CPCL                   | Hanin TSPL                   | Image  |
+|----------------|-------------------------------------------------------------------------------------|------------------------------|------------------------------|------------------------------|--------|
+| `text`         | The text to print.                                                                  | Text                         | :star:                       | :star:                       | :star: |
+| `xPosition`    | The x position of the text in the canvas.                                           | Number                       | :star:                       | :star:                       | :star: |
+| `yPosition`    | The y position of the text in the canvas.                                           | Number                       | :star:                       | :star:                       | :star: |
+| `rotation`     | Rotation of the text.                                                               | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
+| `width`        | Width of the text area.                                                             | Number                       | :x:                          | :o:                          | :o:    |
+| `height`       | Height of the text area.                                                            | Number                       | :x:                          | :o:                          | :x:    |
+| `useImage`     | Whether to use image to represent this text. [1]                                    | Boolean                      | :o:                          | :o:                          | :x:    |
+| `style`        | The style of the text. Accept an object.                                            |                              | :o:                          | :o:                          | :o:    |
+| `style.bold`   | Bold text and degree of boldness.                                                   | Number                       | :o:                          | :o:                          | :o:    |
+| `style.width`  | Width of each character in text, as a multiplier. For image printer, the font size. | Number                       | :o:                          | :o:                          | :o:    |
+| `style.height` | Height of each character in text, as a multiplier.                                  | Number                       | :o:                          | :o:                          | :x:    |
+| `style.align`  | Alignment of text.                                                                  | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
+| `style.font`   | Font of text.                                                                       | [2]                          | :o:                          | :o:                          | :o:    |
 
-*1: Either one
+1: If the text command provided by the printer is insufficient, set `useImage` to true and
+flutter_label_printer will generate an image in the OS representing this text and send the image to
+the printer instead. While this is more flexible and can workaround missing features of the printer,
+it is also slower and may not be supported by printers that cannot print images.
+If this is used, attributes supported by the `image` printer, instead of your actual printer, is
+used.
+2: Either one
 of `small, medium, large, vlarge, vvlarge, chinese, chineseLarge, ocrSmall, ocrLarge, square, triumvirate`
+for Hanin TSPL and CPCL. For image printer, any font supported by the OS is supported.
 
 #### Barcode
 
 Command `barcode` prints a barcode.
 
-| Parameter      | Description                                  | Possible Values             | Hanin CPCL | Hanin TSPL | Image  |
-|----------------|----------------------------------------------|-----------------------------|------------|------------|--------|
-| `type`         | The barcode symbology of the barcode.        | Different for each printer. | :star:     | :star:     | :star: |
-| `xPosition`    | The x position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
-| `yPosition`    | The y position of the barcode in the canvas. | Number                      | :star:     | :star:     | :star: |
-| `data`         | Data encoded in the barcode.                 | Text                        | :star:     | :star:     | :star: |
-| `height`       | The height of the barcode.                   | Number                      | :star:     | :star:     | :star: |
-| `barLineWidth` | The width of each narrow bar of the barcode. | Number                      | :o:        | :o:        | :o:    |
+| Parameter      | Description                                  | Possible Values                 | Hanin CPCL | Hanin TSPL | Image  |
+|----------------|----------------------------------------------|---------------------------------|------------|------------|--------|
+| `type`         | The barcode symbology of the barcode.        | Different for each printer. [1] | :star:     | :star:     | :star: |
+| `xPosition`    | The x position of the barcode in the canvas. | Number                          | :star:     | :star:     | :star: |
+| `yPosition`    | The y position of the barcode in the canvas. | Number                          | :star:     | :star:     | :star: |
+| `data`         | Data encoded in the barcode.                 | Text                            | :star:     | :star:     | :star: |
+| `height`       | The height of the barcode.                   | Number                          | :star:     | :star:     | :star: |
+| `barLineWidth` | The width of each narrow bar of the barcode. | Number                          | :o:        | :o:        | :o:    |
 
-##### Supported barcodes:
+[1] Supported barcodes:
 
 | Symbology  | Hanin CPCL | Hanin TSPL | Image |
 |------------|------------|------------|-------|
@@ -326,12 +334,14 @@ String replacement is supported on all fields that takes a String:
 
 ### Printer Hints
 
-Some printers does not support all features available in the commands. flutter_label_printer provides a workaround method to support these features.
+Some printers does not support all features available in the commands. flutter_label_printer
+provides a workaround method to support these features.
 
 #### text_align
 
-`text_align` allows text to be aligned according to the `style.align` parameter of the `text` command, even if the printer does not support it.
-Currently only support a single-line text with a monospaced font. Use outside of these constraints is not supported and will not result in desired behavior.
+`text_align` allows text to be aligned according to the `style.align` parameter of the `text`
+command, even if the printer does not support it.
+Only Hanin TSPL is supported. Only support a single-line text with a monospaced font.
 
 ```yaml
 printer_hints:

@@ -119,6 +119,7 @@ class Template {
 
   static PrintText _getPrintText(YamlMap paramMap, YamlMap? style) => PrintText(
         text: paramMap['text'].toString(),
+        useImage: paramMap['useImage'].toString().toUpperCase() == 'TRUE',
         xPosition: _toDouble(paramMap['xPosition']),
         yPosition: _toDouble(paramMap['yPosition']),
         rotation: _toDouble(paramMap['rotation'], defValue: 0),

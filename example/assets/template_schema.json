@@ -40,11 +40,11 @@
             "type": "object",
             "properties": {
                 "text_align": {
-                    "description": "For aligning text on left/right/center. Currently only support monospaced fonts.",
+                    "description": "For aligning text on left/right/center. Currently only support single-lined text with monospaced font.",
                     "type": "object",
                     "properties": {
                         "enabled": {
-                            "description": "Enable hinting for aligning text. Use if your printer does not support it. Only properly supported if the text fits in one line.",
+                            "description": "Enable hinting for aligning text. Use if your printer does not support it.",
                             "type": "boolean"
                         },
                         "charWidth": {
@@ -93,6 +93,10 @@
                                 "type": "number",
                                 "default": 0,
                                 "description": "Rotation of the text. Only in 90 degree increments are supported."
+                            },
+                            "useImage": {
+                                "type": "boolean",
+                                "description": "Whether to use image to represent this piece of text."
                             },
                             "style": {
                                 "description": "The style of the text.",

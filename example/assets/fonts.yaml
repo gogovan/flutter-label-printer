@@ -167,7 +167,14 @@ commands:
   - command: text
     text: CENTERED TEXT
     xPosition: 0
-    yPosition: 600
+    yPosition: 540
     width: 400
     style:
       align: center
+  - command: text
+    text: Imaged Text 圖像
+    xPosition: 0
+    yPosition: 580
+    useImage: true
+    style:
+      width: 24

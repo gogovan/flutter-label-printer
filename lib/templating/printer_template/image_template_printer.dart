@@ -194,10 +194,9 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     return Future.value(true);
   }
 
-  @override
-  Future<bool> addText(PrintText printText, TextAlignHint? textAlignHint) async {
-    final image = checkImageCommand();
-
+  static Future<img.Image> getTextImage(
+    PrintText printText,
+  ) async {
     TextAlign textAlign;
     switch (printText.style?.align) {
       case PrintTextAlign.left:
@@ -214,12 +213,16 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         break;
     }
 
-    final textWidth = (printText.style?.width ?? 0) * 16;
+    var blockWidth = printText.width;
+    var blockHeight = printText.height;
+
+    final textWidth = printText.style?.width ?? 0;
     final boldWeight = (printText.style?.bold ?? 0) / 10.0;
     final paragraphBuilder = ParagraphBuilder(
       ParagraphStyle(
         textAlign: textAlign,
         fontSize: textWidth,
+        fontFamily: printText.style?.font?.name ?? 'Arial',
         fontWeight:
             FontWeight.lerp(FontWeight.w400, FontWeight.w900, boldWeight),
       ),
@@ -230,26 +233,42 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     final paragraph = paragraphBuilder.build()
       ..layout(
         ParagraphConstraints(
-          width: printText.width > 0
-              ? printText.width
-              : width - printText.xPosition,
+          width: blockWidth > 0 ? blockWidth : double.infinity,
         ),
       );
 
+    blockWidth = paragraph.maxIntrinsicWidth;
+    blockHeight = paragraph.height;
+
     final recorder = PictureRecorder();
-    Canvas(recorder).drawParagraph(paragraph, Offset.zero);
+    Canvas(recorder)
+      ..drawColor(const Color.fromARGB(255, 255, 255, 255), BlendMode.srcOver)
+      ..drawParagraph(paragraph, Offset.zero);
     final picture = recorder.endRecording();
-    final uiImage = await picture.toImage(width.toInt(), height.toInt());
+    final uiImage =
+        await picture.toImage(blockWidth.toInt(), blockHeight.toInt());
     final byteData = await uiImage.toByteData();
     if (byteData == null) {
       throw const FormatException('Unable to convert canvas text image');
     }
     final textImage = img.Image.fromBytes(
-      width: width.toInt(),
-      height: height.toInt(),
+      width: blockWidth.toInt(),
+      height: blockHeight.toInt(),
       bytes: byteData.buffer,
       numChannels: 4,
     );
+
+    return textImage;
+  }
+
+  @override
+  Future<bool> addText(
+    PrintText printText,
+    TextAlignHint? textAlignHint,
+  ) async {
+    final image = checkImageCommand();
+
+    final textImage = await getTextImage(printText);
     img.compositeImage(
       image,
       textImage,
@@ -299,7 +318,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       null,
     );
     await addText(
-      const PrintText(text: 'CODE128', xPosition: 0, yPosition: 66), null,
+      const PrintText(text: 'CODE128', xPosition: 0, yPosition: 66),
+      null,
     );
     await addBarcode(
       const PrintBarcode(
