@@ -324,6 +324,22 @@ String replacement is supported on all fields that takes a String:
 - QR Code data
 - Image file path
 
+### Printer Hints
+
+Some printers does not support all features available in the commands. flutter_label_printer provides a workaround method to support these features.
+
+#### text_align
+
+`text_align` allows text to be aligned according to the `style.align` parameter of the `text` command, even if the printer does not support it.
+Currently only support a single-line text with a monospaced font. Use outside of these constraints is not supported and will not result in desired behavior.
+
+```yaml
+printer_hints:
+  text_align:
+    enabled: true # Set to true to enable this feature
+    charWidth: 8 # The base character width of the font used, before any scaling introduced by `style.width` in the text command. This is used to calculate the width of the text.
+```
+
 # Known Issues
 
 ## Hanin CPCL
