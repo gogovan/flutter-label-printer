@@ -172,9 +172,20 @@ commands:
     style:
       align: center
   - command: text
-    text: Imaged Text 圖像
+    text: Imaged Text C 圖像
     xPosition: 0
     yPosition: 580
     useImage: true
+    width: 400
     style:
       width: 24
+      align: center
+  - command: text
+    text: Imaged Text R 圖像
+    xPosition: 0
+    yPosition: 600
+    useImage: true
+    width: 400
+    style:
+      width: 24
+      align: right

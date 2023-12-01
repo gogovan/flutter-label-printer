@@ -217,14 +217,13 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     var blockHeight = printText.height;
 
     final textWidth = printText.style?.width ?? 0;
-    final boldWeight = (printText.style?.bold ?? 0) / 10.0;
+    final boldWeight = (printText.style?.bold ?? 0) > 0 ? FontWeight.w700 : FontWeight.w400;
     final paragraphBuilder = ParagraphBuilder(
       ParagraphStyle(
         textAlign: textAlign,
         fontSize: textWidth,
         fontFamily: printText.style?.font?.name ?? 'Arial',
-        fontWeight:
-            FontWeight.lerp(FontWeight.w400, FontWeight.w900, boldWeight),
+        fontWeight: boldWeight,
       ),
     )
       ..pushStyle(TextStyle(color: const Color.fromARGB(255, 0, 0, 0)))
@@ -237,7 +236,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         ),
       );
 
-    blockWidth = paragraph.maxIntrinsicWidth;
+    blockWidth = blockWidth > 0 ? blockWidth : paragraph.maxIntrinsicWidth;
     blockHeight = paragraph.height;
 
     final recorder = PictureRecorder();
