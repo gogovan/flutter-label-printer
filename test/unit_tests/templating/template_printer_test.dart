@@ -28,6 +28,7 @@ void main() {
           width: 300,
           height: 500,
         ),
+        {},
         [
           Command(
             CommandType.text,
@@ -86,7 +87,7 @@ void main() {
       when(printer.print()).thenAnswer((realInvocation) async => true);
       when(printer.setPrintAreaSize(any))
           .thenAnswer((realInvocation) async => true);
-      when(printer.addText(any)).thenAnswer((realInvocation) async => true);
+      when(printer.addText(any, any)).thenAnswer((realInvocation) async => true);
       when(printer.addBarcode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addQRCode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addLine(any)).thenAnswer((realInvocation) async => true);
@@ -113,6 +114,7 @@ void main() {
             xPosition: 80,
             yPosition: 20,
           ),
+          null,
         ),
       ).called(1);
       verify(
@@ -155,6 +157,7 @@ void main() {
           width: 300,
           height: 500,
         ),
+        {},
         [
           Command(
             CommandType.text,
@@ -199,7 +202,7 @@ void main() {
       when(printer.print()).thenAnswer((realInvocation) async => true);
       when(printer.setPrintAreaSize(any))
           .thenAnswer((realInvocation) async => true);
-      when(printer.addText(any)).thenAnswer((realInvocation) async => true);
+      when(printer.addText(any, any)).thenAnswer((realInvocation) async => true);
       when(printer.addBarcode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addQRCode(any)).thenAnswer((realInvocation) async => true);
 
@@ -213,6 +216,7 @@ void main() {
             xPosition: 80,
             yPosition: 20,
           ),
+          null,
         ),
       ).called(1);
       verify(

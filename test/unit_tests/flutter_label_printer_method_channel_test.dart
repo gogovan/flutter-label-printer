@@ -425,6 +425,7 @@ void main() {
           height: 40,
           xPosition: 120,
           yPosition: 60,
+          barLineWidth: 1,
           data: '74892342348',
         ),
       ),
