@@ -264,8 +264,8 @@ class FlutterLabelPrinterMethodHandler(
                             val y = call.argument<Int>("y").toString()
                             val text = call.argument<String>("text")
                             val align = call.argument<Int>("align")
-                            val charWidth = (call.argument<Int>("characterWidth") ?: 0).toString()
-                            val charHeight = (call.argument<Int>("characterHeight") ?: 0).toString()
+                            val charWidth = (call.argument<Int>("characterWidth") ?: 1).toString()
+                            val charHeight = (call.argument<Int>("characterHeight") ?: 1).toString()
 
                             val returnCode = HPRTPrinterHelper.printText(
                                 x,
@@ -305,8 +305,8 @@ class FlutterLabelPrinterMethodHandler(
                             val width = call.argument<Int>("width") ?: 0
                             val height = call.argument<Int>("height") ?: 0
                             val align = call.argument<Int>("align") ?: 1
-                            val charWidth = (call.argument<Int>("characterWidth") ?: 0)
-                            val charHeight = (call.argument<Int>("characterHeight") ?: 0)
+                            val charWidth = (call.argument<Int>("characterWidth") ?: 1)
+                            val charHeight = (call.argument<Int>("characterHeight") ?: 1)
 
                             val returnCode = HPRTPrinterHelper.printBlock(
                                 x,
