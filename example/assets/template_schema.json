@@ -124,7 +124,6 @@
                                     },
                                     "font": {
                                         "type": "string",
-                                        "enum": ["small", "medium", "large", "vlarge", "vvlarge", "chinese", "chineseLarge", "ocrSmall", "ocrLarge", "square", "triumvirate"],
                                         "description": "Font of text."
                                     }
                                 }
