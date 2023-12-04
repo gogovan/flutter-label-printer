@@ -201,7 +201,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let charHeight = args["characterHeight"] as? Int,
                    let rotate = PTTSCStyleRotation(rawValue: UInt(rotateValue)),
                    let cmd = currentTSPLCommand {
-                    cmd.printAutoTextWith(withXPos: x, yPos: y, rotation: rotateValue, x_multiplication: charWidth, y_multiplication: charHeight, safeHeight: height, width: width, lineSpacing: 0, text: text)
+                    cmd.printAutoText(withXpos: x, yPos: y, font: PTTSCTextFontStyle.style0, rotation: rotate, xMultiplication: charWidth, yMultiplication: charHeight, safeHeight: height, width: width, lineSpacing: 0, text: text)
                     result(true)
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
@@ -314,7 +314,7 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
             } else {
                 if (currentTSPLCommand == nil) {
-                    currentTSPLCommand = PTCommandCPCL()
+                    currentTSPLCommand = PTCommandTSPL()
                 }
                 if let args = call.arguments as? [String:Any],
                    let sizeId = args["size"] as? Int,
