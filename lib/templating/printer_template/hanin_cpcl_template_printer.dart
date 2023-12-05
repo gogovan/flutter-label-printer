@@ -71,7 +71,10 @@ class HaninCPCLTemplatePrinter extends HaninCPCLPrinter
   }
 
   @override
-  Future<bool> addText(PrintText printText, TextAlignHint? textAlignHint) async {
+  Future<bool> addText(
+    PrintText printText,
+    TextAlignHint? textAlignHint,
+  ) async {
     checkConnected();
 
     final style = printText.style;

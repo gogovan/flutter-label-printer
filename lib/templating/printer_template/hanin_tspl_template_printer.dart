@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_label_printer/exception/invalid_argument_exception.dart';
 import 'package:flutter_label_printer/printer/common_classes.dart';
 import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
@@ -24,12 +23,10 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
     implements TemplatablePrinterInterface {
   HaninTSPLTemplatePrinter(super.device);
 
-  static const String _tempImagePrefix = '_flutter_label_printer_temp_image_file_9U1ZR38S3F3KJ6XE';
+  static const String _tempImagePrefix =
+      '_flutter_label_printer_temp_image_file_9U1ZR38S3F3KJ6XE';
   Directory? _tempTempDir;
   int _currentTempFileIndex = 0;
-
-  int _width = 0;
-  int _height = 0;
 
   @override
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize) async {
@@ -49,14 +46,15 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
       width: width,
       height: height,
     );
-    _width = width;
-    _height = height;
 
     return setPrintAreaSizeParams(params);
   }
 
   @override
-  Future<bool> addText(PrintText printText, TextAlignHint? textAlignHint) async {
+  Future<bool> addText(
+    PrintText printText,
+    TextAlignHint? textAlignHint,
+  ) async {
     checkConnected();
 
     if (printText.useImage) {
@@ -140,18 +138,18 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
         if (textAlignHint != null && textAlignHint.enabled) {
           if (align == HaninTSPLTextAlign.center) {
             xPosition = (xPosition +
-                printText.width / 2 -
-                printText.text.length *
-                    textAlignHint.charWidth *
-                    (printText.style?.width ?? 1) /
-                    2)
+                    printText.width / 2 -
+                    printText.text.length *
+                        textAlignHint.charWidth *
+                        (printText.style?.width ?? 1) /
+                        2)
                 .toInt();
           } else if (align == HaninTSPLTextAlign.right) {
             xPosition = (xPosition +
-                printText.width -
-                printText.text.length *
-                    textAlignHint.charWidth *
-                    (printText.style?.width ?? 1))
+                    printText.width -
+                    printText.text.length *
+                        textAlignHint.charWidth *
+                        (printText.style?.width ?? 1))
                 .toInt();
           }
           usedAlign = HaninTSPLTextAlign.left;

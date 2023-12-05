@@ -217,7 +217,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     var blockHeight = printText.height;
 
     final textWidth = printText.style?.width ?? 0;
-    final boldWeight = (printText.style?.bold ?? 0) > 0 ? FontWeight.w700 : FontWeight.w400;
+    final boldWeight =
+        (printText.style?.bold ?? 0) > 0 ? FontWeight.w700 : FontWeight.w400;
     final paragraphBuilder = ParagraphBuilder(
       ParagraphStyle(
         textAlign: textAlign,

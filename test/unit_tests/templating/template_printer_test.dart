@@ -87,7 +87,8 @@ void main() {
       when(printer.print()).thenAnswer((realInvocation) async => true);
       when(printer.setPrintAreaSize(any))
           .thenAnswer((realInvocation) async => true);
-      when(printer.addText(any, any)).thenAnswer((realInvocation) async => true);
+      when(printer.addText(any, any))
+          .thenAnswer((realInvocation) async => true);
       when(printer.addBarcode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addQRCode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addLine(any)).thenAnswer((realInvocation) async => true);
@@ -202,7 +203,8 @@ void main() {
       when(printer.print()).thenAnswer((realInvocation) async => true);
       when(printer.setPrintAreaSize(any))
           .thenAnswer((realInvocation) async => true);
-      when(printer.addText(any, any)).thenAnswer((realInvocation) async => true);
+      when(printer.addText(any, any))
+          .thenAnswer((realInvocation) async => true);
       when(printer.addBarcode(any)).thenAnswer((realInvocation) async => true);
       when(printer.addQRCode(any)).thenAnswer((realInvocation) async => true);
 

@@ -37,7 +37,8 @@ class PrintText implements CommandParameter {
       );
 
   @override
-  String toString() => 'PrintText{text: $text, useImage: $useImage, xPosition: $xPosition, yPosition: $yPosition, rotation: $rotation, width: $width, height: $height, style: $style}';
+  String toString() =>
+      'PrintText{text: $text, useImage: $useImage, xPosition: $xPosition, yPosition: $yPosition, rotation: $rotation, width: $width, height: $height, style: $style}';
 
   @override
   bool operator ==(Object other) =>

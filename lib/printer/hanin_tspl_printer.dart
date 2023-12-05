@@ -83,11 +83,16 @@ class HaninTSPLPrinter extends PrinterInterface {
     try {
       var result = true;
       if (params.bold > 0) {
-        result = result && await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(params.bold);
+        result = result &&
+            await FlutterLabelPrinterPlatform.instance
+                .setBoldHaninTSPL(params.bold);
       }
-      result = result && await FlutterLabelPrinterPlatform.instance.addTextBlockHaninTSPL(params);
+      result = result &&
+          await FlutterLabelPrinterPlatform.instance
+              .addTextBlockHaninTSPL(params);
       if (params.bold > 0) {
-        result = result && await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(0);
+        result = result &&
+            await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(0);
       }
 
       return result;
@@ -105,11 +110,15 @@ class HaninTSPLPrinter extends PrinterInterface {
     try {
       var result = true;
       if (params.bold > 0) {
-        result = result && await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(params.bold);
+        result = result &&
+            await FlutterLabelPrinterPlatform.instance
+                .setBoldHaninTSPL(params.bold);
       }
-      result = result && await FlutterLabelPrinterPlatform.instance.addTextHaninTSPL(params);
+      result = result &&
+          await FlutterLabelPrinterPlatform.instance.addTextHaninTSPL(params);
       if (params.bold > 0) {
-        result = result && await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(0);
+        result = result &&
+            await FlutterLabelPrinterPlatform.instance.setBoldHaninTSPL(0);
       }
 
       return result;
