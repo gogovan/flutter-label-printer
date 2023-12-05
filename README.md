@@ -213,7 +213,7 @@ Command `text` adds text with styling.
 | `yPosition`    | The y position of the text in the canvas.                                           | Number                       | :star:                       | :star:                       | :star: |
 | `rotation`     | Rotation of the text.                                                               | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
 | `width`        | Width of the text area.                                                             | Number                       | :x:                          | :o:                          | :o:    |
-| `height`       | Height of the text area.                                                            | Number                       | :x:                          | :o:                          | :x:    |
+| `height`       | Height of the text area.                                                            | Number                       | :x:                          | :o:                          | :o:    |
 | `useImage`     | Whether to use image to represent this text. [1]                                    | Boolean                      | :o:                          | :o:                          | :x:    |
 | `style`        | The style of the text. Accept an object.                                            |                              | :o:                          | :o:                          | :o:    |
 | `style.bold`   | Bold text and degree of boldness.                                                   | Number                       | :o:                          | :o:                          | :o:    |

@@ -223,7 +223,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       ParagraphStyle(
         textAlign: textAlign,
         fontSize: textWidth,
-        fontFamily: printText.style?.font?.name ?? 'Arial',
+        fontFamily: printText.style?.font?.name ?? 'Roboto',
         fontWeight: boldWeight,
       ),
     )
@@ -238,7 +238,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       );
 
     blockWidth = blockWidth > 0 ? blockWidth : paragraph.maxIntrinsicWidth;
-    blockHeight = paragraph.height;
+    blockHeight = blockHeight > 0 ? blockHeight : paragraph.height;
 
     final recorder = PictureRecorder();
     Canvas(recorder)

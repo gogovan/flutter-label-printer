@@ -249,7 +249,7 @@
                         "type": "object",
                         "properties": {
                             "command": {
-                                "const": "rectangle"
+                                "const": "image"
                             },
                             "path": {
                                 "type": "string",
