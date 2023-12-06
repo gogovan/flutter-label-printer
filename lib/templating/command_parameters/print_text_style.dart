@@ -24,7 +24,8 @@ class PrintTextStyle implements CommandParameter {
   final int padding;
 
   @override
-  String toString() => 'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font, reverse: $reverse, padding: $padding}';
+  String toString() =>
+      'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font, reverse: $reverse, padding: $padding}';
 
   @override
   bool operator ==(Object other) =>

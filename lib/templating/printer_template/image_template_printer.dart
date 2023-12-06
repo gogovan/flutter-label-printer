@@ -260,7 +260,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
             : const Color.fromARGB(255, 255, 255, 255),
         BlendMode.srcOver,
       )
-      ..drawParagraph(paragraph, Offset(padding.toDouble(), padding.toDouble()));
+      ..drawParagraph(
+          paragraph, Offset(padding.toDouble(), padding.toDouble()));
     final picture = recorder.endRecording();
     final uiImage =
         await picture.toImage(blockWidth.toInt(), blockHeight.toInt());
