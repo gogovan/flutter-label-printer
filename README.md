@@ -206,21 +206,22 @@ Put all printing commands in the `commands` object. They will be sent to the pri
 
 Command `text` adds text with styling.
 
-| Parameter      | Description                                                                         | Possible Values              | Hanin CPCL                   | Hanin TSPL                   | Image  |
-|----------------|-------------------------------------------------------------------------------------|------------------------------|------------------------------|------------------------------|--------|
-| `text`         | The text to print.                                                                  | Text                         | :star:                       | :star:                       | :star: |
-| `xPosition`    | The x position of the text in the canvas.                                           | Number                       | :star:                       | :star:                       | :star: |
-| `yPosition`    | The y position of the text in the canvas.                                           | Number                       | :star:                       | :star:                       | :star: |
-| `rotation`     | Rotation of the text.                                                               | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
-| `width`        | Width of the text area.                                                             | Number                       | :x:                          | :o:                          | :o:    |
-| `height`       | Height of the text area.                                                            | Number                       | :x:                          | :o:                          | :o:    |
-| `useImage`     | Whether to use image to represent this text. [1]                                    | Boolean                      | :o:                          | :o:                          | :x:    |
-| `style`        | The style of the text. Accept an object.                                            |                              | :o:                          | :o:                          | :o:    |
-| `style.bold`   | Bold text and degree of boldness.                                                   | Number                       | :o:                          | :o:                          | :o:    |
-| `style.width`  | Width of each character in text, as a multiplier. For image printer, the font size. | Number                       | :o:                          | :o:                          | :o:    |
-| `style.height` | Height of each character in text, as a multiplier.                                  | Number                       | :o:                          | :o:                          | :x:    |
-| `style.align`  | Alignment of text.                                                                  | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
-| `style.font`   | Font of text.                                                                       | [2]                          | :o:                          | :o:                          | :o:    |
+| Parameter       | Description                                                                         | Possible Values              | Hanin CPCL                   | Hanin TSPL                   | Image  |
+|-----------------|-------------------------------------------------------------------------------------|------------------------------|------------------------------|------------------------------|--------|
+| `text`          | The text to print.                                                                  | Text                         | :star:                       | :star:                       | :star: |
+| `xPosition`     | The x position of the text in the canvas.                                           | Number                       | :star:                       | :star:                       | :star: |
+| `yPosition`     | The y position of the text in the canvas.                                           | Number                       | :star:                       | :star:                       | :star: |
+| `rotation`      | Rotation of the text.                                                               | Number                       | :o: in 90 degrees increments | :o: in 90 degrees increments | :x:    |
+| `width`         | Width of the text area.                                                             | Number                       | :x:                          | :o:                          | :o:    |
+| `height`        | Height of the text area.                                                            | Number                       | :x:                          | :o:                          | :o:    |
+| `useImage`      | Whether to use image to represent this text. [1]                                    | Boolean                      | :o:                          | :o:                          | :x:    |
+| `style`         | The style of the text. Accept an object.                                            |                              | :o:                          | :o:                          | :o:    |
+| `style.bold`    | Bold text and degree of boldness.                                                   | Number                       | :o:                          | :o:                          | :o:    |
+| `style.width`   | Width of each character in text, as a multiplier. For image printer, the font size. | Number                       | :o:                          | :o:                          | :o:    |
+| `style.height`  | Height of each character in text, as a multiplier.                                  | Number                       | :o:                          | :o:                          | :x:    |
+| `style.align`   | Alignment of text.                                                                  | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
+| `style.font`    | Font of text.                                                                       | [2]                          | :o:                          | :o:                          | :o:    |
+| `style.reverse` | Reverse the color of the text.                                                      | Boolean                      | :x:                          | :x:                          | :o:    |
 
 1: If the text command provided by the printer is insufficient, set `useImage` to true and
 flutter_label_printer will generate an image in the OS representing this text and send the image to

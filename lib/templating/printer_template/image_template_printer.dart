@@ -216,6 +216,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     var blockWidth = printText.width;
     var blockHeight = printText.height;
 
+    final reverse = printText.style?.reverse ?? false;
+
     final textWidth = printText.style?.width ?? 0;
     final boldWeight =
         (printText.style?.bold ?? 0) > 0 ? FontWeight.w700 : FontWeight.w400;
@@ -227,7 +229,13 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         fontWeight: boldWeight,
       ),
     )
-      ..pushStyle(TextStyle(color: const Color.fromARGB(255, 0, 0, 0)))
+      ..pushStyle(
+        TextStyle(
+          color: reverse
+              ? const Color.fromARGB(255, 255, 255, 255)
+              : const Color.fromARGB(255, 0, 0, 0),
+        ),
+      )
       ..addText(printText.text)
       ..pop();
     final paragraph = paragraphBuilder.build()
@@ -242,7 +250,11 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
     final recorder = PictureRecorder();
     Canvas(recorder)
-      ..drawColor(const Color.fromARGB(255, 255, 255, 255), BlendMode.srcOver)
+      ..drawColor(
+          reverse
+              ? const Color.fromARGB(255, 0, 0, 0)
+              : const Color.fromARGB(255, 255, 255, 255),
+          BlendMode.srcOver)
       ..drawParagraph(paragraph, Offset.zero);
     final picture = recorder.endRecording();
     final uiImage =

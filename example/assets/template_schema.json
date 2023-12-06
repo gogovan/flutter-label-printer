@@ -125,6 +125,11 @@
                                     "font": {
                                         "type": "string",
                                         "description": "Font of text."
+                                    },
+                                    "reverse": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "Whether to reverse the color of the text. (White text on black background instead of black text on white background.)"
                                     }
                                 }
                             }
