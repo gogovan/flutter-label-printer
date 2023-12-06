@@ -261,7 +261,9 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         BlendMode.srcOver,
       )
       ..drawParagraph(
-          paragraph, Offset(padding.toDouble(), padding.toDouble()));
+        paragraph,
+        Offset(padding.toDouble(), padding.toDouble()),
+      );
     final picture = recorder.endRecording();
     final uiImage =
         await picture.toImage(blockWidth.toInt(), blockHeight.toInt());
