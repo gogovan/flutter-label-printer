@@ -271,8 +271,6 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
   Future<bool> addImage(PrintImage printImage) {
     checkConnected();
 
-    checkConnected();
-
     final algo = printImage.monochromizationAlgorithm ??
         MonochromizationAlgorithm.binary;
     final ImageMode printImageMode =

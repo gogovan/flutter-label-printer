@@ -59,7 +59,8 @@ class TemplatePrinter {
           result = result && cmdResult;
           break;
         case CommandType.image:
-          final cmdResult = await printer.addImage(cmd.params as PrintImage);
+          final cmdResult = await printer
+              .addImage((cmd.params as PrintImage).replaceString(rStrings));
           result = result && cmdResult;
           break;
       }
