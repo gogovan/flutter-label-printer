@@ -12,6 +12,7 @@ class PrintTextStyle implements CommandParameter {
     this.align,
     this.font,
     this.reverse = false,
+    this.padding = 0,
   });
 
   final double? bold;
@@ -20,6 +21,10 @@ class PrintTextStyle implements CommandParameter {
   final PrintTextAlign? align;
   final PrintTextFont? font;
   final bool reverse;
+  final int padding;
+
+  @override
+  String toString() => 'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font, reverse: $reverse, padding: $padding}';
 
   @override
   bool operator ==(Object other) =>
@@ -31,7 +36,8 @@ class PrintTextStyle implements CommandParameter {
           height == other.height &&
           align == other.align &&
           font == other.font &&
-          reverse == other.reverse;
+          reverse == other.reverse &&
+          padding == other.padding;
 
   @override
   int get hashCode =>
@@ -40,9 +46,6 @@ class PrintTextStyle implements CommandParameter {
       height.hashCode ^
       align.hashCode ^
       font.hashCode ^
-      reverse.hashCode;
-
-  @override
-  String toString() =>
-      'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font, reverse: $reverse}';
+      reverse.hashCode ^
+      padding.hashCode;
 }

@@ -136,6 +136,7 @@ class Template {
                 font:
                     PrintTextFont.values.asNameMap()[style['font'].toString()],
                 reverse: style['reverse'].toString().toUpperCase() == 'TRUE',
+                padding: _toDouble(style['padding'], defValue: 0).toInt(),
               ),
       );
 

@@ -248,14 +248,19 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     blockWidth = blockWidth > 0 ? blockWidth : paragraph.maxIntrinsicWidth;
     blockHeight = blockHeight > 0 ? blockHeight : paragraph.height;
 
+    final padding = printText.style?.padding ?? 0;
+    blockWidth += padding * 2;
+    blockHeight += padding * 2;
+
     final recorder = PictureRecorder();
     Canvas(recorder)
       ..drawColor(
-          reverse
-              ? const Color.fromARGB(255, 0, 0, 0)
-              : const Color.fromARGB(255, 255, 255, 255),
-          BlendMode.srcOver)
-      ..drawParagraph(paragraph, Offset.zero);
+        reverse
+            ? const Color.fromARGB(255, 0, 0, 0)
+            : const Color.fromARGB(255, 255, 255, 255),
+        BlendMode.srcOver,
+      )
+      ..drawParagraph(paragraph, Offset(padding as double, padding as double));
     final picture = recorder.endRecording();
     final uiImage =
         await picture.toImage(blockWidth.toInt(), blockHeight.toInt());

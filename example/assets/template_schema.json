@@ -130,6 +130,11 @@
                                         "type": "boolean",
                                         "default": false,
                                         "description": "Whether to reverse the color of the text. (White text on black background instead of black text on white background.)"
+                                    },
+                                    "padding": {
+                                        "type": "number",
+                                        "default": 0,
+                                        "description": "Padding around the text. To be used with style.reverse."
                                     }
                                 }
                             }

@@ -222,6 +222,7 @@ Command `text` adds text with styling.
 | `style.align`   | Alignment of text.                                                                  | `left`, `center` or `right`. | :o:                          | :o:                          | :o:    |
 | `style.font`    | Font of text.                                                                       | [2]                          | :o:                          | :o:                          | :o:    |
 | `style.reverse` | Reverse the color of the text.                                                      | Boolean                      | :x:                          | :x:                          | :o:    |
+| `style.padding` | Padding for the text. Particularly useful with style.reverse = true                 | Number                       | :x:                          | :x:                          | :o:    |
 
 1: If the text command provided by the printer is insufficient, set `useImage` to true and
 flutter_label_printer will generate an image in the OS representing this text and send the image to
