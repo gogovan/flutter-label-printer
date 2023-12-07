@@ -262,7 +262,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       )
       ..drawParagraph(
         paragraph,
-        Offset(padding.toDouble(), padding.toDouble()),
+        Offset(padding, padding),
       );
     final picture = recorder.endRecording();
     final uiImage =

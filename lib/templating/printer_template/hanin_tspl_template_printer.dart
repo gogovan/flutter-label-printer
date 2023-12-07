@@ -166,6 +166,7 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
           charWidth: printText.style?.width?.toInt() ?? 1,
           charHeight: printText.style?.height?.toInt() ?? 1,
           bold: printText.style?.bold?.toInt() ?? 0,
+          lineSpacing: printText.style?.lineSpacing.toInt() ?? 0,
         );
 
         return addTextBlockParams(params);

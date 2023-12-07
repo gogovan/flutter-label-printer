@@ -173,6 +173,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
         'alignment': params.alignment.code,
         'characterWidth': params.charWidth,
         'characterHeight': params.charHeight,
+        'lineSpacing': params.lineSpacing,
       },
     );
 

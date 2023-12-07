@@ -307,6 +307,7 @@ class FlutterLabelPrinterMethodHandler(
                             val align = call.argument<Int>("align") ?: 1
                             val charWidth = (call.argument<Int>("characterWidth") ?: 1)
                             val charHeight = (call.argument<Int>("characterHeight") ?: 1)
+                            val lineSpacing = (call.argument<Int>("lineSpacing") ?: 0)
 
                             val returnCode = HPRTPrinterHelper.printBlock(
                                 x,
@@ -317,7 +318,7 @@ class FlutterLabelPrinterMethodHandler(
                                 rotate,
                                 charWidth,
                                 charHeight,
-                                0,
+                                lineSpacing,
                                 align,
                                 text
                             )

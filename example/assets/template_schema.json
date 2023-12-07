@@ -135,6 +135,11 @@
                                         "type": "number",
                                         "default": 0,
                                         "description": "Padding around the text. To be used with style.reverse."
+                                    },
+                                    "lineSpacing": {
+                                        "type": "number",
+                                        "default": 0,
+                                        "description": "Spacing between lines of text."
                                     }
                                 }
                             }

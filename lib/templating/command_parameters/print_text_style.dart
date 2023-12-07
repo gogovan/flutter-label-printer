@@ -13,6 +13,7 @@ class PrintTextStyle implements CommandParameter {
     this.font,
     this.reverse = false,
     this.padding = 0,
+    this.lineSpacing = 0,
   });
 
   final double? bold;
@@ -21,11 +22,12 @@ class PrintTextStyle implements CommandParameter {
   final PrintTextAlign? align;
   final PrintTextFont? font;
   final bool reverse;
-  final int padding;
+  final double padding;
+  final double lineSpacing;
 
   @override
   String toString() =>
-      'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font, reverse: $reverse, padding: $padding}';
+      'PrintTextStyle{bold: $bold, width: $width, height: $height, align: $align, font: $font, reverse: $reverse, padding: $padding, lineSpacing: $lineSpacing}';
 
   @override
   bool operator ==(Object other) =>
@@ -38,7 +40,8 @@ class PrintTextStyle implements CommandParameter {
           align == other.align &&
           font == other.font &&
           reverse == other.reverse &&
-          padding == other.padding;
+          padding == other.padding &&
+          lineSpacing == other.lineSpacing;
 
   @override
   int get hashCode =>
@@ -48,5 +51,6 @@ class PrintTextStyle implements CommandParameter {
       align.hashCode ^
       font.hashCode ^
       reverse.hashCode ^
-      padding.hashCode;
+      padding.hashCode ^
+      lineSpacing.hashCode;
 }

@@ -171,6 +171,7 @@ class HaninTSPLTextBlockParams {
     this.charWidth = 1,
     this.charHeight = 1,
     this.bold = 0,
+    this.lineSpacing = 0,
   });
 
   final int xPosition;
@@ -183,10 +184,11 @@ class HaninTSPLTextBlockParams {
   final int charWidth;
   final int charHeight;
   final int bold;
+  final int lineSpacing;
 
   @override
   String toString() =>
-      'HaninTSPLTextBlockParams{xPosition: $xPosition, yPosition: $yPosition, text: $text, width: $width, height: $height, alignment: $alignment, charWidth: $charWidth, charHeight: $charHeight, bold: $bold}';
+      'HaninTSPLTextBlockParams{xPosition: $xPosition, yPosition: $yPosition, text: $text, width: $width, height: $height, rotate: $rotate, alignment: $alignment, charWidth: $charWidth, charHeight: $charHeight, bold: $bold, lineSpacing: $lineSpacing}';
 
   @override
   bool operator ==(Object other) =>
@@ -198,10 +200,12 @@ class HaninTSPLTextBlockParams {
           text == other.text &&
           width == other.width &&
           height == other.height &&
+          rotate == other.rotate &&
           alignment == other.alignment &&
           charWidth == other.charWidth &&
           charHeight == other.charHeight &&
-          bold == other.bold;
+          bold == other.bold &&
+          lineSpacing == other.lineSpacing;
 
   @override
   int get hashCode =>
@@ -210,10 +214,12 @@ class HaninTSPLTextBlockParams {
       text.hashCode ^
       width.hashCode ^
       height.hashCode ^
+      rotate.hashCode ^
       alignment.hashCode ^
       charWidth.hashCode ^
       charHeight.hashCode ^
-      bold.hashCode;
+      bold.hashCode ^
+      lineSpacing.hashCode;
 }
 
 @immutable

@@ -200,8 +200,9 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let charWidth = args["characterWidth"] as? Int,
                    let charHeight = args["characterHeight"] as? Int,
                    let rotate = PTTSCStyleRotation(rawValue: UInt(rotateValue)),
+                   let lineSpacing = args["lineSpacing"] as? Int,
                    let cmd = currentTSPLCommand {
-                    cmd.printAutoText(withXpos: x, yPos: y, font: PTTSCTextFontStyle.style0, rotation: rotate, xMultiplication: charWidth, yMultiplication: charHeight, safeHeight: height, width: width, lineSpacing: 0, text: text)
+                    cmd.printAutoText(withXpos: x, yPos: y, font: PTTSCTextFontStyle.style0, rotation: rotate, xMultiplication: charWidth, yMultiplication: charHeight, safeHeight: height, width: width, lineSpacing: lineSpacing, text: text)
                     result(true)
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
