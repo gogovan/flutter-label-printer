@@ -227,6 +227,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         fontSize: textWidth,
         fontFamily: printText.style?.font?.name ?? 'Roboto',
         fontWeight: boldWeight,
+        height: printText.style?.lineSpacing ?? 0,
       ),
     )
       ..pushStyle(
