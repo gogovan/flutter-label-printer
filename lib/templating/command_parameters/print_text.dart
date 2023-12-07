@@ -9,23 +9,36 @@ class PrintText implements CommandParameter {
     required this.text,
     required this.xPosition,
     required this.yPosition,
+    this.useImage = false,
     this.rotation = 0,
+    this.width = 0,
+    this.height = 0,
     this.style,
   });
 
   final String text;
+  final bool useImage;
   final double xPosition;
   final double yPosition;
   final double rotation;
+  final double width;
+  final double height;
   final PrintTextStyle? style;
 
   PrintText replaceString(Map<String, String> replace) => PrintText(
         text: text.format(replace),
+        useImage: useImage,
         xPosition: xPosition,
         yPosition: yPosition,
         rotation: rotation,
+        width: width,
+        height: height,
         style: style,
       );
+
+  @override
+  String toString() =>
+      'PrintText{text: $text, useImage: $useImage, xPosition: $xPosition, yPosition: $yPosition, rotation: $rotation, width: $width, height: $height, style: $style}';
 
   @override
   bool operator ==(Object other) =>
@@ -33,15 +46,22 @@ class PrintText implements CommandParameter {
       other is PrintText &&
           runtimeType == other.runtimeType &&
           text == other.text &&
+          useImage == other.useImage &&
           xPosition == other.xPosition &&
           yPosition == other.yPosition &&
+          rotation == other.rotation &&
+          width == other.width &&
+          height == other.height &&
           style == other.style;
 
   @override
   int get hashCode =>
-      text.hashCode ^ xPosition.hashCode ^ yPosition.hashCode ^ style.hashCode;
-
-  @override
-  String toString() =>
-      'PrintText{text: $text, xPosition: $xPosition, yPosition: $yPosition, style: $style}';
+      text.hashCode ^
+      useImage.hashCode ^
+      xPosition.hashCode ^
+      yPosition.hashCode ^
+      rotation.hashCode ^
+      width.hashCode ^
+      height.hashCode ^
+      style.hashCode;
 }

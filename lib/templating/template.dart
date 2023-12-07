@@ -8,7 +8,9 @@ import 'package:flutter_label_printer/templating/command_parameters/print_qr_cod
 import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
+import 'package:flutter_label_printer/templating/command_parameters/print_text_font.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
+import 'package:flutter_label_printer/templating/printer_hints/text_align_hint.dart';
 import 'package:yaml/yaml.dart';
 
 double _toDouble(x, {double? defValue}) {
@@ -26,7 +28,7 @@ double _toDouble(x, {double? defValue}) {
 /// Template represents a parsed template.
 @immutable
 class Template {
-  const Template(this.size, this.commands);
+  const Template(this.size, this.printerHints, this.commands);
 
   /// Create a Template from YAML data.
   factory Template.fromYaml(String data) {
@@ -34,6 +36,9 @@ class Template {
     final result = <Command>[];
 
     final size = _getPrintAreaSize(obj['size'] as YamlMap);
+    final hints = obj.containsKey('printer_hints')
+        ? _getPrinterHints(obj['printer_hints'] as YamlMap)
+        : <PrinterHintType, PrinterHint>{};
 
     final cmds = obj['commands'] as YamlList;
     for (final rawCmd in cmds) {
@@ -73,7 +78,7 @@ class Template {
       result.add(Command(type, params));
     }
 
-    return Template(size, result);
+    return Template(size, hints, result);
   }
 
   static PrintImage _getPrintImage(YamlMap paramMap) => PrintImage(
@@ -109,13 +114,17 @@ class Template {
         yPosition: _toDouble(paramMap['yPosition']),
         data: paramMap['data'].toString(),
         height: _toDouble(paramMap['height']),
+        barLineWidth: _toDouble(paramMap['barLineWidth'], defValue: 1),
       );
 
   static PrintText _getPrintText(YamlMap paramMap, YamlMap? style) => PrintText(
         text: paramMap['text'].toString(),
+        useImage: paramMap['useImage'].toString().toUpperCase() == 'TRUE',
         xPosition: _toDouble(paramMap['xPosition']),
         yPosition: _toDouble(paramMap['yPosition']),
         rotation: _toDouble(paramMap['rotation'], defValue: 0),
+        width: _toDouble(paramMap['width'], defValue: 0),
+        height: _toDouble(paramMap['height'], defValue: 0),
         style: style == null
             ? null
             : PrintTextStyle(
@@ -124,6 +133,11 @@ class Template {
                 height: _toDouble(style['height'], defValue: 1),
                 align: PrintTextAlign.values
                     .asNameMap()[style['align'].toString()],
+                font:
+                    PrintTextFont.values.asNameMap()[style['font'].toString()],
+                reverse: style['reverse'].toString().toUpperCase() == 'TRUE',
+                padding: _toDouble(style['padding'], defValue: 0),
+                lineSpacing: _toDouble(style['lineSpacing'], defValue: 0),
               ),
       );
 
@@ -137,7 +151,19 @@ class Template {
         height: _toDouble(paramMap['height']),
       );
 
+  static Map<PrinterHintType, PrinterHint> _getPrinterHints(YamlMap paramMap) {
+    final result = <PrinterHintType, PrinterHint>{};
+    if (paramMap.containsKey('text_align')) {
+      result[PrinterHintType.textAlign] = TextAlignHint(
+        enabled: paramMap['text_align']['enabled'],
+        charWidth: paramMap['text_align']['charWidth'],
+      );
+    }
+    return result;
+  }
+
   final PrintAreaSize size;
+  final Map<PrinterHintType, PrinterHint> printerHints;
   final List<Command> commands;
 
   @override
@@ -180,4 +206,15 @@ class Command {
 enum CommandType { text, barcode, qrcode, rectangle, line, image }
 
 /// Marker interface to indicate that the class is a CommandParameter.
+@immutable
 abstract class CommandParameter {}
+
+@immutable
+abstract class PrinterHint {
+  const PrinterHint(this.hintType, {required this.enabled});
+
+  final PrinterHintType hintType;
+  final bool enabled;
+}
+
+enum PrinterHintType { textAlign }

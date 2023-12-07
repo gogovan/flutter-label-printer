@@ -263,8 +263,9 @@ class FlutterLabelPrinterMethodHandler(
                             val x = call.argument<Int>("x").toString()
                             val y = call.argument<Int>("y").toString()
                             val text = call.argument<String>("text")
-                            val charWidth = (call.argument<Int>("characterWidth") ?: 0).toString()
-                            val charHeight = (call.argument<Int>("characterHeight") ?: 0).toString()
+                            val align = call.argument<Int>("align")
+                            val charWidth = (call.argument<Int>("characterWidth") ?: 1).toString()
+                            val charHeight = (call.argument<Int>("characterHeight") ?: 1).toString()
 
                             val returnCode = HPRTPrinterHelper.printText(
                                 x,
@@ -273,7 +274,52 @@ class FlutterLabelPrinterMethodHandler(
                                 rotate,
                                 charWidth,
                                 charHeight,
-                                1,
+                                align ?: 1,
+                                text
+                            )
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments $e",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+
+                "hk.gogovan.label_printer.hanin.tspl.addTextBlock" -> {
+                    if (!HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val rotate = (call.argument<Int>("rotate") ?: 0)
+                            val x = call.argument<Int>("x") ?: 0
+                            val y = call.argument<Int>("y") ?: 0
+                            val text = call.argument<String>("text")
+                            val width = call.argument<Int>("width") ?: 0
+                            val height = call.argument<Int>("height") ?: 0
+                            val align = call.argument<Int>("align") ?: 1
+                            val charWidth = (call.argument<Int>("characterWidth") ?: 1)
+                            val charHeight = (call.argument<Int>("characterHeight") ?: 1)
+                            val lineSpacing = (call.argument<Int>("lineSpacing") ?: 0)
+
+                            val returnCode = HPRTPrinterHelper.printBlock(
+                                x,
+                                y,
+                                width,
+                                height,
+                                0,
+                                rotate,
+                                charWidth,
+                                charHeight,
+                                lineSpacing,
+                                align,
                                 text
                             )
 
@@ -432,6 +478,29 @@ class FlutterLabelPrinterMethodHandler(
                         try {
                             val size = max(0, min(5, call.argument<Int>("size") ?: 0))
                             val returnCode = PrinterHelper.SetBold(size.toString())
+
+                            result.success(returnCode >= 0)
+                        } catch (e: ClassCastException) {
+                            result.error(
+                                "1009",
+                                "Unable to extract arguments $e",
+                                Throwable().stackTraceToString()
+                            )
+                        }
+                    }
+                }
+
+                "hk.gogovan.label_printer.hanin.tspl.setBold" -> {
+                    if (!HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer not connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        try {
+                            val size = max(0, min(1, call.argument<Int>("size") ?: 0))
+                            val returnCode = HPRTPrinterHelper.Bold(size)
 
                             result.success(returnCode >= 0)
                         } catch (e: ClassCastException) {
@@ -616,6 +685,7 @@ class FlutterLabelPrinterMethodHandler(
                             val y = (call.argument<Int>("y") ?: 0).toString()
                             val type = call.argument<String>("type")
                             val height = (call.argument<Int>("height") ?: 0).toString()
+                            val width = (call.argument<Int>("barLineWidth") ?: 1)
                             val showData =
                                 if (call.argument<Boolean>("showData") == true) "1" else "0"
                             val rotate = (call.argument<Int>("rotate") ?: 0).toString()
@@ -643,8 +713,8 @@ class FlutterLabelPrinterMethodHandler(
                                 height,
                                 showData,
                                 rotate,
-                                "1",
-                                "1",
+                                width.toString(),
+                                (width * 2).toString(),
                                 data
                             )
                             result.success(returnCode >= 0)

@@ -160,6 +160,27 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
+  Future<bool> addTextBlockHaninTSPL(HaninTSPLTextBlockParams params) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.tspl.addTextBlock',
+      <String, dynamic>{
+        'rotate': params.rotate.rot,
+        'x': params.xPosition,
+        'y': params.yPosition,
+        'text': params.text,
+        'width': params.width,
+        'height': params.height,
+        'alignment': params.alignment.code,
+        'characterWidth': params.charWidth,
+        'characterHeight': params.charHeight,
+        'lineSpacing': params.lineSpacing,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
   Future<bool> addTextHaninCPCL(HaninCPCLTextParams params) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.addText',
@@ -207,6 +228,18 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   Future<bool> setBoldHaninCPCL(int size) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.setBold',
+      <String, dynamic>{
+        'size': size,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> setBoldHaninTSPL(int size) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.tspl.setBold',
       <String, dynamic>{
         'size': size,
       },
@@ -301,6 +334,7 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
         'y': params.yPosition,
         'type': params.barcodeType.code,
         'height': params.height,
+        'barLineWidth': params.barLineWidth,
         'showData': params.showData,
         'rotate': params.rotate.rot,
         'data': params.data,

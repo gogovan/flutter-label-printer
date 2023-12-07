@@ -12,6 +12,7 @@ import 'package:flutter_label_printer/templating/command_parameters/print_rect.d
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_align.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text_style.dart';
+import 'package:flutter_label_printer/templating/printer_hints/text_align_hint.dart';
 import 'package:flutter_label_printer/templating/templatable_printer_interface.dart';
 import 'package:image/image.dart' as img;
 
@@ -193,10 +194,9 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     return Future.value(true);
   }
 
-  @override
-  Future<bool> addText(PrintText printText) async {
-    final image = checkImageCommand();
-
+  static Future<img.Image> getTextImage(
+    PrintText printText,
+  ) async {
     TextAlign textAlign;
     switch (printText.style?.align) {
       case PrintTextAlign.left:
@@ -208,41 +208,88 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
       case PrintTextAlign.right:
         textAlign = TextAlign.right;
         break;
-      case null:
+      default:
         textAlign = TextAlign.left;
         break;
     }
 
-    final textWidth = (printText.style?.width ?? 0) + 16;
-    final boldWeight = (printText.style?.bold ?? 0) / 10.0;
+    var blockWidth = printText.width;
+    var blockHeight = printText.height;
+
+    final reverse = printText.style?.reverse ?? false;
+
+    final textWidth = printText.style?.width ?? 0;
+    final boldWeight =
+        (printText.style?.bold ?? 0) > 0 ? FontWeight.w700 : FontWeight.w400;
     final paragraphBuilder = ParagraphBuilder(
       ParagraphStyle(
         textAlign: textAlign,
         fontSize: textWidth,
-        fontWeight:
-            FontWeight.lerp(FontWeight.w400, FontWeight.w900, boldWeight),
+        fontFamily: printText.style?.font?.name ?? 'Roboto',
+        fontWeight: boldWeight,
+        height: printText.style?.lineSpacing ?? 0,
       ),
     )
-      ..pushStyle(TextStyle(color: const Color.fromARGB(255, 0, 0, 0)))
+      ..pushStyle(
+        TextStyle(
+          color: reverse
+              ? const Color.fromARGB(255, 255, 255, 255)
+              : const Color.fromARGB(255, 0, 0, 0),
+        ),
+      )
       ..addText(printText.text)
       ..pop();
     final paragraph = paragraphBuilder.build()
-      ..layout(ParagraphConstraints(width: width - printText.xPosition));
+      ..layout(
+        ParagraphConstraints(
+          width: blockWidth > 0 ? blockWidth : double.infinity,
+        ),
+      );
+
+    blockWidth = blockWidth > 0 ? blockWidth : paragraph.maxIntrinsicWidth;
+    blockHeight = blockHeight > 0 ? blockHeight : paragraph.height;
+
+    final padding = printText.style?.padding ?? 0;
+    blockWidth += padding * 2;
+    blockHeight += padding * 2;
 
     final recorder = PictureRecorder();
-    Canvas(recorder).drawParagraph(paragraph, Offset.zero);
+    Canvas(recorder)
+      ..drawColor(
+        reverse
+            ? const Color.fromARGB(255, 0, 0, 0)
+            : const Color.fromARGB(255, 255, 255, 255),
+        BlendMode.srcOver,
+      )
+      ..drawParagraph(
+        paragraph,
+        Offset(padding, padding),
+      );
     final picture = recorder.endRecording();
-    final uiImage = await picture.toImage(width.toInt(), height.toInt());
+    final uiImage =
+        await picture.toImage(blockWidth.toInt(), blockHeight.toInt());
     final byteData = await uiImage.toByteData();
     if (byteData == null) {
       throw const FormatException('Unable to convert canvas text image');
     }
     final textImage = img.Image.fromBytes(
-      width: width.toInt(),
-      height: height.toInt(),
+      width: blockWidth.toInt(),
+      height: blockHeight.toInt(),
       bytes: byteData.buffer,
       numChannels: 4,
     );
+
+    return textImage;
+  }
+
+  @override
+  Future<bool> addText(
+    PrintText printText,
+    TextAlignHint? textAlignHint,
+  ) async {
+    final image = checkImageCommand();
+
+    final textImage = await getTextImage(printText);
     img.compositeImage(
       image,
       textImage,
@@ -289,9 +336,11 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         yPosition: 5,
         style: PrintTextStyle(width: 3, height: 100, bold: 2),
       ),
+      null,
     );
     await addText(
       const PrintText(text: 'CODE128', xPosition: 0, yPosition: 66),
+      null,
     );
     await addBarcode(
       const PrintBarcode(

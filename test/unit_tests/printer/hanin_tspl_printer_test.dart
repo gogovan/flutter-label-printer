@@ -44,6 +44,7 @@ void main() {
     height: 40,
     xPosition: 30,
     yPosition: 20,
+    barLineWidth: 1,
     data: 'https://example.com',
   );
   const HaninTSPLQRCodeParams qrcodeParams = HaninTSPLQRCodeParams(

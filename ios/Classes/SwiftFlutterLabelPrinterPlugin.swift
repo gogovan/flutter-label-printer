@@ -182,6 +182,32 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
             }
+        } else if (call.method == "hk.gogovan.label_printer.hanin.tspl.addTextBlock") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentTSPLCommand == nil) {
+                    currentTSPLCommand = PTCommandTSPL()
+                    currentTSPLCommand?.setCLS()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let rotateValue = args["rotate"] as? Int,
+                   let x = args["x"] as? Int,
+                   let y = args["y"] as? Int,
+                   let text = args["text"] as? String,
+                   let width = args["width"] as? Int,
+                   let height = args["height"] as? Int,
+                   let charWidth = args["characterWidth"] as? Int,
+                   let charHeight = args["characterHeight"] as? Int,
+                   let rotate = PTTSCStyleRotation(rawValue: UInt(rotateValue)),
+                   let lineSpacing = args["lineSpacing"] as? Int,
+                   let cmd = currentTSPLCommand {
+                    cmd.printAutoText(withXpos: x, yPos: y, font: PTTSCTextFontStyle.style0, rotation: rotate, xMultiplication: charWidth, yMultiplication: charHeight, safeHeight: height, width: width, lineSpacing: lineSpacing, text: text)
+                    result(true)
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
         } else if (call.method == "hk.gogovan.label_printer.hanin.cpcl.print") {
             if (PTDispatcher.share().printerConnected == nil) {
                 result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
@@ -280,6 +306,23 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                     } else {
                         result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                     }
+                } else {
+                    result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
+                }
+            }
+        } else if (call.method == "hk.gogovan.label_printer.hanin.tspl.setBold") {
+            if (PTDispatcher.share().printerConnected == nil) {
+                result(FlutterError(code: "1005", message: "Printer not connected.", details: Thread.callStackSymbols.joined(separator: "\n")))
+            } else {
+                if (currentTSPLCommand == nil) {
+                    currentTSPLCommand = PTCommandTSPL()
+                }
+                if let args = call.arguments as? [String:Any],
+                   let sizeId = args["size"] as? Int,
+                   let cmd = currentTSPLCommand {
+                    let sizeBool = sizeId > 0
+                    cmd.setFontBold(sizeBool)
+                    result(true)
                 } else {
                     result(FlutterError(code: "1009", message: "Unable to extract arguments", details: Thread.callStackSymbols.joined(separator: "\n")))
                 }
@@ -495,9 +538,10 @@ public class SwiftFlutterLabelPrinterPlugin: NSObject, FlutterPlugin {
                    let showData = args["showData"] as? UInt,
                    let rotate = args["rotate"] as? UInt,
                    let data = args["data"] as? String,
+                   let barLineWidth = args["barLineWidth"] as? UInt,
                    let readableN = PTTSCBarcodeReadbleStyle(rawValue: showData),
                    let rotateN = PTTSCStyleRotation(rawValue: rotate),
-                   let ratioN = PTTSCBarcodeRatio(rawValue: 1),
+                   let ratioN = PTTSCBarcodeRatio(rawValue: barLineWidth),
                    let cmd = currentTSPLCommand {
                     let typeN: PTTSCBarcodeStyle?
                     switch (type) {

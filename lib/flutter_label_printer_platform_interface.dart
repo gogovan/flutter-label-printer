@@ -88,6 +88,12 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     );
   }
 
+  Future<bool> addTextBlockHaninTSPL(HaninTSPLTextBlockParams params) {
+    throw UnimplementedError(
+      'addTextBlockHaninTSPL() has not been implemented.',
+    );
+  }
+
   Future<bool> addTextHaninCPCL(HaninCPCLTextParams params) {
     throw UnimplementedError(
       'addTextHaninCPCL() has not been implemented.',
@@ -115,6 +121,12 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
   Future<bool> setBoldHaninCPCL(int size) {
     throw UnimplementedError(
       'setBoldHaninCPCL() has not been implemented.',
+    );
+  }
+
+  Future<bool> setBoldHaninTSPL(int size) {
+    throw UnimplementedError(
+      'setBoldHaninTSPL() has not been implemented.',
     );
   }
 

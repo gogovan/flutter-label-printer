@@ -243,7 +243,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
                 "width" to 3,
                 "height" to 2,
                 "x" to 100,
-                "y" to 120
+                "y" to 120,
             ),
             {
                 PrinterHelper.Barcode(
@@ -331,7 +331,12 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addText",
             mapOf("font" to 9, "x" to 40, "y" to 20, "text" to "Hello World!"),
-            { HPRTPrinterHelper.printText("40", "20", "9", "0", "0", "0", 1, "Hello World!") }, 1
+            { HPRTPrinterHelper.printText("40", "20", "9", "0", "1", "1", 1, "Hello World!") }, 1
+        ),
+        SuccessCaseEntry(
+            "hk.gogovan.label_printer.hanin.tspl.addTextBlock",
+            mapOf("x" to 40, "y" to 20, "width" to 100, "height" to 50, "text" to "Hello World!"),
+            { HPRTPrinterHelper.printBlock(40, 20, 100, 50, 0, 0, 1, 1, 0, 1, "Hello World!") }, 1
         ),
         SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.print",
@@ -344,7 +349,7 @@ class FlutterLabelPrinterMethodHandlerTest : DescribeSpec({
         SuccessCaseEntry(
             "hk.gogovan.label_printer.hanin.tspl.addBarcode",
             mapOf("x" to 40, "y" to 20, "type" to "39", "height" to 50, "data" to "APV92"),
-            { HPRTPrinterHelper.printBarcode("40", "20", "39", "50", "0", "0", "1", "1", "APV92") },
+            { HPRTPrinterHelper.printBarcode("40", "20", "39", "50", "0", "0", "1", "2", "APV92") },
             1
         ),
         SuccessCaseEntry(

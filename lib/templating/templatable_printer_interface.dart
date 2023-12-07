@@ -5,13 +5,14 @@ import 'package:flutter_label_printer/templating/command_parameters/print_image.
 import 'package:flutter_label_printer/templating/command_parameters/print_qr_code.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_rect.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_text.dart';
+import 'package:flutter_label_printer/templating/printer_hints/text_align_hint.dart';
 
 abstract class TemplatablePrinterInterface extends PrinterInterface {
   TemplatablePrinterInterface(super.device);
 
   Future<bool> setPrintAreaSize(PrintAreaSize printAreaSize);
 
-  Future<bool> addText(PrintText printText);
+  Future<bool> addText(PrintText printText, TextAlignHint? textAlignHint);
 
   Future<bool> addBarcode(PrintBarcode barcode);
 

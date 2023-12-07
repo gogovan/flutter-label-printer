@@ -35,6 +35,27 @@
             },
             "required": ["width", "height"]
         },
+        "printer_hints": {
+            "description": "Hint parameters used for layout if the printer does not support certain features.",
+            "type": "object",
+            "properties": {
+                "text_align": {
+                    "description": "For aligning text on left/right/center. Currently only support single-lined text with monospaced font.",
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "description": "Enable hinting for aligning text. Use if your printer does not support it.",
+                            "type": "boolean"
+                        },
+                        "charWidth": {
+                            "description": "Base width of each character.",
+                            "type": "number"
+                        }
+                    },
+                    "required": ["enabled", "charWidth"]
+                }
+            }
+        },
         "commands": {
             "description": "List of commands for printing",
             "type": "array",
@@ -60,10 +81,22 @@
                                 "type": "number",
                                 "description": "The y position of the text in the canvas."
                             },
+                            "width": {
+                                "type": "number",
+                                "description": "Width of the text area. Not compatible with style.font."
+                            },
+                            "height": {
+                                "type": "number",
+                                "description": "Height of the text area."
+                            },
                             "rotation": {
                                 "type": "number",
                                 "default": 0,
                                 "description": "Rotation of the text. Only in 90 degree increments are supported."
+                            },
+                            "useImage": {
+                                "type": "boolean",
+                                "description": "Whether to use image to represent this piece of text."
                             },
                             "style": {
                                 "description": "The style of the text.",
@@ -87,7 +120,26 @@
                                     "align": {
                                         "type": "string",
                                         "enum": ["left", "center", "right"],
-                                        "description": "Alignment of text. Either left, center or right."
+                                        "description": "Alignment of text. Either left, center or right. Should be used in conjunction with width (not style.width)."
+                                    },
+                                    "font": {
+                                        "type": "string",
+                                        "description": "Font of text."
+                                    },
+                                    "reverse": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "Whether to reverse the color of the text. (White text on black background instead of black text on white background.)"
+                                    },
+                                    "padding": {
+                                        "type": "number",
+                                        "default": 0,
+                                        "description": "Padding around the text. To be used with style.reverse."
+                                    },
+                                    "lineSpacing": {
+                                        "type": "number",
+                                        "default": 0,
+                                        "description": "Spacing between lines of text."
                                     }
                                 }
                             }
@@ -121,6 +173,10 @@
                             "height": {
                                 "type": "number",
                                 "description": "The height of the barcode."
+                            },
+                            "barLineWidth": {
+                                "type": "number",
+                                "description": "The width of each narrow bar of the barcode."
                             }
                         },
                         "required": ["type", "xPosition", "yPosition", "data", "height"]
@@ -208,7 +264,7 @@
                         "type": "object",
                         "properties": {
                             "command": {
-                                "const": "rectangle"
+                                "const": "image"
                             },
                             "path": {
                                 "type": "string",

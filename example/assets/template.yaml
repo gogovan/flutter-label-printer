@@ -3,8 +3,8 @@ size:
   paperType: label
   originX: 0
   originY: 0
-  width: 80
-  height: 30
+  width: 500
+  height: 100
 commands:
   - command: text
     text: Hello {{world}}!
@@ -46,3 +46,10 @@ commands:
     text: Body text lorem ipsum dolor sit amet
     xPosition: 150
     yPosition: 150
+  - command: text
+    text: Multi-line long text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
+    xPosition: 150
+    yPosition: 300
+    width: 300
+    style:
+      lineSpacing: 4
