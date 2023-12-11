@@ -5,9 +5,12 @@ import android.graphics.BitmapFactory
 import androidx.annotation.VisibleForTesting
 import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
+import hk.gogovan.flutter_label_printer.searcher.UsbSearcher
 import hk.gogovan.flutter_label_printer.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import tspl.HPRTPrinterHelper
 import java.lang.Integer.max
 import java.lang.Integer.min
@@ -16,6 +19,7 @@ import java.util.Locale
 class FlutterLabelPrinterMethodHandler(
     private val context: Context,
     private val bluetoothSearcher: BluetoothSearcher?,
+    private val usbSearcher: UsbSearcher?,
 ) : MethodChannel.MethodCallHandler {
     companion object {
         const val SHARED_PREF_NAME = "hk.gogovan.label_printer.flutter_label_printer"
@@ -54,6 +58,21 @@ class FlutterLabelPrinterMethodHandler(
                 "hk.gogovan.label_printer.stopSearchBluetooth" -> {
                     val response = bluetoothSearcher?.stopScan()
                     result.success(response)
+                }
+
+                "hk.gogovan.label_printer.searchUsb" -> {
+                    val map = usbSearcher?.getUsbDevices()
+                    val obj = map?.mapValues { mapOf<String, String>(
+                        "deviceName" to it.value.deviceName,
+                        "vendorId" to it.value.vendorId.toString(),
+                        "productId" to it.value.productId.toString(),
+                        "serialNumber" to (it.value.serialNumber ?: ""),
+                        "deviceClass" to it.value.deviceClass.toString(),
+                        "deviceSubclass" to it.value.deviceSubclass.toString(),
+                        "deviceProtocol" to it.value.deviceProtocol.toString(),
+                        "interfaceCount" to it.value.interfaceCount.toString(),
+                    ) }
+                    result.success(Json.encodeToString(obj))
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.connect" -> {

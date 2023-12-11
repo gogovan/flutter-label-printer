@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_label_printer/flutter_label_printer_platform_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_label_printer/printer_search_result/printer_search_resul
 import 'package:flutter_label_printer/printer_searcher/printer_searcher_interface.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
-/// Searcher for Hanin (HPRT) HM-A300L printers.
+/// Searcher for Hanin (HPRT) printers using Bluetooth
 class BluetoothPrinterSearcher extends PrinterSearcherInterface {
   /// Scan for Bluetooth printers.
   /// Will request for Bluetooth permission if none was granted yet.
@@ -14,9 +16,9 @@ class BluetoothPrinterSearcher extends PrinterSearcherInterface {
     try {
       return FlutterLabelPrinterPlatform.instance.searchBluetooth().map(
             (event) => event.map((e) {
-              final spl = e.split(';');
+              final data = jsonDecode(e) as Map<String, dynamic>;
 
-              return BluetoothResult(spl.first, spl[1]);
+              return BluetoothResult(data['address'] ?? '', data['name'] ?? '');
             }).toList(),
           );
     } on PlatformException catch (ex, st) {

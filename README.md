@@ -53,7 +53,6 @@ OS.
    permissions.
 
 ```xml
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_label_printer_example">
 
@@ -76,6 +75,26 @@ OS.
 
 1. Include usage description keys for Bluetooth into `info.plist`.
    ![iOS XCode Bluetooth permission instruction](README_img/ios-bluetooth-perm.png)
+
+## USB
+
+If your device requires USB connection, add USB permissions/notices as required by the OS.
+
+Only Android is supported.
+
+1. Add the following to your main `AndroidManifest.xml`.
+   See [Android Developers](https://developer.android.com/guide/topics/connectivity/usb/host)
+   for more information about permission settings.
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.flutter_label_printer_example">
+
+    <uses-feature android:name="android.hardware.usb.host" android:required="true" />
+
+    
+</manifest>
+```
 
 # Usage
 
