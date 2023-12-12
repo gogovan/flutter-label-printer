@@ -9,23 +9,41 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 
 /// Search for Hanin (HPRT) printers using USB
 class UsbPrinterSearcher extends PrinterSearcherInterface {
+
+  Stream<String> test() {
+    try {
+      return FlutterLabelPrinterPlatform.instance.searchUsb().asStream();
+    } on PlatformException catch (ex, st) {
+      Error.throwWithStackTrace(
+        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
+        st,
+      );
+    }
+  }
+
   @override
   Stream<List<PrinterSearchResult>> search() {
     try {
-      return FlutterLabelPrinterPlatform.instance.searchBluetooth().map(
-            (event) => event.map((e) {
-              final data = jsonDecode(e) as Map<String, dynamic>;
+      return FlutterLabelPrinterPlatform.instance.searchUsb().asStream().map(
+            (event) {
+              final data = (jsonDecode(event) as Map<String, dynamic>).map((key, value) {
+                final obj = value as Map<String, dynamic>;
 
-              return UsbResult(
-                data['deviceName'],
-                data['vendorId'],
-                data['productId'],
-                data['serialNumber'],
-                int.parse(data['deviceClass'].toString()),
-                int.parse(data['deviceSubclass'].toString()),
-                int.parse(data['deviceProtocol'].toString()),
-              );
-            }).toList(),
+                final result = UsbResult(
+                  obj['deviceName'],
+                  obj['vendorId'],
+                  obj['productId'],
+                  obj['serialNumber'],
+                  int.parse(obj['deviceClass'].toString()),
+                  int.parse(obj['deviceSubclass'].toString()),
+                  int.parse(obj['deviceProtocol'].toString()),
+                );
+
+                return MapEntry(key, result);
+              });
+
+              return data.values.toList();
+            },
           );
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(

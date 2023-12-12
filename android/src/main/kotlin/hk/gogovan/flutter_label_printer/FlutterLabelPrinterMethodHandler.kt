@@ -62,7 +62,7 @@ class FlutterLabelPrinterMethodHandler(
 
                 "hk.gogovan.label_printer.searchUsb" -> {
                     val map = usbSearcher?.getUsbDevices()
-                    val obj = map?.mapValues { mapOf<String, String>(
+                    val obj = map?.mapValues { mapOf(
                         "deviceName" to it.value.deviceName,
                         "vendorId" to it.value.vendorId.toString(),
                         "productId" to it.value.productId.toString(),

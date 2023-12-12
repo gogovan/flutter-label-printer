@@ -13,6 +13,7 @@ import 'package:flutter_label_printer/templating/printer_template/image_template
 import 'dart:io';
 
 import 'package:flutter_label_printer/printer_searcher/bluetooth_printer_searcher.dart';
+import 'package:flutter_label_printer/printer_searcher/usb_printer_searcher.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_area_size.dart';
 import 'package:flutter_label_printer/templating/command_parameters/print_image.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final BluetoothPrinterSearcher _searcher = BluetoothPrinterSearcher();
+  final UsbPrinterSearcher _usbSearcher = UsbPrinterSearcher();
 
   List<PrinterSearchResult> _searchResults = [];
   bool _searching = false;
@@ -81,6 +83,33 @@ class _MyAppState extends State<MyApp> {
   Future<void> _stopSearch() async {
     try {
       await _searcher.stopSearch();
+      setState(() {
+        _searching = false;
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _startUsbSearch() async {
+    try {
+      setState(() {
+        _searching = true;
+      });
+
+      _usbSearcher.search().listen((event) {
+        setState(() {
+          _searchResults = event;
+        });
+      });
+    } catch (ex, st) {
+      print('Exception: $ex\n$st');
+    }
+  }
+
+  Future<void> _stopUsbSearch() async {
+    try {
+      await _usbSearcher.stopSearch();
       setState(() {
         _searching = false;
       });
@@ -239,12 +268,18 @@ class _MyAppState extends State<MyApp> {
                     children: [
                       ElevatedButton(
                           onPressed: _startSearch,
-                          child: const Text('Start search')),
+                          child: const Text('Start Bluetooth search')),
+                      ElevatedButton(
+                          onPressed: _startUsbSearch,
+                          child: const Text('Start USB search')),
                       Text('Searching = $_searching'),
                       Text('Search Result = ${_searchResults.toString()}\n'),
                       ElevatedButton(
                           onPressed: _stopSearch,
-                          child: const Text('Stop search')),
+                          child: const Text('Stop Bluetooth search')),
+                      ElevatedButton(
+                          onPressed: _stopUsbSearch,
+                          child: const Text('Stop USB search')),
                       TextField(
                         decoration: const InputDecoration(
                           hintText:
