@@ -104,6 +104,63 @@ class FlutterLabelPrinterMethodHandler(
                     }
                 }
 
+                "hk.gogovan.label_printer.hanin.tspl.connectUSB" -> {
+                    if (HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer already connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        val name = call.argument<String>("name")
+                        if (name == null) {
+                            result.error(
+                                "1000",
+                                "Unable to extract arguments.",
+                                Throwable().stackTraceToString()
+                            )
+                        } else {
+                            val device = usbSearcher?.getUsbDevice(name)
+                            if (device == null) {
+                                result.error(
+                                    "1007",
+                                    "Unable to find USB device by $name",
+                                    Throwable().stackTraceToString()
+                                )
+                            } else {
+                                usbSearcher?.checkPermission(device) { granted, d ->
+                                    if (granted) {
+                                        if (d == null) {
+                                            result.error(
+                                                "1007",
+                                                "Unable to find USB device by $name",
+                                                Throwable().stackTraceToString()
+                                            )
+                                        } else {
+                                            if (HPRTPrinterHelper.PortOpen(context, d) == 0) {
+                                                HPRTPrinterHelper.CLS()
+                                                result.success(true)
+                                            } else {
+                                                result.error(
+                                                    "1006",
+                                                    "Connection error.",
+                                                    Throwable().stackTraceToString()
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        result.error(
+                                            "1008",
+                                            "Permission denied.",
+                                            Throwable().stackTraceToString()
+                                        )
+                                    }
+                                } ?: false
+                            }
+                        }
+                    }
+                }
+
                 "hk.gogovan.label_printer.hanin.cpcl.connect" -> {
                     if (PrinterHelper.IsOpened()) {
                         result.error(

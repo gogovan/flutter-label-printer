@@ -52,6 +52,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         bluetoothScanStreamHandler?.setCurrentActivity(binding.activity)
+        usbSearcher?.setCurrentActivity(binding.activity)
 
         binding.addActivityResultListener { requestCode, resultCode, _ ->
             bluetoothSearcher?.handleActivityResult(

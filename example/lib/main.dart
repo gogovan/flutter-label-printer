@@ -58,6 +58,8 @@ class _MyAppState extends State<MyApp> {
 
   String? _filePath;
 
+  String _exceptionText = '';
+
   @override
   void dispose() {
     connectIndexController.dispose();
@@ -77,6 +79,9 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -88,6 +93,9 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -104,6 +112,9 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -115,6 +126,9 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -145,6 +159,9 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -156,6 +173,9 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -167,6 +187,9 @@ class _MyAppState extends State<MyApp> {
           .showSnackBar(const SnackBar(content: Text("Test page printed.")));
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -196,6 +219,9 @@ class _MyAppState extends State<MyApp> {
           replaceStrings: {'world': 'Earth'}).printTemplate();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -224,6 +250,9 @@ class _MyAppState extends State<MyApp> {
       await MyApp.printer!.print();
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -246,6 +275,9 @@ class _MyAppState extends State<MyApp> {
           });
     } catch (ex, st) {
       print('Exception: $ex\n$st');
+      setState(() {
+        _exceptionText = ex.toString();
+      });
     }
   }
 
@@ -266,6 +298,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   child: Column(
                     children: [
+                      Text('Exception = $_exceptionText'),
                       ElevatedButton(
                           onPressed: _startSearch,
                           child: const Text('Start Bluetooth search')),
