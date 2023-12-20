@@ -113,10 +113,14 @@ Only Android is supported.
     - All classes implementing `PrinterSearcherInterface` provides a `search` method returning
       a `Stream<List<PrinterSearchResult>>`. `listen` to the stream to list all the available
       devices.
+    - Save the subscription returned when `listen`ing to the stream. Call `cancel` on the
+      subscription when you are done searching for printers.
+      - You should cancel the stream before connecting the printer. Devices may misbehave if you
+        start connecting to printers while a search is ongoing.
 
 ```dart
 BluetoothPrinterSearcher _searcher = BluetoothPrinterSearcher();
-_searcher.search().listen((event) {
+StreamSubscription<List<PrinterSearchResult>> subscription = _searcher.search().listen((event) {
 // event contains a list of `PrinterSearchResult`s
 });
 ```

@@ -66,13 +66,14 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
+  StreamSubscription<List<PrinterSearchResult>>? _searchSubscription;
   Future<void> _startSearch() async {
     try {
       setState(() {
         _searching = true;
       });
 
-      _searcher.search().listen((event) {
+      _searchSubscription = _searcher.search().listen((event) {
         setState(() {
           _searchResults = event;
         });
@@ -87,7 +88,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _stopSearch() async {
     try {
-      await _searcher.stopSearch();
+      _searchSubscription?.cancel();
       setState(() {
         _searching = false;
       });
@@ -99,13 +100,14 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  StreamSubscription<List<PrinterSearchResult>>? _usbSearchSubscription;
   Future<void> _startUsbSearch() async {
     try {
       setState(() {
         _searching = true;
       });
 
-      _usbSearcher.search().listen((event) {
+      _usbSearchSubscription = _usbSearcher.search().listen((event) {
         setState(() {
           _searchResults = event;
         });
@@ -120,7 +122,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _stopUsbSearch() async {
     try {
-      await _usbSearcher.stopSearch();
+      _usbSearchSubscription?.cancel();
       setState(() {
         _searching = false;
       });

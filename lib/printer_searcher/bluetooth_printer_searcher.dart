@@ -14,25 +14,20 @@ class BluetoothPrinterSearcher extends PrinterSearcherInterface {
   @override
   Stream<List<PrinterSearchResult>> search() {
     try {
-      return FlutterLabelPrinterPlatform.instance.searchBluetooth().map(
+      return FlutterLabelPrinterPlatform.instance
+          .searchBluetooth()
+          .map(
             (event) => event.map((e) {
               final data = jsonDecode(e) as Map<String, dynamic>;
 
               return BluetoothResult(data['address'] ?? '', data['name'] ?? '');
             }).toList(),
-          );
-    } on PlatformException catch (ex, st) {
-      Error.throwWithStackTrace(
-        getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
-        st,
+          )
+          .asBroadcastStream(
+        onCancel: (sub) {
+          FlutterLabelPrinterPlatform.instance.stopSearchBluetooth();
+        },
       );
-    }
-  }
-
-  @override
-  Future<bool> stopSearch() {
-    try {
-      return FlutterLabelPrinterPlatform.instance.stopSearchBluetooth();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
