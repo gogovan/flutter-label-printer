@@ -19,11 +19,7 @@ class UsbSearcher(private val context: Context) {
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (ACTION_USB_PERMISSION == intent?.action) {
-                val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
-                onPermission(
-                    intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false),
-                    device
-                )
+                onPermission()
             }
         }
     }
@@ -31,7 +27,7 @@ class UsbSearcher(private val context: Context) {
     private var currentActivity: Activity? = null
     private var permissionIntent: PendingIntent? = null
 
-    private var onPermission: (Boolean, UsbDevice?) -> Unit = { _, _ -> }
+    private var onPermission: () -> Unit = { }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     fun setCurrentActivity(activity: Activity) {
@@ -66,7 +62,9 @@ class UsbSearcher(private val context: Context) {
             onPerm(true, device)
             true
         } else {
-            onPermission = onPerm
+            onPermission = {
+                onPerm(manager.hasPermission(device), device)
+            }
             manager.requestPermission(device, permissionIntent)
             false
         }
