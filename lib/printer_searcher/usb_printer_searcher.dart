@@ -9,8 +9,6 @@ import 'package:flutter_label_printer/src/exception_codes.dart';
 
 /// Search for Hanin (HPRT) printers using USB
 class UsbPrinterSearcher extends PrinterSearcherInterface {
-  Stream<List<PrinterSearchResult>>? _searchStream;
-
   Stream<String> test() {
     try {
       return FlutterLabelPrinterPlatform.instance.searchUsb().asStream();
@@ -26,7 +24,8 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
     while (true) {
       final event = await FlutterLabelPrinterPlatform.instance.searchUsb();
 
-      final data = (jsonDecode(event) as Map<String, dynamic>).map((key, value) {
+      final data =
+          (jsonDecode(event) as Map<String, dynamic>).map((key, value) {
         final obj = value as Map<String, dynamic>;
 
         final result = UsbResult(
