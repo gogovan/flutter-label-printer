@@ -148,10 +148,8 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
         img.dotScreen(srcImage);
         break;
       default:
-        throw InvalidArgumentException(
-          'Unsupported algorithm: ${printImage.monochromizationAlgorithm}',
-          '',
-        );
+        img.luminanceThreshold(srcImage);
+        break;
     }
 
     img.compositeImage(
@@ -194,9 +192,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
     return Future.value(true);
   }
 
-  static Future<img.Image> getTextImage(
-    PrintText printText,
-  ) async {
+  static Future<img.Image> getTextImage(PrintText printText) async {
     TextAlign textAlign;
     switch (printText.style?.align) {
       case PrintTextAlign.left:
@@ -218,7 +214,7 @@ class ImageTemplatePrinter implements TemplatablePrinterInterface {
 
     final reverse = printText.style?.reverse ?? false;
 
-    final textWidth = printText.style?.width ?? 0;
+    final textWidth = (printText.style?.width ?? 1) * 16;
     final boldWeight =
         (printText.style?.bold ?? 0) > 0 ? FontWeight.w700 : FontWeight.w400;
     final paragraphBuilder = ParagraphBuilder(
