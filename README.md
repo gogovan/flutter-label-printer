@@ -7,13 +7,21 @@ Integrate printers with Flutter apps.
 - Android: Android 7.0+
 - iOS:
 
-# Supported Printers
+# Supported Printers, OS and connections
 
 - Hanin (HPRT) CPCL Printers
-    - HM-A300L is tested
+  - Android and iOS are supported
+  - Bluetooth connection only
+  - HM-A300L is tested
 - Hanin (HPRT) TSPL Printers
-    - N41BT is tested
-- A special "printer" that print to an image instead of a hardware printer. Useful for:
+  - Android and iOS are supported
+  - Bluetooth or USB connection
+    - USB connection is only supported on Android
+  - N41BT is tested
+- A special "printer" that print to an image instead of a hardware printer.
+  - Android and iOS are supported
+  - No connection needed
+  - Useful for:
     - Send the image to printer instead of using printer commands for consistency and working around
       missing printer features.
     - Print to an image for preliminary testing and verification during development.
@@ -53,7 +61,6 @@ OS.
    permissions.
 
 ```xml
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_label_printer_example">
 
@@ -77,6 +84,26 @@ OS.
 1. Include usage description keys for Bluetooth into `info.plist`.
    ![iOS XCode Bluetooth permission instruction](README_img/ios-bluetooth-perm.png)
 
+## USB
+
+If your device requires USB connection, add USB permissions/notices as required by the OS.
+
+Only Android is supported.
+
+1. Add the following to your main `AndroidManifest.xml`.
+   See [Android Developers](https://developer.android.com/guide/topics/connectivity/usb/host)
+   for more information about permission settings.
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.flutter_label_printer_example">
+
+    <uses-feature android:name="android.hardware.usb.host" android:required="true" />
+
+    <uses-permission android:name="hk.gogovan.flutter_label_printer.USB_PERMISSION" />
+</manifest>
+```
+
 # Usage
 
 ## Connect your printer and basic printing
@@ -86,14 +113,14 @@ OS.
     - All classes implementing `PrinterSearcherInterface` provides a `search` method returning
       a `Stream<List<PrinterSearchResult>>`. `listen` to the stream to list all the available
       devices.
+    - Save the subscription returned when `listen`ing to the stream. Call `cancel` on the
+      subscription when you are done searching for printers.
+      - You should cancel the stream before connecting the printer. Devices may misbehave if you
+        start connecting to printers while a search is ongoing.
 
 ```dart
-
 BluetoothPrinterSearcher _searcher = BluetoothPrinterSearcher();
-_searcher.search
-().listen
-(
-(event) {
+StreamSubscription<List<PrinterSearchResult>> subscription = _searcher.search().listen((event) {
 // event contains a list of `PrinterSearchResult`s
 });
 ```
@@ -105,33 +132,21 @@ _searcher.search
 
 ```dart
 HaninTSPLPrinter? _printer;
-_printer =
-
-HaninTSPLPrinter(result);
-
-await _printer
-?.
-
-connect();
+_printer = HaninTSPLPrinter(result);
+await _printer?.connect();
 ```
 
 3. Use the instance of `PrinterInterface` that has connected to a printer to send printing commands.
    `printTestPage` may be used to print a testing page.
 
 ```dart
-await _printer
-?.
-
-printTestPage();
+await _printer?.printTestPage();
 ```
 
 4. When you are done, call `disconnect` to disconnect the device from your app.
 
 ```dart
-await _printer
-?.
-
-disconnect();
+await _printer?.disconnect();
 ```
 
 ## Using print templates
@@ -150,11 +165,8 @@ disconnect();
 3. Create a `TemplatePrinter` and use it to print the template.
 
 ```dart
-
 final printer = TemplatePrinter(printer, template);
-await
-printer.printTemplate
-();
+await printer.printTemplate();
 ```
 
 ### Template YAML

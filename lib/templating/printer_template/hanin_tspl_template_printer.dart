@@ -58,7 +58,9 @@ class HaninTSPLTemplatePrinter extends HaninTSPLPrinter
     checkConnected();
 
     if (printText.useImage) {
-      final image = await ImageTemplatePrinter.getTextImage(printText);
+      final image = await ImageTemplatePrinter.getTextImage(
+        printText,
+      );
 
       // store the image into a temp file
       final tempDir = await getTemporaryDirectory();

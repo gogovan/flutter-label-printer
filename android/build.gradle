@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.3'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -55,6 +55,8 @@ android {
 dependencies {
     implementation files('libs/CPCL_SDK_V1.13.jar')
     implementation files('libs/TSPL_V1.22.jar')
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
 
     testImplementation "junit:junit:4.13.2"
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"

@@ -2,6 +2,7 @@ package hk.gogovan.flutter_label_printer
 
 import androidx.annotation.NonNull
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
+import hk.gogovan.flutter_label_printer.searcher.UsbSearcher
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -19,6 +20,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
     private var bluetoothSearcher: BluetoothSearcher? = null
     private var bluetoothScanStreamHandler: BluetoothScanStreamHandler? = null
+    private var usbSearcher: UsbSearcher? = null
     private var methodHandler: FlutterLabelPrinterMethodHandler? = null
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -26,7 +28,8 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
         bluetoothSearcher = BluetoothSearcher(context)
         bluetoothScanStreamHandler = BluetoothScanStreamHandler(bluetoothSearcher)
-        methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher)
+        usbSearcher = UsbSearcher(context)
+        methodHandler = FlutterLabelPrinterMethodHandler(context, bluetoothSearcher, usbSearcher)
 
         channel =
             MethodChannel(flutterPluginBinding.binaryMessenger, "hk.gogovan.label_printer.flutter_label_printer")
@@ -49,6 +52,7 @@ class FlutterLabelPrinterPlugin : FlutterPlugin, ActivityAware {
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         bluetoothScanStreamHandler?.setCurrentActivity(binding.activity)
+        usbSearcher?.setCurrentActivity(binding.activity)
 
         binding.addActivityResultListener { requestCode, resultCode, _ ->
             bluetoothSearcher?.handleActivityResult(

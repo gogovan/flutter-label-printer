@@ -22,6 +22,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.Closeable
 
 /**
@@ -164,7 +166,13 @@ class BluetoothSearcher @VisibleForTesting constructor(
                 foundDevice.collect {
                     val address = it.address
                     if (address != null) {
-                        val result = "${address};${it.name}"
+                        val obj = mapOf<String, String>(
+                            "address" to address,
+                            "name" to it.name,
+                            "bondState" to it.bondState.toString(),
+                            "type" to it.type.toString(),
+                        )
+                        val result = Json.encodeToString(obj)
                         discoveredBluetoothDevices.add(result)
                         val toSend = discoveredBluetoothDevices.toList()
                         resultFlow.emit(ResultOr(toSend))

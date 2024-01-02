@@ -51,6 +51,14 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
   }
 
   @override
+  Future<String> searchUsb() async {
+    final result = await methodChannel
+        .invokeMethod<String>('hk.gogovan.label_printer.searchUsb');
+
+    return result ?? '';
+  }
+
+  @override
   Future<bool> connectHaninCPCL(String address) async {
     final result = await methodChannel.invokeMethod<bool>(
       'hk.gogovan.label_printer.hanin.cpcl.connect',
@@ -68,6 +76,18 @@ class MethodChannelFlutterLabelPrinter extends FlutterLabelPrinterPlatform {
       'hk.gogovan.label_printer.hanin.tspl.connect',
       <String, dynamic>{
         'address': address,
+      },
+    );
+
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> connectHaninTSPLUSB(String name) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hk.gogovan.label_printer.hanin.tspl.connectUSB',
+      <String, dynamic>{
+        'name': name,
       },
     );
 

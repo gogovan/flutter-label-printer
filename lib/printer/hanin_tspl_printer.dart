@@ -4,6 +4,7 @@ import 'package:flutter_label_printer/printer/hanin_tspl_classes.dart';
 import 'package:flutter_label_printer/printer/printer_interface.dart';
 import 'package:flutter_label_printer/printer_search_result/bluetooth_result.dart';
 import 'package:flutter_label_printer/printer_search_result/printer_search_result.dart';
+import 'package:flutter_label_printer/printer_search_result/usb_result.dart';
 import 'package:flutter_label_printer/src/exception_codes.dart';
 
 class HaninTSPLPrinter extends PrinterInterface {
@@ -12,8 +13,15 @@ class HaninTSPLPrinter extends PrinterInterface {
   @override
   Future<bool> connectImpl(PrinterSearchResult device) {
     try {
-      return FlutterLabelPrinterPlatform.instance
-          .connectHaninTSPL((device as BluetoothResult).address);
+      if (device is BluetoothResult) {
+        return FlutterLabelPrinterPlatform.instance
+            .connectHaninTSPL(device.address);
+      } else if (device is UsbResult) {
+        return FlutterLabelPrinterPlatform.instance
+            .connectHaninTSPLUSB(device.deviceName);
+      } else {
+        throw Exception('Unknown device type');
+      }
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

@@ -42,12 +42,20 @@ abstract class FlutterLabelPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('stopSearchBluetooth() has not been implemented.');
   }
 
+  Future<String> searchUsb() {
+    throw UnimplementedError('searchUsb() has not been implemented.');
+  }
+
   Future<bool> connectHaninCPCL(String address) {
     throw UnimplementedError('connectHaninCPCL() has not been implemented.');
   }
 
   Future<bool> connectHaninTSPL(String address) {
     throw UnimplementedError('connectHaninTSPL() has not been implemented.');
+  }
+
+  Future<bool> connectHaninTSPLUSB(String name) {
+    throw UnimplementedError('connectHaninTSPLUSB() has not been implemented.');
   }
 
   Future<bool> disconnectHaninTSPL() {

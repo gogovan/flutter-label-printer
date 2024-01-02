@@ -5,9 +5,12 @@ import android.graphics.BitmapFactory
 import androidx.annotation.VisibleForTesting
 import cpcl.PrinterHelper
 import hk.gogovan.flutter_label_printer.searcher.BluetoothSearcher
+import hk.gogovan.flutter_label_printer.searcher.UsbSearcher
 import hk.gogovan.flutter_label_printer.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import tspl.HPRTPrinterHelper
 import java.lang.Integer.max
 import java.lang.Integer.min
@@ -16,6 +19,7 @@ import java.util.Locale
 class FlutterLabelPrinterMethodHandler(
     private val context: Context,
     private val bluetoothSearcher: BluetoothSearcher?,
+    private val usbSearcher: UsbSearcher?,
 ) : MethodChannel.MethodCallHandler {
     companion object {
         const val SHARED_PREF_NAME = "hk.gogovan.label_printer.flutter_label_printer"
@@ -56,6 +60,20 @@ class FlutterLabelPrinterMethodHandler(
                     result.success(response)
                 }
 
+                "hk.gogovan.label_printer.searchUsb" -> {
+                    val map = usbSearcher?.getUsbDevices()
+                    val obj = map?.mapValues { mapOf(
+                        "deviceName" to it.value.deviceName,
+                        "vendorId" to it.value.vendorId.toString(),
+                        "productId" to it.value.productId.toString(),
+                        "serialNumber" to (it.value.serialNumber ?: ""),
+                        "deviceClass" to it.value.deviceClass.toString(),
+                        "deviceSubclass" to it.value.deviceSubclass.toString(),
+                        "deviceProtocol" to it.value.deviceProtocol.toString(),
+                    ) }
+                    result.success(Json.encodeToString(obj))
+                }
+
                 "hk.gogovan.label_printer.hanin.tspl.connect" -> {
                     if (HPRTPrinterHelper.IsOpened()) {
                         result.error(
@@ -81,6 +99,63 @@ class FlutterLabelPrinterMethodHandler(
                                     "Connection error.",
                                     Throwable().stackTraceToString()
                                 )
+                            }
+                        }
+                    }
+                }
+
+                "hk.gogovan.label_printer.hanin.tspl.connectUSB" -> {
+                    if (HPRTPrinterHelper.IsOpened()) {
+                        result.error(
+                            "1005",
+                            "Printer already connected.",
+                            Throwable().stackTraceToString()
+                        )
+                    } else {
+                        val name = call.argument<String>("name")
+                        if (name == null) {
+                            result.error(
+                                "1000",
+                                "Unable to extract arguments.",
+                                Throwable().stackTraceToString()
+                            )
+                        } else {
+                            val device = usbSearcher?.getUsbDevice(name)
+                            if (device == null) {
+                                result.error(
+                                    "1007",
+                                    "Unable to find USB device by $name",
+                                    Throwable().stackTraceToString()
+                                )
+                            } else {
+                                usbSearcher?.checkPermission(device) { granted, d ->
+                                    if (granted) {
+                                        if (d == null) {
+                                            result.error(
+                                                "1007",
+                                                "Unable to find USB device by $name",
+                                                Throwable().stackTraceToString()
+                                            )
+                                        } else {
+                                            if (HPRTPrinterHelper.PortOpen(context, d) == 0) {
+                                                HPRTPrinterHelper.CLS()
+                                                result.success(true)
+                                            } else {
+                                                result.error(
+                                                    "1006",
+                                                    "Connection error.",
+                                                    Throwable().stackTraceToString()
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        result.error(
+                                            "1008",
+                                            "Permission denied.",
+                                            Throwable().stackTraceToString()
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
