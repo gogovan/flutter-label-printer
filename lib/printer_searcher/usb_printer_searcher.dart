@@ -25,7 +25,7 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
       final event = await FlutterLabelPrinterPlatform.instance.searchUsb();
 
       final data =
-          (jsonDecode(event) as Map<String, dynamic>).map((key, value) {
+          (jsonDecode(event) as List<dynamic>).map((value) {
         final obj = value as Map<String, dynamic>;
 
         final result = UsbResult(
@@ -38,10 +38,10 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
           int.parse(obj['deviceProtocol'].toString()),
         );
 
-        return MapEntry(key, result);
+        return result;
       });
 
-      yield data.values.toList();
+      yield data.toList();
 
       await Future.delayed(const Duration(seconds: 1));
     }
