@@ -36,6 +36,8 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
           int.parse(obj['deviceClass'].toString()),
           int.parse(obj['deviceSubclass'].toString()),
           int.parse(obj['deviceProtocol'].toString()),
+          int.parse(obj['interfaceClass'].toString()),
+          int.parse(obj['interfaceSubclass'].toString()),
         );
 
         return result;

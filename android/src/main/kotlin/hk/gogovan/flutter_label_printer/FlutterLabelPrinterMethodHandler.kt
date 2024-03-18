@@ -76,6 +76,8 @@ class FlutterLabelPrinterMethodHandler(
                                 "deviceClass" to it.deviceClass.toString(),
                                 "deviceSubclass" to it.deviceSubclass.toString(),
                                 "deviceProtocol" to it.deviceProtocol.toString(),
+                                "interfaceClass" to it.getInterface(0).interfaceClass.toString(),
+                                "interfaceSubclass" to it.getInterface(0).interfaceSubclass.toString(),
                             )
                         }
                         result.success(Json.encodeToString(obj))
