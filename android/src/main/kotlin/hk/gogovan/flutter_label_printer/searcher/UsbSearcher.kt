@@ -57,7 +57,7 @@ class UsbSearcher(private val context: Context) {
             for (i in 0 until device.interfaceCount) {
                 val intf = device.getInterface(i)
                 Log.d("ddd", "interface $i")
-                if (true || intf.interfaceClass == 7) {
+                if (intf.interfaceClass == 7) {
                     Log.d("ddd", "interface ${intf.interfaceClass} found")
                     permissionPendingChecks += 1
                     checkPermission(device) { granted, inDevice ->
