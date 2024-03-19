@@ -52,7 +52,7 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
   @override
   Stream<List<PrinterSearchResult>> search() {
     try {
-      return _search().asBroadcastStream();
+      return _search();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),
