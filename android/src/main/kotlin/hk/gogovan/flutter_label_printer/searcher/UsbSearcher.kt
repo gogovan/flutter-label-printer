@@ -50,21 +50,15 @@ class UsbSearcher(private val context: Context) {
         val result = mutableListOf<UsbDevice>()
         var permissionPendingChecks = 0
 
-        Log.d("ddd", "getting usb devices")
         val manager = context.getSystemService(UsbManager::class.java)
         for (device in manager.deviceList.values) {
-            Log.d("ddd", "device found")
             for (i in 0 until device.interfaceCount) {
                 val intf = device.getInterface(i)
-                Log.d("ddd", "interface $i")
                 if (intf.interfaceClass == 7) {
-                    Log.d("ddd", "interface ${intf.interfaceClass} found")
                     permissionPendingChecks += 1
                     checkPermission(device) { granted, inDevice ->
-                        Log.d("ddd", "permission granted $granted")
                         if (inDevice != null && granted) {
                             result.add(inDevice)
-                            Log.d("ddd", "added device ${inDevice.deviceName} ${inDevice.deviceId} ${inDevice.deviceClass} ${inDevice.manufacturerName} ${inDevice.productName} ${inDevice.serialNumber} ${inDevice.vendorId} ${inDevice.productId}")
                         }
                         permissionPendingChecks -= 1
                     }
@@ -72,12 +66,10 @@ class UsbSearcher(private val context: Context) {
             }
         }
 
-        Log.d("ddd", "waiting for permission checks")
         while (permissionPendingChecks > 0) {
             kotlinx.coroutines.delay(100)
         }
 
-        Log.d("ddd", "permission checks done")
         return result
     }
 

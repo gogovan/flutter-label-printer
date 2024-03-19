@@ -139,7 +139,6 @@ class FlutterLabelPrinterMethodHandler(
                                 )
                             } else {
                                 usbSearcher?.checkPermission(device) { granted, d ->
-                                    android.util.Log.d("ddd", "connect permission granted $granted")
                                     if (granted) {
                                         if (d == null) {
                                             result.error(
@@ -148,16 +147,22 @@ class FlutterLabelPrinterMethodHandler(
                                                 Throwable().stackTraceToString()
                                             )
                                         } else {
-                                            android.util.Log.d("ddd", "port open device ${d.deviceName} ${d.manufacturerName} ${d.productName} ${d.serialNumber} ${d.deviceId} ${d.deviceProtocol} ${d.deviceSubclass} ")
-                                            if (HPRTPrinterHelper.PortOpen(context, d) == 0) {
-                                                android.util.Log.d("ddd", "port open success")
-                                                HPRTPrinterHelper.CLS()
-                                                result.success(true)
-                                            } else {
+                                            try {
+                                                if (HPRTPrinterHelper.PortOpen(context, d) == 0) {
+                                                    HPRTPrinterHelper.CLS()
+                                                    result.success(true)
+                                                } else {
+                                                    result.error(
+                                                        "1006",
+                                                        "Connection error.",
+                                                        Throwable().stackTraceToString()
+                                                    )
+                                                }
+                                            } catch (e: Exception) {
                                                 result.error(
                                                     "1006",
                                                     "Connection error.",
-                                                    Throwable().stackTraceToString()
+                                                    e.stackTraceToString()
                                                 )
                                             }
                                         }
