@@ -24,7 +24,8 @@ class UsbResult implements PrinterSearchResult {
   final int interfaceSubclass;
 
   @override
-  String toString() => 'UsbResult{deviceName: $deviceName, vendorId: $vendorId, productId: $productId, serialNumber: $serialNumber, deviceClass: $deviceClass, deviceSubclass: $deviceSubclass, deviceProtocol: $deviceProtocol, interfaceClass: $interfaceClass, interfaceSubclass: $interfaceSubclass}';
+  String toString() =>
+      'UsbResult{deviceName: $deviceName, vendorId: $vendorId, productId: $productId, serialNumber: $serialNumber, deviceClass: $deviceClass, deviceSubclass: $deviceSubclass, deviceProtocol: $deviceProtocol, interfaceClass: $interfaceClass, interfaceSubclass: $interfaceSubclass}';
 
   @override
   bool operator ==(Object other) =>
