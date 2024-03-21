@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.hardware.usb.UsbConstants
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Build
@@ -54,7 +55,7 @@ class UsbSearcher(private val context: Context) {
         for (device in manager.deviceList.values) {
             for (i in 0 until device.interfaceCount) {
                 val intf = device.getInterface(i)
-                if (intf.interfaceClass == 7) {
+                if (intf.interfaceClass == UsbConstants.USB_CLASS_PRINTER) {
                     permissionPendingChecks += 1
                     checkPermission(device) { granted, inDevice ->
                         if (inDevice != null && granted) {
