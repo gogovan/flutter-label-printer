@@ -7,9 +7,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.hardware.usb.UsbConstants
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Build
+import android.util.Log
 
 class UsbSearcher(private val context: Context) {
     companion object {
@@ -45,9 +47,31 @@ class UsbSearcher(private val context: Context) {
         }
     }
 
-    fun getUsbDevices(): Map<String, UsbDevice> {
+    suspend fun getUsbDevices(): List<UsbDevice> {
+        val result = mutableListOf<UsbDevice>()
+        var permissionPendingChecks = 0
+
         val manager = context.getSystemService(UsbManager::class.java)
-        return manager.deviceList
+        for (device in manager.deviceList.values) {
+            for (i in 0 until device.interfaceCount) {
+                val intf = device.getInterface(i)
+                if (intf.interfaceClass == UsbConstants.USB_CLASS_PRINTER) {
+                    permissionPendingChecks += 1
+                    checkPermission(device) { granted, inDevice ->
+                        if (inDevice != null && granted) {
+                            result.add(inDevice)
+                        }
+                        permissionPendingChecks -= 1
+                    }
+                }
+            }
+        }
+
+        while (permissionPendingChecks > 0) {
+            kotlinx.coroutines.delay(100)
+        }
+
+        return result
     }
 
     fun getUsbDevice(name: String): UsbDevice? {

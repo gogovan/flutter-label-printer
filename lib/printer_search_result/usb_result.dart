@@ -9,6 +9,8 @@ class UsbResult implements PrinterSearchResult {
     this.deviceClass,
     this.deviceSubclass,
     this.deviceProtocol,
+    this.interfaceClass,
+    this.interfaceSubclass,
   );
 
   final String deviceName;
@@ -18,10 +20,12 @@ class UsbResult implements PrinterSearchResult {
   final int deviceClass;
   final int deviceSubclass;
   final int deviceProtocol;
+  final int interfaceClass;
+  final int interfaceSubclass;
 
   @override
   String toString() =>
-      'UsbResult{deviceName: $deviceName, vendorId: $vendorId, productId: $productId, serialNumber: $serialNumber, deviceClass: $deviceClass, deviceSubclass: $deviceSubclass, deviceProtocol: $deviceProtocol}';
+      'UsbResult{deviceName: $deviceName, vendorId: $vendorId, productId: $productId, serialNumber: $serialNumber, deviceClass: $deviceClass, deviceSubclass: $deviceSubclass, deviceProtocol: $deviceProtocol, interfaceClass: $interfaceClass, interfaceSubclass: $interfaceSubclass}';
 
   @override
   bool operator ==(Object other) =>
@@ -34,7 +38,9 @@ class UsbResult implements PrinterSearchResult {
           serialNumber == other.serialNumber &&
           deviceClass == other.deviceClass &&
           deviceSubclass == other.deviceSubclass &&
-          deviceProtocol == other.deviceProtocol;
+          deviceProtocol == other.deviceProtocol &&
+          interfaceClass == other.interfaceClass &&
+          interfaceSubclass == other.interfaceSubclass;
 
   @override
   int get hashCode =>
@@ -44,5 +50,7 @@ class UsbResult implements PrinterSearchResult {
       serialNumber.hashCode ^
       deviceClass.hashCode ^
       deviceSubclass.hashCode ^
-      deviceProtocol.hashCode;
+      deviceProtocol.hashCode ^
+      interfaceClass.hashCode ^
+      interfaceSubclass.hashCode;
 }

@@ -9,6 +9,10 @@ import hk.gogovan.flutter_label_printer.searcher.UsbSearcher
 import hk.gogovan.flutter_label_printer.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tspl.HPRTPrinterHelper
@@ -61,17 +65,23 @@ class FlutterLabelPrinterMethodHandler(
                 }
 
                 "hk.gogovan.label_printer.searchUsb" -> {
-                    val map = usbSearcher?.getUsbDevices()
-                    val obj = map?.mapValues { mapOf(
-                        "deviceName" to it.value.deviceName,
-                        "vendorId" to it.value.vendorId.toString(),
-                        "productId" to it.value.productId.toString(),
-                        "serialNumber" to (it.value.serialNumber ?: ""),
-                        "deviceClass" to it.value.deviceClass.toString(),
-                        "deviceSubclass" to it.value.deviceSubclass.toString(),
-                        "deviceProtocol" to it.value.deviceProtocol.toString(),
-                    ) }
-                    result.success(Json.encodeToString(obj))
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val map = usbSearcher?.getUsbDevices()
+                        val obj = map?.map {
+                            mapOf(
+                                "deviceName" to it.deviceName,
+                                "vendorId" to it.vendorId.toString(),
+                                "productId" to it.productId.toString(),
+                                "serialNumber" to (it.serialNumber ?: ""),
+                                "deviceClass" to it.deviceClass.toString(),
+                                "deviceSubclass" to it.deviceSubclass.toString(),
+                                "deviceProtocol" to it.deviceProtocol.toString(),
+                                "interfaceClass" to it.getInterface(0).interfaceClass.toString(),
+                                "interfaceSubclass" to it.getInterface(0).interfaceSubclass.toString(),
+                            )
+                        }
+                        result.success(Json.encodeToString(obj))
+                    }
                 }
 
                 "hk.gogovan.label_printer.hanin.tspl.connect" -> {
@@ -90,7 +100,7 @@ class FlutterLabelPrinterMethodHandler(
                                 Throwable().stackTraceToString()
                             )
                         } else {
-                            if (HPRTPrinterHelper.PortOpen("Bluetooth,$address") == 0) {
+                            if (HPRTPrinterHelper.PortOpen(context, "Bluetooth,$address") == 0) {
                                 HPRTPrinterHelper.CLS()
                                 result.success(true)
                             } else {
@@ -137,14 +147,22 @@ class FlutterLabelPrinterMethodHandler(
                                                 Throwable().stackTraceToString()
                                             )
                                         } else {
-                                            if (HPRTPrinterHelper.PortOpen(context, d) == 0) {
-                                                HPRTPrinterHelper.CLS()
-                                                result.success(true)
-                                            } else {
+                                            try {
+                                                if (HPRTPrinterHelper.PortOpen(context, d) == 0) {
+                                                    HPRTPrinterHelper.CLS()
+                                                    result.success(true)
+                                                } else {
+                                                    result.error(
+                                                        "1006",
+                                                        "Connection error.",
+                                                        Throwable().stackTraceToString()
+                                                    )
+                                                }
+                                            } catch (e: Exception) {
                                                 result.error(
                                                     "1006",
                                                     "Connection error.",
-                                                    Throwable().stackTraceToString()
+                                                    e.stackTraceToString()
                                                 )
                                             }
                                         }

@@ -24,8 +24,7 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
     while (true) {
       final event = await FlutterLabelPrinterPlatform.instance.searchUsb();
 
-      final data =
-          (jsonDecode(event) as Map<String, dynamic>).map((key, value) {
+      final data = (jsonDecode(event) as List<dynamic>).map((value) {
         final obj = value as Map<String, dynamic>;
 
         final result = UsbResult(
@@ -36,12 +35,14 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
           int.parse(obj['deviceClass'].toString()),
           int.parse(obj['deviceSubclass'].toString()),
           int.parse(obj['deviceProtocol'].toString()),
+          int.parse(obj['interfaceClass'].toString()),
+          int.parse(obj['interfaceSubclass'].toString()),
         );
 
-        return MapEntry(key, result);
+        return result;
       });
 
-      yield data.values.toList();
+      yield data.toList();
 
       await Future.delayed(const Duration(seconds: 1));
     }
@@ -50,7 +51,7 @@ class UsbPrinterSearcher extends PrinterSearcherInterface {
   @override
   Stream<List<PrinterSearchResult>> search() {
     try {
-      return _search().asBroadcastStream();
+      return _search();
     } on PlatformException catch (ex, st) {
       Error.throwWithStackTrace(
         getExceptionFromCode(int.parse(ex.code), ex.message ?? '', ex.details),

@@ -54,9 +54,11 @@ android {
 
 dependencies {
     implementation files('libs/CPCL_SDK_V1.13.jar')
-    implementation files('libs/TSPL_V1.22.jar')
+    implementation files('libs/TSPL_V1.24.jar')
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2"
 
     testImplementation "junit:junit:4.13.2"
     testImplementation "androidx.test.ext:junit-ktx:1.1.5"
